@@ -23,22 +23,7 @@ namespace Tanchiki
 {
     public class GameScene : GameWindow
     {
-        private ShaderProgram shaderProgram;
-        private BufferObject vboVC;
-        private BufferObject vboTextureCoords;
-        private ArrayObject vao;
-
-        Texture texture;
-        Texture textureTank;
-
         private MainWindow MainWindowWPF;
-
-        public double value { get; set; }
-
-        
-        private float Cell = 0.1f;
-
-        Map map;
 
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF)
       : base(gameWindowSettings, nativeWindowSettings)
@@ -51,32 +36,21 @@ namespace Tanchiki
 
         private double FrameTime { get; set; }
 
+        private Renderer? renderer;
         private double FPS { get; set; }
-
-        Player FirstPlayer;
-        Player SecondPlayer;
-        float[] mapArr;
 
         protected override void OnLoad()
         {
             base.OnLoad();
             GL.ClearColor(Color4.White);
             GL.Enable(EnableCap.CullFace);
-            map = new Map(20, 20, Cell, LoadMapFromFile(@"data\maps\map1.txt"));
-            shaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            texture = Texture.LoadFromFile(@"data\textures\wall.png");
-            textureTank = Texture.LoadFromFile(@"data\textures\tank.png");
-            FirstPlayer = new Player(1);
-            mapArr = map.GetVertColorArray();
-            SecondPlayer = new Player(2);
-            CreateVAO(mapArr);
-            //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            renderer = new Renderer();
         }
 
         protected override void OnUnload()
         {
-            vao.Dispose();
-            shaderProgram.DeleteProgram();
+            renderer?.vao?.Dispose();
+            renderer?.shaderProgram.DeleteProgram();
             base.OnUnload();
             
         }
@@ -88,11 +62,10 @@ namespace Tanchiki
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
         }
-        int counter = 0;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            Draw();
+            renderer?.Draw();
             SwapBuffers();
             base.OnRenderFrame(e);
         }
@@ -108,196 +81,9 @@ namespace Tanchiki
                 FrameTime = 0;
             }
 
-            List<Projectile> projectilesToRemove = new List<Projectile>();
-            if (FirstPlayer.projectiles.Count != 0)
-                foreach (Projectile projectile in FirstPlayer.projectiles)
-                {
-                    projectile.Move(map.cells, projectilesToRemove);
-                }
-            foreach(Projectile myProjectile in projectilesToRemove)
-                FirstPlayer.projectiles.Remove(myProjectile);
-            if (SecondPlayer.projectiles.Count != 0)
-                foreach (Projectile projectile in SecondPlayer.projectiles)
-                {
-                    
-                    projectile.Move(map.cells, projectilesToRemove);
-                }
-                foreach (Projectile myProjectile in projectilesToRemove)
-                SecondPlayer.projectiles.Remove(myProjectile);
+            renderer?.MoveShoots();
             OnKeyDown();
             base.OnUpdateFrame(frameEventArgs);
-        }
-
-        private int[,] LoadMapFromFile(string filename)
-        {
-            try
-            {
-                string[] lines = File.ReadAllLines(filename);
-                int width = lines[0].Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries).Length;
-                int height = lines.Length;
-                int[,] map = new int[width, height];
-
-                for (int y = 0; y < height; y++)
-                {
-                    string[] values = lines[y].Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int x = 0; x < width; x++)
-                    {
-                        if (int.TryParse(values[x], out int tileValue))
-                        {
-                            map[x, y] = tileValue;
-                        }
-                        else
-                        {
-                            map[x, y] = 0;
-                        }
-                    }
-                }
-
-                return map;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка чтения файла: {ex.Message}");
-                return null;
-            }
-        }
-
-        private void CreateVAO(float[] vert_colors)
-        {
-
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_colors, BufferHint.StaticDraw);
-
-            vboTextureCoords = new BufferObject(BufferType.ArrayBuffer);
-            vboTextureCoords.SetData(vert_colors, BufferHint.StaticDraw);
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int ColorArray = shaderProgram.GetAttribProgram("aColor");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
-
-            GL.Uniform1(TextureCoordArray, 0);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
-
-            vao = new ArrayObject();
-            vao.Activate();
-            
-            vao.AttachBufer(vboVC);
-            vao.AttachBufer(vboTextureCoords);
-
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 9 * sizeof(float), 0);
-            vao.AttribPointer(ColorArray, 4, AttribType.Float, 9 * sizeof(float), 3 * sizeof(float));
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 9 * sizeof(float), 7 * sizeof(float));
-
-            vao.Deactivate();
-            vao.DisableAttribAll();
-
-            shaderProgram?.SetTexture("aTextureCoord", texture.Handle);
-        }
-
-        private void CreateVAOPlayer(float[] vert_colorPl)
-        {
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_colorPl, BufferHint.StaticDraw);
-
-            vboTextureCoords = new BufferObject(BufferType.ArrayBuffer);
-            vboTextureCoords.SetData(vert_colorPl, BufferHint.StaticDraw);
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int ColorArray = shaderProgram.GetAttribProgram("aColor");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
-
-            GL.Uniform1(TextureCoordArray, 0);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, textureTank.Handle);
-
-            vao = new ArrayObject();
-            vao.Activate();
-
-            vao.AttachBufer(vboVC);
-            vao.AttachBufer(vboTextureCoords);
-
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 9 * sizeof(float), 0);
-            vao.AttribPointer(ColorArray, 4, AttribType.Float, 9 * sizeof(float), 3 * sizeof(float));
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 9 * sizeof(float), 7 * sizeof(float));
-
-            vao.Deactivate();
-            vao.DisableAttribAll();
-
-            shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
-        }
-
-        private void DrawReloadLine()
-        {
-            
-            float xStart = FirstPlayer.PointerAndReloadLine()[2];
-            float xEnd = FirstPlayer.PointerAndReloadLine()[3];
-            float y = FirstPlayer.PointerAndReloadLine()[4];
-            double timeReload = FirstPlayer.TimeReload;
-            float step = (xEnd - xStart)/ (float)(timeReload * 90);
-            if (FirstPlayer.IsReloading && counter < (float)(timeReload * 90))
-            {
-                counter++;
-                GL.Color3(Color.Orange);
-                GL.LineWidth(5);
-                GL.Begin(PrimitiveType.Lines);
-                GL.Vertex2(xStart, y);
-                GL.Vertex2(xStart + counter * step, y);
-                GL.End();
-            }
-            else
-            {
-                counter = 0;
-                GL.Color3(Color.Gray);
-                GL.LineWidth(5);
-                GL.Begin(PrimitiveType.Lines);
-                GL.Vertex2(xStart, y);
-                GL.Vertex2(xEnd, y);
-                GL.End();
-            }
-        }
-
-        private void Draw()
-        {
-            shaderProgram?.ActiveProgram();
-            vao.Activate();
-            CreateVAO(mapArr);
-            vao.Draw(0, 500);
-            vao.Dispose();
-            shaderProgram?.DeactiveProgram();
-            if (FirstPlayer.IsChanged || SecondPlayer.IsChanged)
-            {
-                shaderProgram?.ActiveProgram();
-                vao.Activate();
-                CreateVAOPlayer(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
-                vao.Draw(0, 200);
-                vao.Dispose();
-                shaderProgram?.DeactiveProgram();
-            }
-            DrawReloadLine();
-            DrawShoots();
-        }
-
-        private void DrawShoots()
-        {
-            if (FirstPlayer.projectiles.Count != 0)
-            {
-                foreach (Projectile projectile in FirstPlayer.projectiles)
-                {
-                    GL.PointSize(20);
-                    GL.Begin(PrimitiveType.Points);
-                    GL.Vertex2(projectile.X, projectile.Y);
-                    GL.End();
-                }
-            }
-            if(SecondPlayer.projectiles.Count != 0)
-            {
-                foreach (Projectile projectile in SecondPlayer.projectiles)
-                {
-                    GL.PointSize(20);
-                    GL.Begin(PrimitiveType.Points);
-                    GL.Vertex2(projectile.X, projectile.Y);
-                    GL.End();
-                }
-            }
         }
 
         private void OnKeyDown()
@@ -309,43 +95,43 @@ namespace Tanchiki
             }
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                FirstPlayer.PlayerMove(Movement.Top, map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.A))
             {
-                FirstPlayer.PlayerMove(Movement.Left, map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.S))
             {
-                FirstPlayer.PlayerMove(Movement.Bottom, map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.D))
             {
-                FirstPlayer.PlayerMove(Movement.Right, map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.U))
             {
-                SecondPlayer.PlayerMove(Movement.Top, map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.J))
             {
-                SecondPlayer.PlayerMove(Movement.Bottom, map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.H))
             {
-                SecondPlayer.PlayerMove(Movement.Left, map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.K))
             {
-                SecondPlayer.PlayerMove(Movement.Right, map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells());
             }
             if (KeyboardState.IsKeyDown(Keys.V))
             {
-                FirstPlayer.Shoot();
+                renderer?.FirstPlayer.Shoot();
             }
             if (KeyboardState.IsKeyDown(Keys.P))
             {
-                SecondPlayer.Shoot();
+                renderer?.SecondPlayer.Shoot();
             }
         }
     }
