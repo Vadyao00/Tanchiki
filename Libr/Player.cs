@@ -18,10 +18,11 @@ namespace Libr
         public float X {  get; private set; }
         public float Y { get; private set; }
         public float Size { get; private set; } = 0.08f;
-        public float Health { get;private set; } = 100f;
-        public float Damage { get; private set; } = 35f;
+        public float Health { get; set; } = 100f;
+        public float Damage { get; private set; } = 20f;
         public float Speed { get; private set; } = 0.0045f;
         public double TimeReload { get; private set; }
+        public float Fuel { get; private set; } = 100.0f;
         public int NumShells { get; private set; } = 20;
         public bool IsReloading { get; private set; } = false;
         public bool IsChanged { get; set; } = true;
@@ -116,6 +117,7 @@ namespace Libr
         }
         public void PlayerMove(Movement move, List<Cell> mapCells)
         {
+            if(Fuel <= 0) return;
             float futureX = X;
             float futureY = Y;
             direction = move;
@@ -151,6 +153,7 @@ namespace Libr
             X = futureX;
             Y = futureY;
             IsChanged = true;
+            Fuel -= 0.02f;
         }
 
         public float[] PointerAndReloadLine()
@@ -176,6 +179,12 @@ namespace Libr
                     break;
             }
             return [x, y, xStart, xEnd, yLine];
+        }
+
+        public bool CheckIsDead()
+        {
+            if (Health <= 0) return true;
+            else return false;
         }
 
         public void Shoot()

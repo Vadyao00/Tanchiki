@@ -62,8 +62,11 @@ namespace Libr
                 vao?.Dispose();
                 shaderProgram?.DeactiveProgram();
             }
+            DrawHealthState();
+            DrawFuelState();
             DrawReloadLine();
             DrawShoots();
+            RestartGame();
         }
 
         public void MoveShoots()
@@ -72,15 +75,14 @@ namespace Libr
             if (FirstPlayer.projectiles.Count != 0)
                 foreach (Projectile projectile in FirstPlayer.projectiles)
                 {
-                    projectile.Move(map.cells, projectilesToRemove);
+                    projectile.Move(map.cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 FirstPlayer.projectiles.Remove(myProjectile);
             if (SecondPlayer.projectiles.Count != 0)
                 foreach (Projectile projectile in SecondPlayer.projectiles)
                 {
-
-                    projectile.Move(map.cells, projectilesToRemove);
+                    projectile.Move(map.cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.projectiles.Remove(myProjectile);
@@ -149,7 +151,7 @@ namespace Libr
             shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
         }
 
-        public void DrawShoots()
+        private void DrawShoots()
         {
             if (FirstPlayer.projectiles.Count != 0)
             {
@@ -175,7 +177,7 @@ namespace Libr
             }
         }
 
-        public void DrawReloadLine()
+        private void DrawReloadLine()
         {
             float xStart = FirstPlayer.PointerAndReloadLine()[2];
             float xEnd = FirstPlayer.PointerAndReloadLine()[3];
@@ -274,6 +276,90 @@ namespace Libr
             {
                 Console.WriteLine($"Ошибка чтения файла: {ex.Message}");
                 throw new Exception();
+            }
+        }
+
+        private void DrawHealthState()
+        {
+            GL.LineWidth(10);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(1.0f, 1.0f);
+            GL.Vertex2(0.8f, 1.0f);
+            GL.Vertex2(0.8f, 0.9f);
+            GL.Vertex2(1.0f, 0.9f);
+            GL.Vertex2(1.0f, 1.0f);
+            GL.End();
+            GL.LineWidth(15);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(1.0f, 1.0f);
+            GL.Vertex2(0.8f, 1.0f);
+            GL.Vertex2(0.8f, 0.9f);
+            GL.Vertex2(1.0f, 0.9f);
+            GL.Vertex2(1.0f, 1.0f);
+            GL.End();
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Red);
+            GL.Vertex2(-1.0f, 0.9f);
+            GL.Vertex2(0.002f*FirstPlayer.Health - 1, 0.9f);
+            GL.Vertex2(-1.0f, 1.0f);
+            GL.Vertex2(0.002f*FirstPlayer.Health - 1, 1.0f);
+            GL.End();
+
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Red);
+            GL.Vertex2(0.8f, 0.9f);
+            GL.Vertex2(0.8f + 0.002f * SecondPlayer.Health, 0.9f);
+            GL.Vertex2(0.8f, 1.0f);
+            GL.Vertex2(0.8f + 0.002f * SecondPlayer.Health, 1.0f);
+            GL.End();
+        }
+
+        private void DrawFuelState()
+        {
+            GL.LineWidth(5);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(-1.0f, 0.89f);
+            GL.Vertex2(-0.8f, 0.89f);
+            GL.Vertex2(-0.8f, 0.79f);
+            GL.Vertex2(-1.0f, 0.79f);
+            GL.Vertex2(-1.0f, 0.89f);
+            GL.End();
+
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(1.0f, 0.89f);
+            GL.Vertex2(0.8f, 0.89f);
+            GL.Vertex2(0.8f, 0.79f);
+            GL.Vertex2(1.0f, 0.79f);
+            GL.Vertex2(1.0f, 0.89f);
+            GL.End();
+
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Purple);
+            GL.Vertex2(-1.0f, 0.79f);
+            GL.Vertex2(0.002f * FirstPlayer.Fuel - 1, 0.79f);
+            GL.Vertex2(-1.0f, 0.89f);
+            GL.Vertex2(0.002f * FirstPlayer.Fuel - 1, 0.89f);
+            GL.End();
+
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Purple);
+            GL.Vertex2(0.8f, 0.79f);
+            GL.Vertex2(0.8f + 0.002f * SecondPlayer.Fuel, 0.79f);
+            GL.Vertex2(0.8f, 0.89f);
+            GL.Vertex2(0.8f + 0.002f * SecondPlayer.Fuel, 0.89f);
+            GL.End();
+        }
+
+        private void RestartGame()
+        {
+            if(FirstPlayer.CheckIsDead() || SecondPlayer.CheckIsDead())
+            {
+                FirstPlayer = new Player(1);
+                SecondPlayer = new Player(2);
             }
         }
     }
