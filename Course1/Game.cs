@@ -24,20 +24,17 @@ namespace Tanchiki
     public class GameScene : GameWindow
     {
         private MainWindow MainWindowWPF;
-
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF)
       : base(gameWindowSettings, nativeWindowSettings)
         {
             VSync = VSyncMode.On;
             Title = "Танковая дуэль";
             MainWindowWPF = mainWindowWPF;
-            Size = new Vector2i(1500, 1500);
+            //Size = new Vector2i(1500, 1500);
         }
 
-        private double FrameTime { get; set; }
 
         private Renderer? renderer;
-        private double FPS { get; set; }
 
         protected override void OnLoad()
         {
@@ -72,15 +69,7 @@ namespace Tanchiki
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
-            FrameTime += frameEventArgs.Time;
-            FPS++;
-            if (FrameTime >= 1)
-            {
-                Title = $"Танковая дуэль - " + FPS;
-                FPS = 0;
-                FrameTime = 0;
-            }
-
+            Title = renderer?.DrawFPS(frameEventArgs, Title);
             renderer?.MoveShoots();
             OnKeyDown();
             base.OnUpdateFrame(frameEventArgs);

@@ -33,14 +33,14 @@ namespace Libr
         {
             if (num == 1)
             {
-                TimeReload = 0.5;
+                TimeReload = 0.7;
                 X = 0.0f;
                 Y = 0.76f;
                 direction = Movement.Bottom;
             }
             else
             {
-                TimeReload = 0.5;
+                TimeReload = 0.7;
                 X = 0.0f;
                 Y = -0.76f;
                 direction = Movement.Top;

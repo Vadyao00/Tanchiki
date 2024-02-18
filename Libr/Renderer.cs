@@ -5,11 +5,13 @@ using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
 using OpenTK.Graphics.OpenGL;
-
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 namespace Libr
 {
     public class Renderer
@@ -22,7 +24,11 @@ namespace Libr
         public BufferObject? vboTextureCoords { get; private set; }
         public float cell { get; private set; } = 0.1f;
         public float[] mapArr { get; private set; }
-        public static int counter { get; private set; } = 0;
+        public int FirstCounter { get; private set; }
+        public int SecondCounter { get; private set; }
+        private double FrameTime { get; set; }
+        private double FPS { get; set; }
+        private double varFPS { get; set; }
         public Map map { get; private set; }
         public Texture texture { get; private set; }
         public Texture textureTank { get; private set; }
@@ -56,8 +62,8 @@ namespace Libr
                 vao?.Dispose();
                 shaderProgram?.DeactiveProgram();
             }
-            DrawReloadLine(FirstPlayer, SecondPlayer);
-            DrawShoots(FirstPlayer, SecondPlayer);
+            DrawReloadLine();
+            DrawShoots();
         }
 
         public void MoveShoots()
@@ -143,13 +149,14 @@ namespace Libr
             shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
         }
 
-        public void DrawShoots(Player FirstPlayer, Player SecondPlayer)
+        public void DrawShoots()
         {
             if (FirstPlayer.projectiles.Count != 0)
             {
                 foreach (Projectile projectile in FirstPlayer.projectiles)
                 {
-                    GL.PointSize(20);
+                    GL.PointSize(15);
+                    GL.Color3(Color.Orange);
                     GL.Begin(PrimitiveType.Points);
                     GL.Vertex2(projectile.X, projectile.Y);
                     GL.End();
@@ -159,7 +166,8 @@ namespace Libr
             {
                 foreach (Projectile projectile in SecondPlayer.projectiles)
                 {
-                    GL.PointSize(20);
+                    GL.PointSize(15);
+                    GL.Color3(Color.Orange);
                     GL.Begin(PrimitiveType.Points);
                     GL.Vertex2(projectile.X, projectile.Y);
                     GL.End();
@@ -167,27 +175,51 @@ namespace Libr
             }
         }
 
-        public void DrawReloadLine(Player FirstPlayer, Player SecondPlayer)
+        public void DrawReloadLine()
         {
-
             float xStart = FirstPlayer.PointerAndReloadLine()[2];
             float xEnd = FirstPlayer.PointerAndReloadLine()[3];
             float y = FirstPlayer.PointerAndReloadLine()[4];
             double timeReload = FirstPlayer.TimeReload;
-            float step = (xEnd - xStart) / (float)(timeReload * 90);
-            if (FirstPlayer.IsReloading && counter < (float)(timeReload * 90))
+            float step = (xEnd - xStart) / (float)(timeReload * varFPS);
+            if (FirstPlayer.IsReloading && FirstCounter < (float)(timeReload * varFPS))
             {
-                counter++;
+                FirstCounter++;
                 GL.Color3(Color.Orange);
                 GL.LineWidth(5);
                 GL.Begin(PrimitiveType.Lines);
                 GL.Vertex2(xStart, y);
-                GL.Vertex2(xStart + counter * step, y);
+                GL.Vertex2(xStart + FirstCounter * step, y);
                 GL.End();
             }
             else
             {
-                counter = 0;
+                FirstCounter = 0;
+                GL.Color3(Color.Gray);
+                GL.LineWidth(5);
+                GL.Begin(PrimitiveType.Lines);
+                GL.Vertex2(xStart, y);
+                GL.Vertex2(xEnd, y);
+                GL.End();
+            }
+            xStart = SecondPlayer.PointerAndReloadLine()[2];
+            xEnd = SecondPlayer.PointerAndReloadLine()[3];
+            y = SecondPlayer.PointerAndReloadLine()[4];
+            timeReload = SecondPlayer.TimeReload;
+            step = (xEnd - xStart) / (float)(timeReload * varFPS);
+            if (SecondPlayer.IsReloading && SecondCounter < (float)(timeReload * varFPS))
+            {
+                SecondCounter++;
+                GL.Color3(Color.Orange);
+                GL.LineWidth(5);
+                GL.Begin(PrimitiveType.Lines);
+                GL.Vertex2(xStart, y);
+                GL.Vertex2(xStart + SecondCounter * step, y);
+                GL.End();
+            }
+            else
+            {
+                SecondCounter = 0;
                 GL.Color3(Color.Gray);
                 GL.LineWidth(5);
                 GL.Begin(PrimitiveType.Lines);
@@ -197,7 +229,21 @@ namespace Libr
             }
         }
 
-        private int[,] LoadMapFromFile(string filename)
+        public string DrawFPS(FrameEventArgs frameEventArgs, string Title)
+        {
+            FrameTime += frameEventArgs.Time;
+            FPS++;
+            if (FrameTime >= 1)
+            {
+                varFPS = FPS;
+                Title = $"Танковая дуэль - " + FPS;
+                FPS = 0;
+                FrameTime = 0;
+            }
+            return Title;
+        }
+
+        private static int[,] LoadMapFromFile(string filename)
         {
             try
             {
