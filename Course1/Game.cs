@@ -174,6 +174,10 @@ namespace Tanchiki
             int ColorArray = shaderProgram.GetAttribProgram("aColor");
             int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
 
+            GL.Uniform1(TextureCoordArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
+
             vao = new ArrayObject();
             vao.Activate();
             
@@ -187,7 +191,7 @@ namespace Tanchiki
             vao.Deactivate();
             vao.DisableAttribAll();
 
-            
+            shaderProgram?.SetTexture("aTextureCoord", texture.Handle);
         }
 
         private void CreateVAO1(float[] vert_colorPl)
@@ -201,6 +205,10 @@ namespace Tanchiki
             int ColorArray = shaderProgram.GetAttribProgram("aColor");
             int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
 
+            GL.Uniform1(TextureCoordArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, textureTank.Handle);
+
             vao = new ArrayObject();
             vao.Activate();
 
@@ -213,8 +221,8 @@ namespace Tanchiki
 
             vao.Deactivate();
             vao.DisableAttribAll();
-            
 
+            shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
         }
 
         private void DrawPointDirection()
@@ -268,7 +276,6 @@ namespace Tanchiki
         {
             shaderProgram?.ActiveProgram();
             vao.Activate();
-            //shaderProgram?.SetTexture("aTextureCoord", texture.Handle);
             CreateVAO(mapArr);
             vao.Draw(0, 500);
             vao.Dispose();
