@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
@@ -10,6 +11,7 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using Course1;
 using Libr;
+using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -44,7 +46,7 @@ namespace Tanchiki
             VSync = VSyncMode.On;
             Title = "Танковая дуэль";
             MainWindowWPF = mainWindowWPF;
-            //Size = new Vector2i(1500, 1500);
+            Size = new Vector2i(1500, 1500);
         }
 
         private double FrameTime { get; set; }
@@ -58,13 +60,12 @@ namespace Tanchiki
         protected override void OnLoad()
         {
             base.OnLoad();
-            GL.ClearColor(Color4.LightBlue);
+            GL.ClearColor(Color4.White);
             GL.Enable(EnableCap.CullFace);
-            map = new Map(20, 20, Cell, LoadMapFromFile("D:\\Labs\\4sem\\Курсовая работа\\Maps\\map1.txt"));
-
+            map = new Map(20, 20, Cell, LoadMapFromFile(@"data\maps\map1.txt"));
             shaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            texture = Texture.LoadFromFile("D:\\Labs\\4sem\\Курсовая работа\\textures\\wall.png");
-            textureTank = Texture.LoadFromFile("D:\\Labs\\4sem\\Курсовая работа\\textures\\tank.png");
+            texture = Texture.LoadFromFile(@"data\textures\wall.png");
+            textureTank = Texture.LoadFromFile(@"data\textures\tank.png");
             FirstPlayer = new Player(1);
             mapArr = map.GetVertColorArray();
             SecondPlayer = new Player(2);
@@ -86,7 +87,6 @@ namespace Tanchiki
             GL.Viewport(0, 0, e.Width, e.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            //GL.Ortho(-100, 100, -100, 100, -1, 1);
         }
         int counter = 0;
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -194,7 +194,7 @@ namespace Tanchiki
             shaderProgram?.SetTexture("aTextureCoord", texture.Handle);
         }
 
-        private void CreateVAO1(float[] vert_colorPl)
+        private void CreateVAOPlayer(float[] vert_colorPl)
         {
             vboVC = new BufferObject(BufferType.ArrayBuffer);
             vboVC.SetData(vert_colorPl, BufferHint.StaticDraw);
@@ -225,23 +225,6 @@ namespace Tanchiki
             shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
         }
 
-        private void DrawPointDirection()
-        {
-            float x = FirstPlayer.PointerAndReloadLine()[0];
-            float y = FirstPlayer.PointerAndReloadLine()[1];
-            GL.PointSize(15);
-            GL.Begin(PrimitiveType.Points);
-            GL.Color3(Color.Orange);
-            GL.Vertex2(x, y);
-            GL.End();
-            x = SecondPlayer.PointerAndReloadLine()[0];
-            y = SecondPlayer.PointerAndReloadLine()[1];
-            GL.PointSize(15);
-            GL.Begin(PrimitiveType.Points);
-            GL.Color3(Color.Orange);
-            GL.Vertex2(x, y);
-            GL.End();
-        }
         private void DrawReloadLine()
         {
             
@@ -284,12 +267,11 @@ namespace Tanchiki
             {
                 shaderProgram?.ActiveProgram();
                 vao.Activate();
-                CreateVAO1(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
+                CreateVAOPlayer(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
                 vao.Draw(0, 200);
                 vao.Dispose();
                 shaderProgram?.DeactiveProgram();
             }
-            DrawPointDirection();
             DrawReloadLine();
             DrawShoots();
         }
@@ -325,23 +307,23 @@ namespace Tanchiki
                 MainWindowWPF.Show();
                 Close();
             }
-            if(KeyboardState.IsKeyDown(Keys.W))
+            if (KeyboardState.IsKeyDown(Keys.W))
             {
                 FirstPlayer.PlayerMove(Movement.Top, map.GetListCells());
             }
-            if(KeyboardState.IsKeyDown(Keys.A))
+            if (KeyboardState.IsKeyDown(Keys.A))
             {
                 FirstPlayer.PlayerMove(Movement.Left, map.GetListCells());
             }
-            if( KeyboardState.IsKeyDown(Keys.S))
+            if (KeyboardState.IsKeyDown(Keys.S))
             {
                 FirstPlayer.PlayerMove(Movement.Bottom, map.GetListCells());
             }
-            if(KeyboardState.IsKeyDown(Keys.D))
+            if (KeyboardState.IsKeyDown(Keys.D))
             {
                 FirstPlayer.PlayerMove(Movement.Right, map.GetListCells());
             }
-            if(KeyboardState.IsKeyDown(Keys.U))
+            if (KeyboardState.IsKeyDown(Keys.U))
             {
                 SecondPlayer.PlayerMove(Movement.Top, map.GetListCells());
             }

@@ -24,7 +24,6 @@ namespace Libr
         public double TimeReload { get; private set; }
         public int NumShells { get; private set; } = 20;
         public bool IsReloading { get; private set; } = false;
-        public Color Color { get;private set; }
         public bool IsChanged { get; set; } = true;
         public Movement direction { get;private set; }
 
@@ -37,7 +36,6 @@ namespace Libr
                 TimeReload = 0.5;
                 X = 0.0f;
                 Y = 0.76f;
-                Color = Color.Red;
                 direction = Movement.Bottom;
             }
             else
@@ -45,7 +43,6 @@ namespace Libr
                 TimeReload = 0.5;
                 X = 0.0f;
                 Y = -0.76f;
-                Color = Color.Blue;
                 direction = Movement.Top;
             }
             projectiles = new List<Projectile>();
@@ -62,20 +59,66 @@ namespace Libr
 
         public float[] GetVertColorArray()
         {
-            return
-            [   X,Y + Size,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f,      1.0f,1.0f,
-                X,Y,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f,             0.0f,1.0f,
-                X + Size,Y,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f,       0.0f,0.0f,
-                X + Size,Y,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f,       0.0f,0.0f,
-                X + Size,Y + Size,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f, 1.0f,0.0f,
-                X,Y + Size,0.0f,Color.R / 255.0f,Color.G / 255.0f,Color.B / 255.0f,1.0f,        1.0f,1.0f
-            ];
+            switch(direction)
+            {
+                case Movement.Bottom:
+                      return
+                      [
+                            X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                            X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                            X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                            X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                            X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                            X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+                      ];
+                case Movement.Left:
+                      return
+                      [   
+                            X,Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,1.0f,
+                             X,Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                            X + Size,Y,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
+                            X + Size,Y,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
+                            X + Size,Y + Size,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,0.0f,
+                            X,Y + Size,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,1.0f
+                      ];
+                case Movement.Right:
+                     return
+                     [
+                         X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                         X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                         X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                         X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                         X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                         X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+                     ];
+                case Movement.Top:
+                    return
+                    [
+                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                        X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                        X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+                    ];
+                default:
+                    return
+                    [
+                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                        X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                        X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+                    ];
+            }
+
         }
         public void PlayerMove(Movement move, List<Cell> mapCells)
         {
             float futureX = X;
             float futureY = Y;
-
+            direction = move;
             switch (move)
             {
                 case Movement.Left:
