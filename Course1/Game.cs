@@ -23,14 +23,17 @@ namespace Tanchiki
 {
     public class GameScene : GameWindow
     {
+        private string mapString;
         private MainWindow MainWindowWPF;
-        public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF)
+        public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
       : base(gameWindowSettings, nativeWindowSettings)
         {
             VSync = VSyncMode.On;
             Title = "Танковая дуэль";
             MainWindowWPF = mainWindowWPF;
-            //Size = new Vector2i(1500, 1500);
+            Size = new Vector2i(1500, 1500);
+            Location = new Vector2i(700, 140);
+            this.mapString = mapString;
         }
 
 
@@ -41,7 +44,7 @@ namespace Tanchiki
             base.OnLoad();
             GL.ClearColor(Color4.White);
             GL.Enable(EnableCap.CullFace);
-            renderer = new Renderer();
+            renderer = new Renderer(mapString);
         }
 
         protected override void OnUnload()

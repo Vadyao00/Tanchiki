@@ -23,7 +23,7 @@ namespace Libr
         public float Speed { get; private set; } = 0.0045f;
         public double TimeReload { get; private set; }
         public float Fuel { get; private set; } = 100.0f;
-        public int NumShells { get; private set; } = 20;
+        public int NumShells { get; private set; } = 100;
         public bool IsReloading { get; private set; } = false;
         public bool IsChanged { get; set; } = true;
         public Movement direction { get;private set; }
@@ -34,16 +34,16 @@ namespace Libr
         {
             if (num == 1)
             {
-                TimeReload = 0.7;
-                X = 0.0f;
+                TimeReload = 0.4;
+                X = -0.04f;
                 Y = 0.76f;
                 direction = Movement.Bottom;
             }
             else
             {
-                TimeReload = 0.7;
-                X = 0.0f;
-                Y = -0.76f;
+                TimeReload = 0.4;
+                X = -0.04f;
+                Y = -0.84f;
                 direction = Movement.Top;
             }
             projectiles = new List<Projectile>();
@@ -153,7 +153,7 @@ namespace Libr
             X = futureX;
             Y = futureY;
             IsChanged = true;
-            Fuel -= 0.02f;
+            Fuel -= 0.002f;
         }
 
         public float[] PointerAndReloadLine()

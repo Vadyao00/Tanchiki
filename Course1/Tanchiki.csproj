@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Libr\Libr.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="mapsImages\" />
+  </ItemGroup>
+
 </Project>

@@ -19,6 +19,7 @@ namespace Course1
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string mapString = @"data\maps\map1.txt";
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace Course1
         {
             var nativeWindowSettings = new NativeWindowSettings
             {
-                WindowState = OpenTK.Windowing.Common.WindowState.Maximized,
+                WindowState = OpenTK.Windowing.Common.WindowState.Normal,
                 WindowBorder = WindowBorder.Resizable,
                 StartFocused = true,
                 StartVisible = true,
@@ -37,7 +38,7 @@ namespace Course1
                 API = ContextAPI.OpenGL,
             };
 
-            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this))
+            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this,mapString))
             {
                 this.Hide();
                 gameScene.Run();
@@ -46,6 +47,28 @@ namespace Course1
         public void ShowWindow()
         {
             this.Show();
+        }
+
+        private void Map1_Click(object sender, RoutedEventArgs e)
+        {
+            mapString = @"data\maps\map1.txt";
+            firstMapText.Foreground = Brushes.Green;
+            secondMapText.Foreground = Brushes.Black;
+            thirdMapText.Foreground = Brushes.Black;
+        }
+        private void Map2_Click(object sender, RoutedEventArgs e)
+        {
+            mapString = @"data\maps\map2.txt";
+            firstMapText.Foreground = Brushes.Black;
+            secondMapText.Foreground = Brushes.Green;
+            thirdMapText.Foreground = Brushes.Black;
+        }
+        private void Map3_Click(object sender, RoutedEventArgs e)
+        {
+            mapString = @"data\maps\map3.txt";
+            firstMapText.Foreground = Brushes.Black;
+            secondMapText.Foreground = Brushes.Black;
+            thirdMapText.Foreground = Brushes.Green;
         }
     }
 }

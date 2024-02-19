@@ -40,7 +40,7 @@ namespace Libr
 
         public void DeactiveProgram() => GL.UseProgram(0);
 
-        public void DeleteProgram() => GL.DeleteProgram(_program);
+        public void DeleteProgram() => GL.DeleteProgram(_program); 
 
         public int GetAttribProgram(string name) => GL.GetAttribLocation(_program, name);
 

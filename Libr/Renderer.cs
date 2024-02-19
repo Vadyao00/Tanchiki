@@ -33,10 +33,10 @@ namespace Libr
         public Texture texture { get; private set; }
         public Texture textureTank { get; private set; }
         List<Projectile>? projectilesToRemove;
-        public Renderer()
+        public Renderer(string mapString)
         {
             shaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            map = new Map(20, 20, cell, LoadMapFromFile(@"data\maps\map1.txt"));
+            map = new Map(20, 20, cell, LoadMapFromFile(mapString));
             mapArr = map.GetVertColorArray();
             texture = Texture.LoadFromFile(@"data\textures\wall.png");
             textureTank = Texture.LoadFromFile(@"data\textures\tank.png");
