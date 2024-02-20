@@ -68,6 +68,12 @@ namespace Libr
             GL.DrawArrays(PrimitiveType.Triangles, start, count);
         }
 
+        public void DrawElements(int start, int count)
+        {
+            Activate();
+            GL.DrawArrays(PrimitiveType.Triangles, start, count);
+        }
+
         public void DisableAttribAll()
         {
             foreach(int attrib in _attribsList)

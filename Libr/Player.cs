@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
@@ -19,42 +20,33 @@ namespace Libr
         public float Y { get; private set; }
         public float Size { get; private set; } = 0.08f;
         public float Health { get; set; } = 100f;
-        public float Damage { get; private set; } = 20f;
-        public float Speed { get; private set; } = 0.0045f;
-        public double TimeReload { get; private set; }
-        public float Fuel { get; private set; } = 100.0f;
+        public float Damage { get;  set; } = 20f;
+        public float Speed { get;  set; } = 0.004f;
+        public double TimeReload { get; set; } = 0.5;
+        public float Fuel { get; set; } = 100.0f;
         public int NumShells { get; private set; } = 100;
         public bool IsReloading { get; private set; } = false;
         public bool IsChanged { get; set; } = true;
         public Movement direction { get;private set; }
-
+        public double TimeSpeedBonus { get; set; } = 0;
+        public double TimeDamageBonus { get; set; } = 0;
+        public double TimeReloadBonus { get; set; } = 0;
         public List<Projectile> projectiles {  get; private set; }
 
         public Player(int num)
         {
             if (num == 1)
             {
-                TimeReload = 0.4;
                 X = -0.04f;
                 Y = 0.76f;
                 direction = Movement.Bottom;
             }
             else
             {
-                TimeReload = 0.4;
                 X = -0.04f;
                 Y = -0.84f;
                 direction = Movement.Top;
             }
-            projectiles = new List<Projectile>();
-        }
-
-        public Player(float hlt, float dmg, float spd, int shl)
-        {
-            Health = hlt;
-            Damage = dmg;
-            Speed = spd;
-            NumShells = shl;
             projectiles = new List<Projectile>();
         }
 
@@ -115,7 +107,7 @@ namespace Libr
             }
 
         }
-        public void PlayerMove(Movement move, List<Cell> mapCells)
+        public void PlayerMove(Movement move, List<Cell> mapCells, List<Bonus> bonusList, Player? player)
         {
             if(Fuel <= 0) return;
             float futureX = X;
@@ -150,10 +142,62 @@ namespace Libr
                     cell.IsWall) return;
             }
 
+            foreach (Bonus bonus in bonusList)
+            {
+                bool isColl = false;
+                double tankLeft = X;
+                double tankBottom = Y;
+                double tankRight = X + Size;
+                double tankTop = Y + Size;
+                double bonusX = bonus.X;
+                double bonusY = bonus.Y;
+                double bonusSize = bonus.Radius;
+                if (bonusX >= tankLeft && bonusX <= tankRight && bonusY >= tankBottom && bonusY <= tankTop)
+                {
+                    isColl = true;
+                }
+                double closestX = Math.Max(tankLeft, Math.Min(bonusX, tankRight));
+                double closestY = Math.Max(tankBottom, Math.Min(bonusY, tankTop));
+                double distance = Math.Sqrt((bonusX - closestX) * (bonusX - closestX) + (bonusY - closestY) * (bonusY - closestY));
+                if (distance < bonusSize)
+                {
+                    isColl = true;
+                }
+                if(isColl)
+                {
+                    if(bonus is SpeedBonus)
+                    {
+                        bonus.isUsed = true;
+                        bonus.ActivateBonus(this);
+                        TimeSpeedBonus = 0;
+                    }
+                    if(bonus is FuelBonus)
+                    {
+                        bonus.isUsed = true;
+                        bonus.ActivateBonus(this);
+                    }
+                    if (bonus is DamageBonus)
+                    {
+                        bonus.isUsed = true;
+                        bonus.ActivateBonus(this);
+                        TimeDamageBonus = 0;
+                    }
+                    if (bonus is ReloadBonus)
+                    {
+                        bonus.isUsed = true;
+                        bonus.ActivateBonus(this);
+                        TimeReloadBonus = 0;
+                    }
+                }
+            }
+            if (futureX < player?.X + player?.Size &&
+                    futureX + Size > player?.X &&
+                    futureY < player?.Y + player?.Size &&
+                    futureY + Size > player?.Y) return;
             X = futureX;
             Y = futureY;
             IsChanged = true;
-            Fuel -= 0.002f;
+            Fuel -= 0.03f;
         }
 
         public float[] PointerAndReloadLine()

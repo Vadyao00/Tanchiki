@@ -65,16 +65,17 @@ namespace Tanchiki
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            renderer?.Draw();
+            renderer?.Draw(e);
             SwapBuffers();
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
-            Title = renderer?.DrawFPS(frameEventArgs, Title);
-            renderer?.MoveShoots();
             OnKeyDown();
+            Title = renderer?.DrawFPS(frameEventArgs, Title);
+            renderer?.CreateBonus(frameEventArgs);
+            renderer?.MoveShoots();
             base.OnUpdateFrame(frameEventArgs);
         }
 
@@ -87,35 +88,35 @@ namespace Tanchiki
             }
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells(), renderer.bonusList,renderer?.SecondPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.A))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.S))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.D))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells());
+                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.U))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.J))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.H))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.K))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells());
+                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
             }
             if (KeyboardState.IsKeyDown(Keys.V))
             {

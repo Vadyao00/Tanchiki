@@ -10,12 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 namespace Libr
 {
     public class Renderer
     {
+        public List<Bonus> bonusList;
         public Player FirstPlayer { get; private set; }
         public Player SecondPlayer { get; private set; }
         public ArrayObject? vao {  get;private set; }
@@ -27,11 +29,13 @@ namespace Libr
         public int FirstCounter { get; private set; }
         public int SecondCounter { get; private set; }
         private double FrameTime { get; set; }
+        private double FrameTimeForBonus { get; set; }
         private double FPS { get; set; }
         private double varFPS { get; set; }
         public Map map { get; private set; }
         public Texture texture { get; private set; }
         public Texture textureTank { get; private set; }
+        private BonusFactory bonusFactory;
         List<Projectile>? projectilesToRemove;
         public Renderer(string mapString)
         {
@@ -43,9 +47,11 @@ namespace Libr
             FirstPlayer = new Player(1);
             SecondPlayer = new Player(2);
             CreateVAO(mapArr);
+            bonusList = new List<Bonus>();
+            bonusFactory = new BonusFactory();
         }
 
-        public void Draw()
+        public void Draw(FrameEventArgs frameEventArgs)
         {
             shaderProgram?.ActiveProgram();
             vao?.Activate();
@@ -62,10 +68,12 @@ namespace Libr
                 vao?.Dispose();
                 shaderProgram?.DeactiveProgram();
             }
+            BonusDeactivate(frameEventArgs);
             DrawHealthState();
             DrawFuelState();
             DrawReloadLine();
             DrawShoots();
+            DrawBonus();
             RestartGame();
         }
 
@@ -94,8 +102,6 @@ namespace Libr
             vboVC = new BufferObject(BufferType.ArrayBuffer);
             vboVC.SetData(vert_colors, BufferHint.StaticDraw);
 
-            vboTextureCoords = new BufferObject(BufferType.ArrayBuffer);
-            vboTextureCoords.SetData(vert_colors, BufferHint.StaticDraw);
             int VertexArray = shaderProgram.GetAttribProgram("aPosition");
             int ColorArray = shaderProgram.GetAttribProgram("aColor");
             int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
@@ -108,7 +114,6 @@ namespace Libr
             vao.Activate();
 
             vao.AttachBufer(vboVC);
-            vao.AttachBufer(vboTextureCoords);
 
             vao.AttribPointer(VertexArray, 3, AttribType.Float, 9 * sizeof(float), 0);
             vao.AttribPointer(ColorArray, 4, AttribType.Float, 9 * sizeof(float), 3 * sizeof(float));
@@ -116,8 +121,6 @@ namespace Libr
 
             vao.Deactivate();
             vao.DisableAttribAll();
-
-            shaderProgram?.SetTexture("aTextureCoord", texture.Handle);
         }
 
         private void CreateVAOPlayer(float[] vert_colorPl)
@@ -125,8 +128,6 @@ namespace Libr
             vboVC = new BufferObject(BufferType.ArrayBuffer);
             vboVC.SetData(vert_colorPl, BufferHint.StaticDraw);
 
-            vboTextureCoords = new BufferObject(BufferType.ArrayBuffer);
-            vboTextureCoords.SetData(vert_colorPl, BufferHint.StaticDraw);
             int VertexArray = shaderProgram.GetAttribProgram("aPosition");
             int ColorArray = shaderProgram.GetAttribProgram("aColor");
             int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
@@ -139,7 +140,6 @@ namespace Libr
             vao.Activate();
 
             vao.AttachBufer(vboVC);
-            vao.AttachBufer(vboTextureCoords);
 
             vao.AttribPointer(VertexArray, 3, AttribType.Float, 9 * sizeof(float), 0);
             vao.AttribPointer(ColorArray, 4, AttribType.Float, 9 * sizeof(float), 3 * sizeof(float));
@@ -361,6 +361,101 @@ namespace Libr
                 FirstPlayer = new Player(1);
                 SecondPlayer = new Player(2);
             }
+        }
+
+        public void CreateBonus(FrameEventArgs frameEventArgs)
+        {
+            FrameTimeForBonus += frameEventArgs.Time;
+            if (FrameTimeForBonus >= 1)
+            {
+                bonusList.Add(bonusFactory.createBonus());
+                FrameTimeForBonus = 0;
+            }
+
+            List<Bonus> bonusToRemove = new List<Bonus>();
+            foreach (Bonus bonus in bonusList)
+            {
+                if (bonus.LifeTime >= 15 || bonus.isUsed)
+                    bonusToRemove.Add(bonus);
+                else bonus.LifeTime += frameEventArgs.Time;
+            }
+            foreach (Bonus bonus in bonusToRemove)
+            {
+                bonusList.Remove(bonus);
+            }
+        }
+        private void DrawBonus()
+        {
+            foreach(Bonus bonus in bonusList)
+                if(!bonus.isUsed)
+                {
+                    int segments = 36;
+
+                    GL.Begin(PrimitiveType.LineLoop);
+                    GL.Color3(Color.Red);
+
+                    for (int i = 0; i < segments; i++)
+                    {
+                        double theta = 2.0f * Math.PI * i / segments;
+                        double cx = bonus.X + bonus.Radius * Math.Cos(theta);
+                        double cy = bonus.Y + bonus.Radius * Math.Sin(theta);
+                        GL.Vertex2(cx, cy);
+                    }
+                    GL.End();
+                }
+        }
+        private void BonusDeactivate(FrameEventArgs frameEventArgs)
+        {
+            List<Bonus> bonus = [new SpeedBonus(), new DamageBonus()];
+            foreach(Bonus _bonus in bonus)
+            {
+                if (_bonus is SpeedBonus)
+                {
+                    if (FirstPlayer.TimeSpeedBonus >= 10)
+                    {
+                        FirstPlayer.TimeSpeedBonus = 0;
+                        _bonus.DeactivateBonus(FirstPlayer);
+                    }
+                    else { FirstPlayer.TimeSpeedBonus += frameEventArgs.Time; }
+                    if (SecondPlayer.TimeSpeedBonus >= 10)
+                    {
+                        SecondPlayer.TimeSpeedBonus = 0;
+                        _bonus.DeactivateBonus(SecondPlayer);
+                    }
+                    else { SecondPlayer.TimeSpeedBonus += frameEventArgs.Time; }
+                }
+                if(_bonus is DamageBonus)
+                {
+                    if (FirstPlayer.TimeDamageBonus >= 10)
+                    {
+                        FirstPlayer.TimeDamageBonus = 0;
+                        _bonus.DeactivateBonus(FirstPlayer);
+                    }
+                    else { FirstPlayer.TimeDamageBonus += frameEventArgs.Time; }
+                    if (SecondPlayer.TimeDamageBonus >= 10)
+                    {
+                        SecondPlayer.TimeDamageBonus = 0;
+                        _bonus.DeactivateBonus(SecondPlayer);
+                    }
+                    else { SecondPlayer.TimeDamageBonus += frameEventArgs.Time; }
+                }
+                if (_bonus is ReloadBonus)
+                {
+                    if (FirstPlayer.TimeReloadBonus >= 10)
+                    {
+                        FirstPlayer.TimeReloadBonus = 0;
+                        _bonus.DeactivateBonus(FirstPlayer);
+                    }
+                    else { FirstPlayer.TimeReloadBonus += frameEventArgs.Time; }
+                    if (SecondPlayer.TimeReloadBonus >= 10)
+                    {
+                        SecondPlayer.TimeReloadBonus = 0;
+                        _bonus.DeactivateBonus(SecondPlayer);
+                    }
+                    else { SecondPlayer.TimeReloadBonus += frameEventArgs.Time; }
+                }
+            }
+
         }
     }
 }

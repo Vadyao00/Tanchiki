@@ -24,13 +24,13 @@
         </Grid.ColumnDefinitions>
         <Button Click="PlayButton_Click" Content="Play" FontSize="50" FontFamily="Arial" Foreground="Black" Margin="10" Grid.Row="2" Grid.Column="2" Background="AliceBlue"/>
         <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="1" Grid.Row="3" Click="Map1_Click">
-            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\mapsImages\map1.png"></Image>
+            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map1.png"></Image>
         </Button>
         <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="2" Grid.Row="3" Click="Map2_Click">
-            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\mapsImages\map2.png"></Image>
+            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map2.png"></Image>
         </Button>
         <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="3" Grid.Row="3" Click="Map3_Click">
-            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\mapsImages\map3.png"></Image>
+            <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map3.png"></Image>
         </Button>
         <TextBlock x:Name="firstMapText" Text="Map1" Grid.Column="1" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="Black"/>
         <TextBlock x:Name="secondMapText" Text="Map2" Grid.Column="2" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="Black"/>

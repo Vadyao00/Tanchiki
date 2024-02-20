@@ -16,7 +16,8 @@ namespace Libr
 
     public enum BufferHint
     {
-        StaticDraw = BufferUsageHint.StaticDraw
+        StaticDraw = BufferUsageHint.StaticDraw,
+        DynamicDraw = BufferUsageHint.DynamicDraw
     }
 
     public sealed class BufferObject : IDisposable
