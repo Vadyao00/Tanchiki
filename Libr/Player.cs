@@ -26,11 +26,13 @@ namespace Libr
         public float Fuel { get; set; } = 100.0f;
         public int NumShells { get; private set; } = 100;
         public bool IsReloading { get; private set; } = false;
-        public bool IsChanged { get; set; } = true;
         public Movement direction { get;private set; }
         public double TimeSpeedBonus { get; set; } = 0;
+        public bool isSpeedBonusActive { get; set; } = false;
         public double TimeDamageBonus { get; set; } = 0;
+        public bool isDamageBonusActive { get; set; } = false;
         public double TimeReloadBonus { get; set; } = 0;
+        public bool isReloadBonusActive { get; set; } = false;
         public List<Projectile> projectiles {  get; private set; }
 
         public Player(int num)
@@ -57,52 +59,52 @@ namespace Libr
                 case Movement.Bottom:
                       return
                       [
-                            X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                            X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                            X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                            X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                            X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                            X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+                            X, Y + Size, 0.0f, 1.0f, 0.0f,
+                            X, Y, 0.0f, 1.0f, 1.0f,
+                            X + Size, Y, 0.0f, 0.0f, 1.0f,
+                            X + Size, Y, 0.0f, 0.0f, 1.0f,
+                            X + Size, Y + Size, 0.0f, 0.0f, 0.0f,
+                            X, Y + Size, 0.0f, 1.0f, 0.0f
                       ];
                 case Movement.Left:
                       return
                       [   
-                            X,Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,1.0f,
-                             X,Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                            X + Size,Y,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
-                            X + Size,Y,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
-                            X + Size,Y + Size,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,0.0f,
-                            X,Y + Size,0.0f,0.0f,0.0f,0.0f,1.0f,1.0f,1.0f
+                            X,Y + Size, 0.0f,1.0f,1.0f,
+                             X,Y, 0.0f,0.0f, 1.0f,
+                            X + Size,Y,0.0f,0.0f,0.0f,
+                            X + Size,Y,0.0f,0.0f,0.0f,
+                            X + Size,Y + Size,0.0f,1.0f,0.0f,
+                            X,Y + Size,0.0f,1.0f,1.0f
                       ];
                 case Movement.Right:
                      return
                      [
-                         X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                         X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                         X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                         X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                         X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                         X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+                         X, Y + Size, 0.0f, 1.0f, 0.0f,
+                         X, Y, 0.0f, 0.0f, 0.0f,
+                         X + Size, Y, 0.0f, 0.0f, 1.0f,
+                         X + Size, Y, 0.0f, 0.0f, 1.0f,
+                         X + Size, Y + Size, 0.0f, 1.0f, 1.0f,
+                         X, Y + Size, 0.0f, 1.0f, 0.0f
                      ];
                 case Movement.Top:
                     return
                     [
-                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                        X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                        X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+                        X, Y + Size, 0.0f, 0.0f, 1.0f,
+                        X, Y, 0.0f, 0.0f, 0.0f,
+                        X + Size, Y, 0.0f, 1.0f, 0.0f,
+                        X + Size, Y, 0.0f, 1.0f, 0.0f,
+                        X + Size, Y + Size, 0.0f, 1.0f, 1.0f,
+                        X, Y + Size, 0.0f, 0.0f, 1.0f
                     ];
                 default:
                     return
                     [
-                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                        X, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                        X + Size, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-                        X, Y + Size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+                        X, Y + Size, 0.0f, 1.0f, 1.0f,
+                        X, Y, 0.0f, 0.0f, 1.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f,
+                        X + Size, Y, 0.0f, 0.0f, 0.0f,
+                        X + Size, Y + Size, 0.0f, 1.0f, 0.0f,
+                        X, Y + Size, 0.0f, 1.0f, 1.0f
                     ];
             }
 
@@ -144,34 +146,19 @@ namespace Libr
 
             foreach (Bonus bonus in bonusList)
             {
-                bool isColl = false;
-                double tankLeft = X;
-                double tankBottom = Y;
-                double tankRight = X + Size;
-                double tankTop = Y + Size;
-                double bonusX = bonus.X;
-                double bonusY = bonus.Y;
-                double bonusSize = bonus.Radius;
-                if (bonusX >= tankLeft && bonusX <= tankRight && bonusY >= tankBottom && bonusY <= tankTop)
+                if (futureX < bonus.X + bonus.Size &&
+                    futureX + Size > bonus.X &&
+                    futureY < bonus.Y + bonus.Size &&
+                    futureY + Size > bonus.Y)
                 {
-                    isColl = true;
-                }
-                double closestX = Math.Max(tankLeft, Math.Min(bonusX, tankRight));
-                double closestY = Math.Max(tankBottom, Math.Min(bonusY, tankTop));
-                double distance = Math.Sqrt((bonusX - closestX) * (bonusX - closestX) + (bonusY - closestY) * (bonusY - closestY));
-                if (distance < bonusSize)
-                {
-                    isColl = true;
-                }
-                if(isColl)
-                {
-                    if(bonus is SpeedBonus)
+                    if (bonus is SpeedBonus)
                     {
                         bonus.isUsed = true;
                         bonus.ActivateBonus(this);
                         TimeSpeedBonus = 0;
+                        isSpeedBonusActive = true;
                     }
-                    if(bonus is FuelBonus)
+                    if (bonus is FuelBonus)
                     {
                         bonus.isUsed = true;
                         bonus.ActivateBonus(this);
@@ -181,12 +168,14 @@ namespace Libr
                         bonus.isUsed = true;
                         bonus.ActivateBonus(this);
                         TimeDamageBonus = 0;
+                        isDamageBonusActive = true;
                     }
                     if (bonus is ReloadBonus)
                     {
                         bonus.isUsed = true;
                         bonus.ActivateBonus(this);
                         TimeReloadBonus = 0;
+                        isReloadBonusActive = true;
                     }
                 }
             }
@@ -196,7 +185,6 @@ namespace Libr
                     futureY + Size > player?.Y) return;
             X = futureX;
             Y = futureY;
-            IsChanged = true;
             Fuel -= 0.03f;
         }
 

@@ -10,7 +10,7 @@ namespace Libr
     {
         public float X { get;private set; }
         public float Y { get; private set; }
-        public float Radius { get; private set; } = 0.05f;
+        public float Size { get; private set; } = 0.11f;
         public double BonusTime { get; private set; } = 5;
         public bool isUsed { get; set; } = false;
         public double LifeTime { get; set; } = 0;
@@ -25,5 +25,18 @@ namespace Libr
         public abstract void ActivateBonus(Player player);
 
         public abstract void DeactivateBonus(Player player);
+
+        public float[] GetVertexArray()
+        {
+            return
+            [
+             X, Y + Size, 0.0f, 0.0f,1.0f,
+             X, Y, 0.0f, 0.0f,0.0f,
+             X + Size, Y, 0.0f, 1.0f,0.0f,
+             X + Size, Y, 0.0f, 1.0f,0.0f,
+             X + Size, Y + Size, 0.0f, 1.0f,1.0f,
+             X, Y + Size, 0.0f, 0.0f,1.0f
+            ];
+        }
     }
 }

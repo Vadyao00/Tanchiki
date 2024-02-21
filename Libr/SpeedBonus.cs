@@ -8,7 +8,7 @@ namespace Libr
 {
     public class SpeedBonus : Bonus
     {
-        private readonly float speedEffect = 0.006f;
+        private readonly float speedEffect = 0.007f;
         private readonly float speedNormal = 0.004f;
         public SpeedBonus() : base() { }
 

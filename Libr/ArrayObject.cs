@@ -68,10 +68,10 @@ namespace Libr
             GL.DrawArrays(PrimitiveType.Triangles, start, count);
         }
 
-        public void DrawElements(int start, int count)
+        public void DrawPoligon(int start, int count)
         {
             Activate();
-            GL.DrawArrays(PrimitiveType.Triangles, start, count);
+            GL.DrawArrays(PrimitiveType.Polygon, start, count);
         }
 
         public void DisableAttribAll()

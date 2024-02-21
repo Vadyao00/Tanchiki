@@ -13,7 +13,9 @@ namespace Libr
 
         public override void ActivateBonus(Player player)
         {
-            player.Fuel += fuel;
+            if (player.Fuel <= 90.0f)
+                player.Fuel += fuel;
+            else player.Fuel = 100.0f;
         }
 
         public override void DeactivateBonus(Player player) { }

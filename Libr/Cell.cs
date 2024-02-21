@@ -30,13 +30,12 @@ namespace Libr
         {
             return
             [
-             X, Y + Size, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f ,        1.0f,1.0f,
-             X, Y, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f ,               0.0f,1.0f,      
-             X + Size, Y, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f ,        0.0f,0.0f,
-
-             X + Size, Y, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f,         0.0f,0.0f,
-             X + Size, Y + Size, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f,  1.0f,0.0f,
-             X, Y + Size, 0.0f, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f      ,    1.0f,1.0f
+             X, Y + Size, 0.0f, 1.0f,1.0f,
+             X, Y, 0.0f, 0.0f,1.0f,      
+             X + Size, Y, 0.0f, 0.0f,0.0f,
+             X + Size, Y, 0.0f, 0.0f,0.0f,
+             X + Size, Y + Size, 0.0f, 1.0f,0.0f,
+             X, Y + Size, 0.0f, 1.0f,1.0f
             ];
         }
     }

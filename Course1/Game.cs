@@ -42,7 +42,7 @@ namespace Tanchiki
         protected override void OnLoad()
         {
             base.OnLoad();
-            GL.ClearColor(Color4.White);
+            GL.ClearColor(Color4.AliceBlue);
             GL.Enable(EnableCap.CullFace);
             renderer = new Renderer(mapString);
         }

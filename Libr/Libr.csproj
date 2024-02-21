@@ -32,6 +32,24 @@
     <None Update="Data\shaders\shader_base.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Data\textures\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\textures\bonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\textures\break.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\textures\damageBonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\textures\reloadBonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\textures\speedBonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\textures\tank.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -41,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\textures\" />
     <Folder Include="Data\maps\" />
   </ItemGroup>
 
