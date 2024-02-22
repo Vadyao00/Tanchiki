@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class ReloadBonus : Bonus
+    public class ReloadBonus(Player player) : Bonus(player)
     {
         private readonly double reloadEffect = 0.2;
         private readonly double reloadNormal = 0.5;
-        public ReloadBonus() : base() { }
 
-        public override void ActivateBonus(Player player)
+        public override void ActivateBonus()
         {
-            player.TimeReload = reloadEffect;
+            _player.TimeReload = reloadEffect;
         }
 
-        public override void DeactivateBonus(Player player)
+        public override void DeactivateBonus()
         {
-            player.TimeReload = reloadNormal;
+            _player.TimeReload = reloadNormal;
         }
     }
 }

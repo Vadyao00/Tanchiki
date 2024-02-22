@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Libr
+namespace Libr.GameObjects.Bonus_Management
 {
-    interface IBonus
+    public class Timer
     {
-        void ActivateBonus();
-        void DeactivateBonus();
+        
     }
 }

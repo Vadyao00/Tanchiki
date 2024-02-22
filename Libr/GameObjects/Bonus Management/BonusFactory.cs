@@ -9,22 +9,22 @@ namespace Libr
     public class BonusFactory
     {
         private int randomBonus;
-        public Bonus createBonus()
+        public Bonus createBonus(Player player)
         {
-            Random random = new Random();
+            Random random = new();
             randomBonus = random.Next(1, 5);
             switch (randomBonus)
             {
                 case 1:
-                    return new SpeedBonus();
+                    return new SpeedBonus(player);
                 case 2:
-                    return new FuelBonus();
+                    return new FuelBonus(player);
                 case 3:
-                    return new DamageBonus();
+                    return new DamageBonus(player);
                 case 4:
-                    return new ReloadBonus();
+                    return new ReloadBonus(player);
                 default:
-                    return new SpeedBonus();
+                    return new SpeedBonus(player);
             }
         }
     }

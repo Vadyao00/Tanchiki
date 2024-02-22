@@ -25,6 +25,7 @@ namespace Tanchiki
     {
         private readonly string mapString;
         private readonly MainWindow MainWindowWPF;
+        private readonly BonusFactory bonusFactory;
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
       : base(gameWindowSettings, nativeWindowSettings)
         {
@@ -34,6 +35,7 @@ namespace Tanchiki
             Size = new Vector2i(1500, 1500);
             Location = new Vector2i(700, 140);
             this.mapString = mapString;
+            bonusFactory = new BonusFactory();
         }
 
 
@@ -49,8 +51,8 @@ namespace Tanchiki
 
         protected override void OnUnload()
         {
-            renderer?.vao?.Dispose();
-            renderer?.shaderProgram.DeleteProgram();
+            renderer?.Vao?.Dispose();
+            renderer?.ShaderProgram.DeleteProgram();
             base.OnUnload();
             
         }
@@ -74,8 +76,6 @@ namespace Tanchiki
         {
             OnKeyDown();
             Title = renderer?.DrawFPS(frameEventArgs, Title);
-            renderer?.CreateBonus(frameEventArgs);
-            renderer?.MoveShoots();
             base.OnUpdateFrame(frameEventArgs);
         }
 
@@ -88,35 +88,35 @@ namespace Tanchiki
             }
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells(), renderer.bonusList,renderer?.SecondPlayer);
+                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.A))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
+                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.S))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
+                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.D))
             {
-                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells(), renderer.bonusList, renderer?.SecondPlayer);
+                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.U))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
+                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.J))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
+                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.H))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
+                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.K))
             {
-                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.map.GetListCells(), renderer.bonusList, renderer?.FirstPlayer);
+                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
             }
             if (KeyboardState.IsKeyDown(Keys.V))
             {

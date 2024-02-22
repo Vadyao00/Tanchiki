@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class SpeedBonus : Bonus
+    public class SpeedBonus(Player player) : Bonus(player)
     {
         private readonly float speedEffect = 0.007f;
         private readonly float speedNormal = 0.004f;
-        public SpeedBonus() : base() { }
 
-        public override void ActivateBonus(Player player)
+        public override void ActivateBonus()
         {
-            player.Speed = speedEffect;
+            _player.Speed = speedEffect;
         }
 
-        public override void DeactivateBonus(Player player)
+        public override void DeactivateBonus()
         {
-                player.Speed = speedNormal;
+                _player.Speed = speedNormal;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
+using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -18,82 +19,84 @@ namespace Libr
     public class Renderer
     {
         public List<Bonus> bonusList;
+        public List<VirtualBonus> virtualBonusesList;
         public Player FirstPlayer { get; private set; }
         public Player SecondPlayer { get; private set; }
-        public ArrayObject? vao {  get;private set; }
-        public ShaderProgram shaderProgram { get; private set; }
-        public BufferObject? vboVC { get; private set; }
-        public BufferObject? vboTextureCoords { get; private set; }
-        public float cell { get; private set; } = 0.1f;
-        public float[] mapArr { get; private set; }
+        public ArrayObject? Vao {  get;private set; }
+        public ShaderProgram ShaderProgram { get; private set; }
+        public BufferObject? VboVC { get; private set; }
+        public BufferObject? VboTextureCoords { get; private set; }
+        public float Cell { get; private set; } = 0.1f;
+        public float[] MapArr { get; private set; }
         public int FirstCounter { get; private set; }
         public int SecondCounter { get; private set; }
         private double FrameTime { get; set; }
         private double FrameTimeForBonus { get; set; }
         private double FPS { get; set; }
         private float[] bonusVertexArray;
-        private double varFPS { get; set; }
-        public Map map { get; private set; }
-        public Texture texture { get; private set; }
-        public Texture textureTank { get; private set; }
-        public Texture textureBonus { get; private set; }
-        public Texture textureBackground { get; private set; }
-        public Texture textureBonusInfoSpeed { get; private set; }
-        public Texture textureBonusInfoDamage { get; private set; }
-        public Texture textureBonusInfoReload { get; private set; }
+        private double VarFPS { get; set; }
+        public Map Map { get; private set; }
+        public Texture Texture { get; private set; }
+        public Texture TextureTank { get; private set; }
+        public Texture TextureBonus { get; private set; }
+        public Texture TextureBackground { get; private set; }
+        public Texture TextureBonusInfoSpeed { get; private set; }
+        public Texture TextureBonusInfoDamage { get; private set; }
+        public Texture TextureBonusInfoReload { get; private set; }
 
-        private BonusFactory bonusFactory;
         List<Projectile>? projectilesToRemove;
         public Renderer(string mapString)
         {
-            shaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            map = new Map(20, 20, cell, LoadMapFromFile(mapString));
-            mapArr = map.GetVertColorArray();
-            texture = Texture.LoadFromFile(@"data\textures\wall.png");
-            textureTank = Texture.LoadFromFile(@"data\textures\tank.png");
-            textureBonus = Texture.LoadFromFile(@"data\textures\bonus.png");
-            textureBackground = Texture.LoadFromFile(@"data\textures\background.png");
-            textureBonusInfoSpeed = Texture.LoadFromFile(@"data\textures\speedBonus.png");
-            textureBonusInfoDamage = Texture.LoadFromFile(@"data\textures\damageBonus.png");
-            textureBonusInfoReload = Texture.LoadFromFile(@"data\textures\reloadBonus.png");
+            ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
+            Map = new Map(20, 20, Cell, LoadMapFromFile(mapString));
+            MapArr = Map.GetVertColorArray();
+            Texture = Texture.LoadFromFile(@"data\textures\wall.png");
+            TextureTank = Texture.LoadFromFile(@"data\textures\tank.png");
+            TextureBonus = Texture.LoadFromFile(@"data\textures\bonus.png");
+            TextureBackground = Texture.LoadFromFile(@"data\textures\background.png");
+            TextureBonusInfoSpeed = Texture.LoadFromFile(@"data\textures\speedBonus.png");
+            TextureBonusInfoDamage = Texture.LoadFromFile(@"data\textures\damageBonus.png");
+            TextureBonusInfoReload = Texture.LoadFromFile(@"data\textures\reloadBonus.png");
             FirstPlayer = new Player(1);
             SecondPlayer = new Player(2);
-            CreateVAO(mapArr);
-            bonusList = new List<Bonus>();
-            bonusFactory = new BonusFactory();
+            CreateVAO(MapArr);
+            bonusList = [];
+            virtualBonusesList = [];
             bonusVertexArray = [0];
         }
 
         public void Draw(FrameEventArgs frameEventArgs)
         {
-            shaderProgram?.ActiveProgram();
-            vao?.Activate();
+            ShaderProgram?.ActiveProgram();
+            Vao?.Activate();
             CreateVAOBackground();
-            vao?.Draw(0,6);
-            vao?.Dispose();
-            vao?.Activate();
-            CreateVAO(mapArr);
-            vao?.Draw(0, 1000);
-            vao?.Dispose();
+            Vao?.Draw(0,6);
+            Vao?.Dispose();
+            Vao?.Activate();
+            CreateVAO(MapArr);
+            Vao?.Draw(0, 1000);
+            Vao?.Dispose();
             if (GetBonusVertexArray().Length != 0)
             {
-                vao?.Activate();
+                Vao?.Activate();
                 CreateVAOBonus(GetBonusVertexArray());
-                vao?.Draw(0, 400);
-                vao?.Dispose();
+                Vao?.Draw(0, 400);
+                Vao?.Dispose();
             }
-            vao?.Activate();
+            Vao?.Activate();
             CreateVAOPlayer(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
-            vao?.Draw(0, 200);
-            vao?.Dispose();
-            shaderProgram?.DeactiveProgram();
-            BonusDeactivate(frameEventArgs);
+            Vao?.Draw(0, 200);
+            Vao?.Dispose();
+            ShaderProgram?.DeactiveProgram();
+            //BonusDeactivate(frameEventArgs);
             DrawHealthState();
             DrawFuelState();
             DrawBonusInfo();
             DrawReloadLine();
             DrawShoots();
             RestartGame();
+            CreateVirtualBonus(frameEventArgs);
+            MoveShoots();
         }
 
         public void MoveShoots()
@@ -102,14 +105,14 @@ namespace Libr
             if (FirstPlayer.projectiles.Count != 0)
                 foreach (Projectile projectile in FirstPlayer.projectiles)
                 {
-                    projectile.Move(map.cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
+                    projectile.Move(Map.cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 FirstPlayer.projectiles.Remove(myProjectile);
             if (SecondPlayer.projectiles.Count != 0)
                 foreach (Projectile projectile in SecondPlayer.projectiles)
                 {
-                    projectile.Move(map.cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
+                    projectile.Move(Map.cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.projectiles.Remove(myProjectile);
@@ -118,7 +121,7 @@ namespace Libr
         private float[] GetBonusVertexArray()
         {
             bonusVertexArray = [];
-            foreach (Bonus bonus in bonusList)
+            foreach (VirtualBonus bonus in virtualBonusesList)
             {
                 bonusVertexArray = bonusVertexArray.Concat(bonus.GetVertexArray()).ToArray();
             }
@@ -128,33 +131,33 @@ namespace Libr
         private void CreateVAO(float[] vert_textureMap)
         {
 
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_textureMap, BufferHint.StaticDraw);
+            VboVC = new BufferObject(BufferType.ArrayBuffer);
+            VboVC.SetData(vert_textureMap, BufferHint.StaticDraw);
 
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
+            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
+            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
 
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
+            GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
 
-            vao = new ArrayObject();
-            vao.Activate();
+            Vao = new ArrayObject();
+            Vao.Activate();
 
-            vao.AttachBufer(vboVC);
+            Vao.AttachBufer(VboVC);
 
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
-            vao.Deactivate();
-            vao.DisableAttribAll();
+            Vao.Deactivate();
+            Vao.DisableAttribAll();
         }
 
         private void CreateVAOBackground()
         {
 
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData([
+            VboVC = new BufferObject(BufferType.ArrayBuffer);
+            VboVC.SetData([
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
              -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
              1.0f, -1.0f, 0.0f, 1.0f,0.0f,
@@ -163,167 +166,167 @@ namespace Libr
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f
             ], BufferHint.StaticDraw);
 
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
+            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
+            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
 
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, textureBackground.Handle);
+            GL.BindTexture(TextureTarget.Texture2D, TextureBackground.Handle);
 
-            vao = new ArrayObject();
-            vao.Activate();
+            Vao = new ArrayObject();
+            Vao.Activate();
 
-            vao.AttachBufer(vboVC);
+            Vao.AttachBufer(VboVC);
 
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
-            vao.Deactivate();
-            vao.DisableAttribAll();
+            Vao.Deactivate();
+            Vao.DisableAttribAll();
         }
 
         private void CreateVAOPlayer(float[] vert_texturePl)
         {
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_texturePl, BufferHint.StaticDraw);
+            VboVC = new BufferObject(BufferType.ArrayBuffer);
+            VboVC.SetData(vert_texturePl, BufferHint.StaticDraw);
 
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
+            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
+            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
 
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, textureTank.Handle);
+            GL.BindTexture(TextureTarget.Texture2D, TextureTank.Handle);
 
-            vao = new ArrayObject();
-            vao.Activate();
+            Vao = new ArrayObject();
+            Vao.Activate();
 
-            vao.AttachBufer(vboVC);
+            Vao.AttachBufer(VboVC);
 
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
-            vao.Deactivate();
-            vao.DisableAttribAll();
+            Vao.Deactivate();
+            Vao.DisableAttribAll();
 
-            shaderProgram?.SetTexture("aTextureCoord", textureTank.Handle);
+            ShaderProgram?.SetTexture("aTextureCoord", TextureTank.Handle);
         }
 
         private void CreateVAOBonus(float[] vert_textureBonus)
         {
 
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_textureBonus, BufferHint.StaticDraw);
+            VboVC = new BufferObject(BufferType.ArrayBuffer);
+            VboVC.SetData(vert_textureBonus, BufferHint.StaticDraw);
 
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
+            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
+            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
 
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, textureBonus.Handle);
+            GL.BindTexture(TextureTarget.Texture2D, TextureBonus.Handle);
 
-            vao = new ArrayObject();
-            vao.Activate();
+            Vao = new ArrayObject();
+            Vao.Activate();
 
-            vao.AttachBufer(vboVC);
+            Vao.AttachBufer(VboVC);
 
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
-            vao.Deactivate();
-            vao.DisableAttribAll();
+            Vao.Deactivate();
+            Vao.DisableAttribAll();
         }
 
         private void CreateVAOBonusInfo(string bonusType,float[] vert_textureBonus)
         {
 
-            vboVC = new BufferObject(BufferType.ArrayBuffer);
-            vboVC.SetData(vert_textureBonus, BufferHint.StaticDraw);
+            VboVC = new BufferObject(BufferType.ArrayBuffer);
+            VboVC.SetData(vert_textureBonus, BufferHint.StaticDraw);
 
-            int VertexArray = shaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = shaderProgram.GetAttribProgram("aTextureCoord");
+            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
+            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
 
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
             switch(bonusType)
             {
                 case "speed":
-                    GL.BindTexture(TextureTarget.Texture2D, textureBonusInfoSpeed.Handle);
+                    GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoSpeed.Handle);
                     break;
                 case "damage":
-                    GL.BindTexture(TextureTarget.Texture2D, textureBonusInfoDamage.Handle);
+                    GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoDamage.Handle);
                     break;
                 case "reload":
-                    GL.BindTexture(TextureTarget.Texture2D, textureBonusInfoReload.Handle);
+                    GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoReload.Handle);
                     break;
             }
 
-            vao = new ArrayObject();
-            vao.Activate();
+            Vao = new ArrayObject();
+            Vao.Activate();
 
-            vao.AttachBufer(vboVC);
+            Vao.AttachBufer(VboVC);
 
-            vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
-            vao.Deactivate();
-            vao.DisableAttribAll();
+            Vao.Deactivate();
+            Vao.DisableAttribAll();
         }
 
         private void DrawBonusInfo()
         {
             if(FirstPlayer.isSpeedBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("speed",[-1.0f,0.75f,0.0f,  0.0f,0.5f,  -0.975f,0.725f,0.0f,  0.5f,0.0f,  -0.95f,0.75f,0.0f,  1.0f,0.5f,  -0.975f,0.775f,0.0f,  0.5f, 1.0f  , -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.isSpeedBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("speed", [0.8f, 0.75f, 0.0f,  0.0f, 0.5f,  0.825f,0.725f, 0.0f,  0.5f, 0.0f,  0.85f, 0.75f, 0.0f,  1.0f, 0.5f,  0.825f, 0.775f, 0.0f,  0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
             if(FirstPlayer.isDamageBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.isDamageBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
             if (FirstPlayer.isReloadBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("reload", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.isReloadBonusActive)
             {
-                shaderProgram?.ActiveProgram();
-                vao?.Activate();
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
                 CreateVAOBonusInfo("reload", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                vao?.DrawPoligon(0, 30);
-                vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
         }
 
@@ -359,8 +362,8 @@ namespace Libr
             float xEnd = FirstPlayer.PointerAndReloadLine()[3];
             float y = FirstPlayer.PointerAndReloadLine()[4];
             double timeReload = FirstPlayer.TimeReload;
-            float step = (xEnd - xStart) / (float)(timeReload * varFPS);
-            if (FirstPlayer.IsReloading && FirstCounter < (float)(timeReload * varFPS))
+            float step = (xEnd - xStart) / (float)(timeReload * VarFPS);
+            if (FirstPlayer.IsReloading && FirstCounter < (float)(timeReload * VarFPS))
             {
                 FirstCounter++;
                 GL.Color3(Color.Orange);
@@ -384,8 +387,8 @@ namespace Libr
             xEnd = SecondPlayer.PointerAndReloadLine()[3];
             y = SecondPlayer.PointerAndReloadLine()[4];
             timeReload = SecondPlayer.TimeReload;
-            step = (xEnd - xStart) / (float)(timeReload * varFPS);
-            if (SecondPlayer.IsReloading && SecondCounter < (float)(timeReload * varFPS))
+            step = (xEnd - xStart) / (float)(timeReload * VarFPS);
+            if (SecondPlayer.IsReloading && SecondCounter < (float)(timeReload * VarFPS))
             {
                 SecondCounter++;
                 GL.Color3(Color.Orange);
@@ -413,7 +416,7 @@ namespace Libr
             FPS++;
             if (FrameTime >= 1)
             {
-                varFPS = FPS;
+                VarFPS = FPS;
                 Title = $"Танковая дуэль - " + FPS;
                 FPS = 0;
                 FrameTime = 0;
@@ -539,103 +542,103 @@ namespace Libr
             }
         }
 
-        public void CreateBonus(FrameEventArgs frameEventArgs)
+        public void CreateVirtualBonus(FrameEventArgs frameEventArgs)
         {
             FrameTimeForBonus += frameEventArgs.Time;
             if (FrameTimeForBonus >= 1)
             {
-                bonusList.Add(bonusFactory.createBonus());
+                virtualBonusesList.Add(new VirtualBonus());
                 FrameTimeForBonus = 0;
             }
 
-            List<Bonus> bonusToRemove = new List<Bonus>();
-            foreach (Bonus bonus in bonusList)
+            List<VirtualBonus> bonusToRemove = [];
+            foreach (VirtualBonus bonus in virtualBonusesList)
             {
-                if (bonus.LifeTime >= 15 || bonus.isUsed)
+                if (bonus.LifeTime >= 15 || bonus.IsUsed)
                     bonusToRemove.Add(bonus);
                 else bonus.LifeTime += frameEventArgs.Time;
             }
-            foreach (Bonus bonus in bonusToRemove)
+            foreach (VirtualBonus bonus in bonusToRemove)
             {
-                bonusList.Remove(bonus);
+                virtualBonusesList.Remove(bonus);
             }
         }
-        private void BonusDeactivate(FrameEventArgs frameEventArgs)
-        {
-            List<Bonus> bonus = [new SpeedBonus(), new DamageBonus(), new ReloadBonus()];
-            foreach(Bonus _bonus in bonus)
-            {
-                if (_bonus is SpeedBonus)
-                {   if (FirstPlayer.isSpeedBonusActive)
-                    {
-                        if (FirstPlayer.TimeSpeedBonus >= 10)
-                        {
-                            FirstPlayer.TimeSpeedBonus = 0;
-                            _bonus.DeactivateBonus(FirstPlayer);
-                            FirstPlayer.isSpeedBonusActive = false;
-                        }
-                        else { FirstPlayer.TimeSpeedBonus += frameEventArgs.Time; }
-                    }
-                    if (SecondPlayer.isSpeedBonusActive)
-                    {
-                        if (SecondPlayer.TimeSpeedBonus >= 10)
-                        {
-                            SecondPlayer.TimeSpeedBonus = 0;
-                            _bonus.DeactivateBonus(SecondPlayer);
-                            SecondPlayer.isSpeedBonusActive = false;
-                        }
-                        else { SecondPlayer.TimeSpeedBonus += frameEventArgs.Time; }
-                    }
-                }
-                if(_bonus is DamageBonus)
-                {
-                    if (FirstPlayer.isDamageBonusActive)
-                    {
-                        if (FirstPlayer.TimeDamageBonus >= 10)
-                        {
-                            FirstPlayer.TimeDamageBonus = 0;
-                            _bonus.DeactivateBonus(FirstPlayer);
-                            FirstPlayer.isDamageBonusActive = false;
-                        }
-                        else { FirstPlayer.TimeDamageBonus += frameEventArgs.Time; }
-                    }
-                    if (SecondPlayer.isDamageBonusActive)
-                    {
-                        if (SecondPlayer.TimeDamageBonus >= 10)
-                        {
-                            SecondPlayer.TimeDamageBonus = 0;
-                            _bonus.DeactivateBonus(SecondPlayer);
-                            SecondPlayer.isDamageBonusActive = false;
-                        }
-                        else { SecondPlayer.TimeDamageBonus += frameEventArgs.Time; }
-                    }
+        //private void BonusDeactivate(FrameEventArgs frameEventArgs)
+        //{
+        //    List<Bonus> bonus = [new SpeedBonus(), new DamageBonus(), new ReloadBonus()];
+        //    foreach(Bonus _bonus in bonus)
+        //    {
+        //        if (_bonus is SpeedBonus)
+        //        {   if (FirstPlayer.isSpeedBonusActive)
+        //            {
+        //                if (FirstPlayer.TimeSpeedBonus >= 10)
+        //                {
+        //                    FirstPlayer.TimeSpeedBonus = 0;
+        //                    _bonus.DeactivateBonus(FirstPlayer);
+        //                    FirstPlayer.isSpeedBonusActive = false;
+        //                }
+        //                else { FirstPlayer.TimeSpeedBonus += frameEventArgs.Time; }
+        //            }
+        //            if (SecondPlayer.isSpeedBonusActive)
+        //            {
+        //                if (SecondPlayer.TimeSpeedBonus >= 10)
+        //                {
+        //                    SecondPlayer.TimeSpeedBonus = 0;
+        //                    _bonus.DeactivateBonus(SecondPlayer);
+        //                    SecondPlayer.isSpeedBonusActive = false;
+        //                }
+        //                else { SecondPlayer.TimeSpeedBonus += frameEventArgs.Time; }
+        //            }
+        //        }
+        //        if(_bonus is DamageBonus)
+        //        {
+        //            if (FirstPlayer.isDamageBonusActive)
+        //            {
+        //                if (FirstPlayer.TimeDamageBonus >= 10)
+        //                {
+        //                    FirstPlayer.TimeDamageBonus = 0;
+        //                    _bonus.DeactivateBonus(FirstPlayer);
+        //                    FirstPlayer.isDamageBonusActive = false;
+        //                }
+        //                else { FirstPlayer.TimeDamageBonus += frameEventArgs.Time; }
+        //            }
+        //            if (SecondPlayer.isDamageBonusActive)
+        //            {
+        //                if (SecondPlayer.TimeDamageBonus >= 10)
+        //                {
+        //                    SecondPlayer.TimeDamageBonus = 0;
+        //                    _bonus.DeactivateBonus(SecondPlayer);
+        //                    SecondPlayer.isDamageBonusActive = false;
+        //                }
+        //                else { SecondPlayer.TimeDamageBonus += frameEventArgs.Time; }
+        //            }
                     
-                }
-                if (_bonus is ReloadBonus)
-                {
-                    if (FirstPlayer.isReloadBonusActive)
-                    {
-                        if (FirstPlayer.TimeReloadBonus >= 10)
-                        {
-                            FirstPlayer.TimeReloadBonus = 0;
-                            _bonus.DeactivateBonus(FirstPlayer);
-                            FirstPlayer.isReloadBonusActive = false;
-                        }
-                        else { FirstPlayer.TimeReloadBonus += frameEventArgs.Time; }
-                    }
-                    if (SecondPlayer.isReloadBonusActive)
-                    {
-                        if (SecondPlayer.TimeReloadBonus >= 10)
-                        {
-                            SecondPlayer.TimeReloadBonus = 0;
-                            _bonus.DeactivateBonus(SecondPlayer);
-                            SecondPlayer.isReloadBonusActive = false;
-                        }
-                        else { SecondPlayer.TimeReloadBonus += frameEventArgs.Time; }
-                    }
-                }
-            }
+        //        }
+        //        if (_bonus is ReloadBonus)
+        //        {
+        //            if (FirstPlayer.isReloadBonusActive)
+        //            {
+        //                if (FirstPlayer.TimeReloadBonus >= 10)
+        //                {
+        //                    FirstPlayer.TimeReloadBonus = 0;
+        //                    _bonus.DeactivateBonus(FirstPlayer);
+        //                    FirstPlayer.isReloadBonusActive = false;
+        //                }
+        //                else { FirstPlayer.TimeReloadBonus += frameEventArgs.Time; }
+        //            }
+        //            if (SecondPlayer.isReloadBonusActive)
+        //            {
+        //                if (SecondPlayer.TimeReloadBonus >= 10)
+        //                {
+        //                    SecondPlayer.TimeReloadBonus = 0;
+        //                    _bonus.DeactivateBonus(SecondPlayer);
+        //                    SecondPlayer.isReloadBonusActive = false;
+        //                }
+        //                else { SecondPlayer.TimeReloadBonus += frameEventArgs.Time; }
+        //            }
+        //        }
+        //    }
 
-        }
+        //}
     }
 }

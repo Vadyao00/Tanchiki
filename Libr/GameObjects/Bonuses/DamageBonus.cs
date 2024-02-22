@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class DamageBonus : Bonus
+    public class DamageBonus(Player player) : Bonus(player)
     {
         private readonly float normalDamage = 20.0f;
         private readonly float effectDamage = 40.0f;
-        public DamageBonus() : base() { }
 
-        public override void ActivateBonus(Player player)
+        public override void ActivateBonus()
         {
-            player.Damage = effectDamage;
+            _player.Damage = effectDamage;
         }
 
-        public override void DeactivateBonus(Player player)
+        public override void DeactivateBonus()
         {
-            player.Damage = normalDamage;
+            _player.Damage = normalDamage;
         }
     }
 }

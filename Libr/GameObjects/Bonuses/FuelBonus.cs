@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class FuelBonus : Bonus
+    public class FuelBonus(Player player) : Bonus(player)
     {
         private readonly float fuel = 10.0f;
-        public FuelBonus() : base() { }
 
-        public override void ActivateBonus(Player player)
+        public override void ActivateBonus()
         {
-            if (player.Fuel <= 90.0f)
-                player.Fuel += fuel;
-            else player.Fuel = 100.0f;
+            if (_player.Fuel <= 90.0f)
+                _player.Fuel += fuel;
+            else _player.Fuel = 100.0f;
         }
 
-        public override void DeactivateBonus(Player player) { }
+        public override void DeactivateBonus() { }
     }
 }

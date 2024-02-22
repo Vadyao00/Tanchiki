@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 
@@ -26,7 +27,7 @@ namespace Libr
         public float Fuel { get; set; } = 100.0f;
         public int NumShells { get; private set; } = 100;
         public bool IsReloading { get; private set; } = false;
-        public Movement direction { get;private set; }
+        public Movement Direction { get;private set; }
         public double TimeSpeedBonus { get; set; } = 0;
         public bool isSpeedBonusActive { get; set; } = false;
         public double TimeDamageBonus { get; set; } = 0;
@@ -41,20 +42,20 @@ namespace Libr
             {
                 X = -0.04f;
                 Y = 0.76f;
-                direction = Movement.Bottom;
+                Direction = Movement.Bottom;
             }
             else
             {
                 X = -0.04f;
                 Y = -0.84f;
-                direction = Movement.Top;
+                Direction = Movement.Top;
             }
             projectiles = new List<Projectile>();
         }
 
         public float[] GetVertColorArray()
         {
-            switch(direction)
+            switch(Direction)
             {
                 case Movement.Bottom:
                       return
@@ -109,89 +110,82 @@ namespace Libr
             }
 
         }
-        public void PlayerMove(Movement move, List<Cell> mapCells, List<Bonus> bonusList, Player? player)
+        public void PlayerMove(Movement move, List<Cell> mapCells, List<VirtualBonus> virtualBonusesList, Player? player, BonusFactory bonusFactory, List<Bonus> bonusList)
         {
             if(Fuel <= 0) return;
             float futureX = X;
             float futureY = Y;
-            direction = move;
+            Direction = move;
             switch (move)
             {
                 case Movement.Left:
                     futureX -= Speed;
-                    direction = Movement.Left;
+                    Direction = Movement.Left;
                     break;
                 case Movement.Top:
                     futureY += Speed;
-                    direction = Movement.Top;
+                    Direction = Movement.Top;
                     break;
                 case Movement.Right:
                     futureX += Speed;
-                    direction = Movement.Right;
+                    Direction = Movement.Right;
                     break;
                 case Movement.Bottom:
                     futureY -= Speed;
-                    direction = Movement.Bottom;
+                    Direction = Movement.Bottom;
                     break;
             }
 
+            if (CheckCollisoinCells(futureX, futureY, mapCells))
+                return;
+
+            foreach (VirtualBonus bonus in virtualBonusesList)
+            {
+                if (futureX < bonus.X + bonus.Size &&
+                    futureX + Size > bonus.X &&
+                    futureY < bonus.Y + bonus.Size &&
+                    futureY + Size > bonus.Y)
+                { 
+                    bonus.IsUsed = true;
+                    bonusList.Add(bonusFactory.createBonus(this));
+                }
+            }
+
+            if (CheckCollisionWithAnotherPlayer(futureX, futureY, player))
+                return;
+
+            X = futureX;
+            Y = futureY;
+            Fuel -= 0.03f;
+        }
+
+
+        private bool CheckCollisoinCells(float futureX, float futureY, List<Cell> mapCells)
+        {
             foreach (var cell in mapCells)
             {
                 if (futureX < cell.X + cell.Size &&
                     futureX + Size > cell.X &&
                     futureY < cell.Y + cell.Size &&
                     futureY + Size > cell.Y &&
-                    cell.IsWall) return;
+                    cell.IsWall) return true;
             }
+            return false;
+        }
 
-            foreach (Bonus bonus in bonusList)
-            {
-                if (futureX < bonus.X + bonus.Size &&
-                    futureX + Size > bonus.X &&
-                    futureY < bonus.Y + bonus.Size &&
-                    futureY + Size > bonus.Y)
-                {
-                    if (bonus is SpeedBonus)
-                    {
-                        bonus.isUsed = true;
-                        bonus.ActivateBonus(this);
-                        TimeSpeedBonus = 0;
-                        isSpeedBonusActive = true;
-                    }
-                    if (bonus is FuelBonus)
-                    {
-                        bonus.isUsed = true;
-                        bonus.ActivateBonus(this);
-                    }
-                    if (bonus is DamageBonus)
-                    {
-                        bonus.isUsed = true;
-                        bonus.ActivateBonus(this);
-                        TimeDamageBonus = 0;
-                        isDamageBonusActive = true;
-                    }
-                    if (bonus is ReloadBonus)
-                    {
-                        bonus.isUsed = true;
-                        bonus.ActivateBonus(this);
-                        TimeReloadBonus = 0;
-                        isReloadBonusActive = true;
-                    }
-                }
-            }
+        private bool CheckCollisionWithAnotherPlayer(float futureX, float futureY, Player? player)
+        {
             if (futureX < player?.X + player?.Size &&
                     futureX + Size > player?.X &&
                     futureY < player?.Y + player?.Size &&
-                    futureY + Size > player?.Y) return;
-            X = futureX;
-            Y = futureY;
-            Fuel -= 0.03f;
+                    futureY + Size > player?.Y) return true;
+            return false;
         }
 
         public float[] PointerAndReloadLine()
         {
             float x=0, y=0, xStart=X, xEnd=X + Size, yLine = Y + Size + 0.02f;
-            switch(direction)
+            switch(Direction)
             {
                 case Movement.Left:
                     x = X;
@@ -223,7 +217,7 @@ namespace Libr
         {
             if (NumShells != 0 && !IsReloading)
             {
-                projectiles.Add(new Projectile(direction, PointerAndReloadLine()[0], PointerAndReloadLine()[1]));
+                projectiles.Add(new Projectile(Direction, PointerAndReloadLine()[0], PointerAndReloadLine()[1]));
                 NumShells--;
                 IsReloading = true;
                 Reload();
