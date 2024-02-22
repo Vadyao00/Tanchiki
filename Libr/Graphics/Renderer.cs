@@ -71,23 +71,17 @@ namespace Libr
             CreateVAOBackground();
             vao?.Draw(0,6);
             vao?.Dispose();
-            shaderProgram?.DeactiveProgram();
-            shaderProgram?.ActiveProgram();
             vao?.Activate();
             CreateVAO(mapArr);
             vao?.Draw(0, 1000);
             vao?.Dispose();
-            shaderProgram?.DeactiveProgram();
             if (GetBonusVertexArray().Length != 0)
             {
-                shaderProgram?.ActiveProgram();
                 vao?.Activate();
                 CreateVAOBonus(GetBonusVertexArray());
                 vao?.Draw(0, 400);
                 vao?.Dispose();
-                shaderProgram?.DeactiveProgram();
             }
-            shaderProgram?.ActiveProgram();
             vao?.Activate();
             CreateVAOPlayer(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
             vao?.Draw(0, 200);

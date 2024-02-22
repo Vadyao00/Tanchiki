@@ -23,8 +23,8 @@ namespace Tanchiki
 {
     public class GameScene : GameWindow
     {
-        private string mapString;
-        private MainWindow MainWindowWPF;
+        private readonly string mapString;
+        private readonly MainWindow MainWindowWPF;
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
       : base(gameWindowSettings, nativeWindowSettings)
         {
