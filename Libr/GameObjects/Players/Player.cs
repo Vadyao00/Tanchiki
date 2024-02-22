@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
+using Timer = Libr.GameObjects.Bonus_Management.Timer;
 
 namespace Libr
 {
@@ -28,13 +29,7 @@ namespace Libr
         public int NumShells { get; private set; } = 100;
         public bool IsReloading { get; private set; } = false;
         public Movement Direction { get;private set; }
-        public double TimeSpeedBonus { get; set; } = 0;
-        public bool isSpeedBonusActive { get; set; } = false;
-        public double TimeDamageBonus { get; set; } = 0;
-        public bool isDamageBonusActive { get; set; } = false;
-        public double TimeReloadBonus { get; set; } = 0;
-        public bool isReloadBonusActive { get; set; } = false;
-        public List<Projectile> projectiles {  get; private set; }
+        public List<Projectile> Projectiles {  get; private set; }
 
         public Player(int num)
         {
@@ -50,7 +45,7 @@ namespace Libr
                 Y = -0.84f;
                 Direction = Movement.Top;
             }
-            projectiles = new List<Projectile>();
+            Projectiles = new List<Projectile>();
         }
 
         public float[] GetVertColorArray()
@@ -110,7 +105,7 @@ namespace Libr
             }
 
         }
-        public void PlayerMove(Movement move, List<Cell> mapCells, List<VirtualBonus> virtualBonusesList, Player? player, BonusFactory bonusFactory, List<Bonus> bonusList)
+        public void PlayerMove(Movement move, List<Cell> mapCells, List<VirtualBonus> virtualBonusesList, Player? player, BonusFactory bonusFactory, Timer timer)
         {
             if(Fuel <= 0) return;
             float futureX = X;
@@ -147,7 +142,7 @@ namespace Libr
                     futureY + Size > bonus.Y)
                 { 
                     bonus.IsUsed = true;
-                    bonusList.Add(bonusFactory.createBonus(this));
+                    timer.AddBonus(bonusFactory.CreateBonus(this));
                 }
             }
 
@@ -217,7 +212,7 @@ namespace Libr
         {
             if (NumShells != 0 && !IsReloading)
             {
-                projectiles.Add(new Projectile(Direction, PointerAndReloadLine()[0], PointerAndReloadLine()[1]));
+                Projectiles.Add(new Projectile(Direction, PointerAndReloadLine()[0], PointerAndReloadLine()[1]));
                 NumShells--;
                 IsReloading = true;
                 Reload();

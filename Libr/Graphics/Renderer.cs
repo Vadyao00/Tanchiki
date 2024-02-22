@@ -14,11 +14,12 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using Timer = Libr.GameObjects.Bonus_Management.Timer;
 namespace Libr
 {
     public class Renderer
     {
-        public List<Bonus> bonusList;
         public List<VirtualBonus> virtualBonusesList;
         public Player FirstPlayer { get; private set; }
         public Player SecondPlayer { get; private set; }
@@ -43,6 +44,7 @@ namespace Libr
         public Texture TextureBonusInfoSpeed { get; private set; }
         public Texture TextureBonusInfoDamage { get; private set; }
         public Texture TextureBonusInfoReload { get; private set; }
+        private readonly BonusFactory bonusFactory;
 
         List<Projectile>? projectilesToRemove;
         public Renderer(string mapString)
@@ -59,13 +61,13 @@ namespace Libr
             TextureBonusInfoReload = Texture.LoadFromFile(@"data\textures\reloadBonus.png");
             FirstPlayer = new Player(1);
             SecondPlayer = new Player(2);
+            bonusFactory = new BonusFactory();
             CreateVAO(MapArr);
-            bonusList = [];
             virtualBonusesList = [];
             bonusVertexArray = [0];
         }
 
-        public void Draw(FrameEventArgs frameEventArgs)
+        public void Draw(FrameEventArgs frameEventArgs, Timer timer)
         {
             ShaderProgram?.ActiveProgram();
             Vao?.Activate();
@@ -88,34 +90,33 @@ namespace Libr
             Vao?.Draw(0, 200);
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
-            //BonusDeactivate(frameEventArgs);
+            CreateVirtualBonus(frameEventArgs);
+            DrawBonusInfo(timer);
             DrawHealthState();
             DrawFuelState();
-            DrawBonusInfo();
             DrawReloadLine();
             DrawShoots();
             RestartGame();
-            CreateVirtualBonus(frameEventArgs);
             MoveShoots();
         }
 
         public void MoveShoots()
         {
             projectilesToRemove = new List<Projectile>();
-            if (FirstPlayer.projectiles.Count != 0)
-                foreach (Projectile projectile in FirstPlayer.projectiles)
+            if (FirstPlayer.Projectiles.Count != 0)
+                foreach (Projectile projectile in FirstPlayer.Projectiles)
                 {
                     projectile.Move(Map.cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
-                FirstPlayer.projectiles.Remove(myProjectile);
-            if (SecondPlayer.projectiles.Count != 0)
-                foreach (Projectile projectile in SecondPlayer.projectiles)
+                FirstPlayer.Projectiles.Remove(myProjectile);
+            if (SecondPlayer.Projectiles.Count != 0)
+                foreach (Projectile projectile in SecondPlayer.Projectiles)
                 {
                     projectile.Move(Map.cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
-                SecondPlayer.projectiles.Remove(myProjectile);
+                SecondPlayer.Projectiles.Remove(myProjectile);
         }
 
         private float[] GetBonusVertexArray()
@@ -272,69 +273,82 @@ namespace Libr
             Vao.DisableAttribAll();
         }
 
-        private void DrawBonusInfo()
+        private void DrawBonusInfo(Timer timer)
         {
-            if(FirstPlayer.isSpeedBonusActive)
+            foreach(Bonus bonus in timer.ActiveBonuses)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("speed",[-1.0f,0.75f,0.0f,  0.0f,0.5f,  -0.975f,0.725f,0.0f,  0.5f,0.0f,  -0.95f,0.75f,0.0f,  1.0f,0.5f,  -0.975f,0.775f,0.0f,  0.5f, 1.0f  , -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
-            }
-            if (SecondPlayer.isSpeedBonusActive)
-            {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("speed", [0.8f, 0.75f, 0.0f,  0.0f, 0.5f,  0.825f,0.725f, 0.0f,  0.5f, 0.0f,  0.85f, 0.75f, 0.0f,  1.0f, 0.5f,  0.825f, 0.775f, 0.0f,  0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
-            }
-            if(FirstPlayer.isDamageBonusActive)
-            {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
-            }
-            if (SecondPlayer.isDamageBonusActive)
-            {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
-            }
-            if (FirstPlayer.isReloadBonusActive)
-            {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("reload", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
-            }
-            if (SecondPlayer.isReloadBonusActive)
-            {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
-                CreateVAOBonusInfo("reload", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
+                if(bonus is SpeedBonus)
+                {
+                    if(bonus._player == FirstPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("speed", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                    if(bonus._player == SecondPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("speed", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                }
+                if (bonus is DamageBonus)
+                {
+                    if (bonus._player == FirstPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                    if (bonus._player == SecondPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                }
+                if (bonus is ReloadBonus)
+                {
+                    if (bonus._player == FirstPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("reload", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                    if (bonus._player == SecondPlayer)
+                    {
+                        ShaderProgram?.ActiveProgram();
+                        Vao?.Activate();
+                        CreateVAOBonusInfo("reload", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                        Vao?.DrawPoligon(0, 30);
+                        Vao?.Dispose();
+                        ShaderProgram?.DeactiveProgram();
+                    }
+                }
+
             }
         }
 
         private void DrawShoots()
         {
-            if (FirstPlayer.projectiles.Count != 0)
+            if (FirstPlayer.Projectiles.Count != 0)
             {
-                foreach (Projectile projectile in FirstPlayer.projectiles)
+                foreach (Projectile projectile in FirstPlayer.Projectiles)
                 {
                     GL.PointSize(15);
                     GL.Color3(Color.Orange);
@@ -343,9 +357,9 @@ namespace Libr
                     GL.End();
                 }
             }
-            if (SecondPlayer.projectiles.Count != 0)
+            if (SecondPlayer.Projectiles.Count != 0)
             {
-                foreach (Projectile projectile in SecondPlayer.projectiles)
+                foreach (Projectile projectile in SecondPlayer.Projectiles)
                 {
                     GL.PointSize(15);
                     GL.Color3(Color.Orange);
@@ -538,7 +552,7 @@ namespace Libr
             {
                 FirstPlayer = new Player(1);
                 SecondPlayer = new Player(2);
-                bonusList = new List<Bonus>();
+                virtualBonusesList = [];
             }
         }
 
@@ -563,82 +577,49 @@ namespace Libr
                 virtualBonusesList.Remove(bonus);
             }
         }
-        //private void BonusDeactivate(FrameEventArgs frameEventArgs)
-        //{
-        //    List<Bonus> bonus = [new SpeedBonus(), new DamageBonus(), new ReloadBonus()];
-        //    foreach(Bonus _bonus in bonus)
-        //    {
-        //        if (_bonus is SpeedBonus)
-        //        {   if (FirstPlayer.isSpeedBonusActive)
-        //            {
-        //                if (FirstPlayer.TimeSpeedBonus >= 10)
-        //                {
-        //                    FirstPlayer.TimeSpeedBonus = 0;
-        //                    _bonus.DeactivateBonus(FirstPlayer);
-        //                    FirstPlayer.isSpeedBonusActive = false;
-        //                }
-        //                else { FirstPlayer.TimeSpeedBonus += frameEventArgs.Time; }
-        //            }
-        //            if (SecondPlayer.isSpeedBonusActive)
-        //            {
-        //                if (SecondPlayer.TimeSpeedBonus >= 10)
-        //                {
-        //                    SecondPlayer.TimeSpeedBonus = 0;
-        //                    _bonus.DeactivateBonus(SecondPlayer);
-        //                    SecondPlayer.isSpeedBonusActive = false;
-        //                }
-        //                else { SecondPlayer.TimeSpeedBonus += frameEventArgs.Time; }
-        //            }
-        //        }
-        //        if(_bonus is DamageBonus)
-        //        {
-        //            if (FirstPlayer.isDamageBonusActive)
-        //            {
-        //                if (FirstPlayer.TimeDamageBonus >= 10)
-        //                {
-        //                    FirstPlayer.TimeDamageBonus = 0;
-        //                    _bonus.DeactivateBonus(FirstPlayer);
-        //                    FirstPlayer.isDamageBonusActive = false;
-        //                }
-        //                else { FirstPlayer.TimeDamageBonus += frameEventArgs.Time; }
-        //            }
-        //            if (SecondPlayer.isDamageBonusActive)
-        //            {
-        //                if (SecondPlayer.TimeDamageBonus >= 10)
-        //                {
-        //                    SecondPlayer.TimeDamageBonus = 0;
-        //                    _bonus.DeactivateBonus(SecondPlayer);
-        //                    SecondPlayer.isDamageBonusActive = false;
-        //                }
-        //                else { SecondPlayer.TimeDamageBonus += frameEventArgs.Time; }
-        //            }
-                    
-        //        }
-        //        if (_bonus is ReloadBonus)
-        //        {
-        //            if (FirstPlayer.isReloadBonusActive)
-        //            {
-        //                if (FirstPlayer.TimeReloadBonus >= 10)
-        //                {
-        //                    FirstPlayer.TimeReloadBonus = 0;
-        //                    _bonus.DeactivateBonus(FirstPlayer);
-        //                    FirstPlayer.isReloadBonusActive = false;
-        //                }
-        //                else { FirstPlayer.TimeReloadBonus += frameEventArgs.Time; }
-        //            }
-        //            if (SecondPlayer.isReloadBonusActive)
-        //            {
-        //                if (SecondPlayer.TimeReloadBonus >= 10)
-        //                {
-        //                    SecondPlayer.TimeReloadBonus = 0;
-        //                    _bonus.DeactivateBonus(SecondPlayer);
-        //                    SecondPlayer.isReloadBonusActive = false;
-        //                }
-        //                else { SecondPlayer.TimeReloadBonus += frameEventArgs.Time; }
-        //            }
-        //        }
-        //    }
 
-        //}
+        public void OnKeyDown(KeyboardState KeyboardState, Timer timer)
+        {
+            if (KeyboardState.IsKeyDown(Keys.W))
+            {
+                FirstPlayer.PlayerMove(Movement.Top, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.A))
+            {
+                FirstPlayer.PlayerMove(Movement.Left, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.S))
+            {
+                FirstPlayer.PlayerMove(Movement.Bottom, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.D))
+            {
+                FirstPlayer.PlayerMove(Movement.Right, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.U))
+            {
+                SecondPlayer.PlayerMove(Movement.Top, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.J))
+            {
+                SecondPlayer.PlayerMove(Movement.Bottom, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.H))
+            {
+                SecondPlayer.PlayerMove(Movement.Left, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.K))
+            {
+                SecondPlayer.PlayerMove(Movement.Right, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+            }
+            if (KeyboardState.IsKeyDown(Keys.V))
+            {
+                FirstPlayer.Shoot();
+            }
+            if (KeyboardState.IsKeyDown(Keys.P))
+            {
+                SecondPlayer.Shoot();
+            }
+        }
     }
 }

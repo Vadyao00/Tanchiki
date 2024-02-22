@@ -19,13 +19,14 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Timer = Libr.GameObjects.Bonus_Management.Timer;
 namespace Tanchiki
 {
     public class GameScene : GameWindow
     {
         private readonly string mapString;
         private readonly MainWindow MainWindowWPF;
-        private readonly BonusFactory bonusFactory;
+        private Timer timer;
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
       : base(gameWindowSettings, nativeWindowSettings)
         {
@@ -35,7 +36,7 @@ namespace Tanchiki
             Size = new Vector2i(1500, 1500);
             Location = new Vector2i(700, 140);
             this.mapString = mapString;
-            bonusFactory = new BonusFactory();
+            timer = new Timer();
         }
 
 
@@ -44,6 +45,7 @@ namespace Tanchiki
         protected override void OnLoad()
         {
             base.OnLoad();
+            timer.Start();
             GL.ClearColor(Color4.AliceBlue);
             GL.Enable(EnableCap.CullFace);
             renderer = new Renderer(mapString);
@@ -53,6 +55,7 @@ namespace Tanchiki
         {
             renderer?.Vao?.Dispose();
             renderer?.ShaderProgram.DeleteProgram();
+            timer.Stop();
             base.OnUnload();
             
         }
@@ -67,65 +70,25 @@ namespace Tanchiki
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            renderer?.Draw(e);
+            renderer?.Draw(e,timer);
+            timer.Update();
+            timer.AddBonus(new SpeedBonus(new Player(1)));
             SwapBuffers();
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
-            OnKeyDown();
+            renderer?.OnKeyDown(KeyboardState,timer);
             Title = renderer?.DrawFPS(frameEventArgs, Title);
-            base.OnUpdateFrame(frameEventArgs);
-        }
-
-        private void OnKeyDown()
-        {
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {
                 MainWindowWPF.Show();
                 Close();
             }
-            if (KeyboardState.IsKeyDown(Keys.W))
-            {
-                renderer?.FirstPlayer.PlayerMove(Movement.Top, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.A))
-            {
-                renderer?.FirstPlayer.PlayerMove(Movement.Left, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.S))
-            {
-                renderer?.FirstPlayer.PlayerMove(Movement.Bottom, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.D))
-            {
-                renderer?.FirstPlayer.PlayerMove(Movement.Right, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.SecondPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.U))
-            {
-                renderer?.SecondPlayer.PlayerMove(Movement.Top, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.J))
-            {
-                renderer?.SecondPlayer.PlayerMove(Movement.Bottom, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.H))
-            {
-                renderer?.SecondPlayer.PlayerMove(Movement.Left, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.K))
-            {
-                renderer?.SecondPlayer.PlayerMove(Movement.Right, renderer.Map.GetListCells(), renderer.virtualBonusesList, renderer?.FirstPlayer, bonusFactory, renderer.bonusList);
-            }
-            if (KeyboardState.IsKeyDown(Keys.V))
-            {
-                renderer?.FirstPlayer.Shoot();
-            }
-            if (KeyboardState.IsKeyDown(Keys.P))
-            {
-                renderer?.SecondPlayer.Shoot();
-            }
+            base.OnUpdateFrame(frameEventArgs);
         }
+
+        
     }
 }
