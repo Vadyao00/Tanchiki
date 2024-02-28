@@ -26,7 +26,7 @@ namespace Libr
         public float Speed { get;  set; } = 0.004f;
         public double TimeReload { get; set; } = 0.5;
         public float Fuel { get; set; } = 100.0f;
-        public int NumShells { get; private set; } = 100;
+        public int NumShells { get; set; } = 100;
         public bool IsReloading { get; private set; } = false;
         public Movement Direction { get;private set; }
         public List<Projectile> Projectiles {  get; private set; }
@@ -142,7 +142,7 @@ namespace Libr
                     futureY + Size > bonus.Y)
                 { 
                     bonus.IsUsed = true;
-                    timer.AddBonus(bonusFactory.CreateBonus(this));
+                    timer.AddBonus(bonusFactory.CreateBonus(this),this);
                 }
             }
 
@@ -151,7 +151,7 @@ namespace Libr
 
             X = futureX;
             Y = futureY;
-            Fuel -= 0.03f;
+            Fuel -= 0.01f;
         }
 
 

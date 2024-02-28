@@ -23,8 +23,19 @@ namespace Libr.GameObjects.Bonus_Management
             Stopwatch.Stop();
         }
 
-        public void AddBonus(Bonus bonus)
+        public void AddBonus(Bonus bonus,Player player)
         {
+            List<Bonus> bonusesToRemoving = [];
+            foreach (var activeBonus in ActiveBonuses)
+                if((activeBonus.GetType() == bonus.GetType())&& activeBonus._player.Equals(player))
+                {
+                    activeBonus.DeactivateBonus();
+                    bonusesToRemoving.Add(activeBonus);
+                }
+            foreach (var myBonus in bonusesToRemoving)
+            {
+                ActiveBonuses.Remove(myBonus);
+            }
             ActiveBonuses.Add(bonus);
             bonus.ActivateBonus();
             bonus.StartDurationTracking();

@@ -26,7 +26,7 @@ namespace Tanchiki
     {
         private readonly string mapString;
         private readonly MainWindow MainWindowWPF;
-        private Timer timer;
+        private readonly Timer timer;
         public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
       : base(gameWindowSettings, nativeWindowSettings)
         {
@@ -70,9 +70,8 @@ namespace Tanchiki
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            renderer?.Draw(e,timer);
             timer.Update();
-            timer.AddBonus(new SpeedBonus(new Player(1)));
+            renderer?.Draw(e,timer);
             SwapBuffers();
             base.OnRenderFrame(e);
         }

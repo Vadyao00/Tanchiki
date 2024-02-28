@@ -1,19 +1,8 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.TextFormatting;
 using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Timer = Libr.GameObjects.Bonus_Management.Timer;
 namespace Libr
@@ -44,6 +33,8 @@ namespace Libr
         public Texture TextureBonusInfoSpeed { get; private set; }
         public Texture TextureBonusInfoDamage { get; private set; }
         public Texture TextureBonusInfoReload { get; private set; }
+        public Texture TextureBonusInfoReloadLow { get; private set; }
+        public Texture TextureBonusInfoSpeedLow { get; private set; }
         private readonly BonusFactory bonusFactory;
 
         List<Projectile>? projectilesToRemove;
@@ -59,6 +50,8 @@ namespace Libr
             TextureBonusInfoSpeed = Texture.LoadFromFile(@"data\textures\speedBonus.png");
             TextureBonusInfoDamage = Texture.LoadFromFile(@"data\textures\damageBonus.png");
             TextureBonusInfoReload = Texture.LoadFromFile(@"data\textures\reloadBonus.png");
+            TextureBonusInfoReloadLow = Texture.LoadFromFile(@"data\textures\reloadBonusLow.png");
+            TextureBonusInfoSpeedLow = Texture.LoadFromFile(@"data\textures\speedBonusLow.png");
             FirstPlayer = new Player(1);
             SecondPlayer = new Player(2);
             bonusFactory = new BonusFactory();
@@ -250,14 +243,20 @@ namespace Libr
             GL.ActiveTexture(TextureUnit.Texture0);
             switch(bonusType)
             {
-                case "speed":
+                case "speedHigh":
                     GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoSpeed.Handle);
                     break;
                 case "damage":
                     GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoDamage.Handle);
                     break;
-                case "reload":
+                case "reloadHigh":
                     GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoReload.Handle);
+                    break;
+                case "reloadLow":
+                    GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoReloadLow.Handle);
+                    break;
+                case "speedLow":
+                    GL.BindTexture(TextureTarget.Texture2D, TextureBonusInfoSpeedLow.Handle);
                     break;
             }
 
@@ -275,72 +274,95 @@ namespace Libr
 
         private void DrawBonusInfo(Timer timer)
         {
-            foreach(Bonus bonus in timer.ActiveBonuses)
+            if(FirstPlayer.Speed > 0.0045f)
             {
-                if(bonus is SpeedBonus)
-                {
-                    if(bonus._player == FirstPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("speed", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                    if(bonus._player == SecondPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("speed", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                }
-                if (bonus is DamageBonus)
-                {
-                    if (bonus._player == FirstPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                    if (bonus._player == SecondPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                }
-                if (bonus is ReloadBonus)
-                {
-                    if (bonus._player == FirstPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("reload", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                    if (bonus._player == SecondPlayer)
-                    {
-                        ShaderProgram?.ActiveProgram();
-                        Vao?.Activate();
-                        CreateVAOBonusInfo("reload", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                        Vao?.DrawPoligon(0, 30);
-                        Vao?.Dispose();
-                        ShaderProgram?.DeactiveProgram();
-                    }
-                }
-
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("speedHigh", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (FirstPlayer.Speed < 0.0035f)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("speedLow", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (SecondPlayer.Speed > 0.0045f)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("speedHigh", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (SecondPlayer.Speed < 0.0035f)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("speedLow", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (FirstPlayer.Damage > 20f)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (SecondPlayer.Damage > 20f)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (FirstPlayer.TimeReload < 0.45)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("reloadHigh", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (FirstPlayer.TimeReload > 0.55)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("reloadLow", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (SecondPlayer.TimeReload < 0.45)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("reloadHigh", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
+            }
+            if (SecondPlayer.TimeReload > 0.55)
+            {
+                ShaderProgram?.ActiveProgram();
+                Vao?.Activate();
+                CreateVAOBonusInfo("reloadLow", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
+                Vao?.DrawPoligon(0, 30);
+                Vao?.Dispose();
+                ShaderProgram?.DeactiveProgram();
             }
         }
 
