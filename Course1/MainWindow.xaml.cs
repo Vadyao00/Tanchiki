@@ -1,22 +1,14 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Tanchiki;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using System.Windows.Media.Effects;
 
 namespace Course1
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private string mapString = @"data\maps\map1.txt";
@@ -38,15 +30,11 @@ namespace Course1
                 API = ContextAPI.OpenGL,
             };
 
-            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this,mapString))
+            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this,mapString, ScorePlayer1, ScorePlayer2))
             {
-                this.Hide();
+                Hide();
                 gameScene.Run();
             }
-        }
-        public void ShowWindow()
-        {
-            this.Show();
         }
 
         private void Map1_Click(object sender, RoutedEventArgs e)
@@ -69,6 +57,34 @@ namespace Course1
             firstMapText.Foreground = Brushes.Black;
             secondMapText.Foreground = Brushes.Black;
             thirdMapText.Foreground = Brushes.Green;
+        }
+
+        private void ButtonMap_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Button button = (Button)sender;
+
+            DropShadowEffect dropShadowEffect = new DropShadowEffect();
+            dropShadowEffect.Color = Colors.Green;
+            dropShadowEffect.ShadowDepth = 8;
+            dropShadowEffect.Opacity = 0.8;
+            button.Effect = dropShadowEffect;
+        }
+        private void ButtonMap_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Button button = (Button)sender;
+            button.BorderThickness = new Thickness(1);
+            button.Effect = null;
+        }
+
+        private void ButtonInformation_Click(object sender, RoutedEventArgs e)
+        {
+            InformationWindow infoWindow = new InformationWindow();
+            infoWindow.Show();
+        }
+        private void ButtonResetScore_Click(object sender, RoutedEventArgs e)
+        {
+            ScorePlayer1.Text = "0";
+            ScorePlayer2.Text = "0";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
+using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
@@ -36,9 +37,10 @@ namespace Libr
         public Texture TextureBonusInfoReloadLow { get; private set; }
         public Texture TextureBonusInfoSpeedLow { get; private set; }
         private readonly BonusFactory bonusFactory;
-
-        List<Projectile>? projectilesToRemove;
-        public Renderer(string mapString)
+        private List<Projectile>? projectilesToRemove;
+        private TextBlock ScorePlayer1;
+        private TextBlock ScorePlayer2;
+        public Renderer(string mapString, TextBlock ScorePlayer1, TextBlock ScorePlayer2)
         {
             ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
             Map = new Map(20, 20, Cell, LoadMapFromFile(mapString));
@@ -58,6 +60,8 @@ namespace Libr
             CreateVAO(MapArr);
             virtualBonusesList = [];
             bonusVertexArray = [0];
+            this.ScorePlayer1 = ScorePlayer1;
+            this.ScorePlayer2 = ScorePlayer2;
         }
 
         public void Draw(FrameEventArgs frameEventArgs, Timer timer)
@@ -570,18 +574,26 @@ namespace Libr
 
         private void RestartGame()
         {
-            if(FirstPlayer.CheckIsDead() || SecondPlayer.CheckIsDead())
+            if(FirstPlayer.CheckIsDead())
             {
                 FirstPlayer = new Player(1);
                 SecondPlayer = new Player(2);
                 virtualBonusesList = [];
+                ScorePlayer2.Text = (int.Parse(ScorePlayer2.Text)+1).ToString();
+            }
+            if(SecondPlayer.CheckIsDead())
+            {
+                FirstPlayer = new Player(1);
+                SecondPlayer = new Player(2);
+                virtualBonusesList = [];
+                ScorePlayer1.Text = (int.Parse(ScorePlayer1.Text) + 1).ToString();
             }
         }
 
         public void CreateVirtualBonus(FrameEventArgs frameEventArgs)
         {
             FrameTimeForBonus += frameEventArgs.Time;
-            if (FrameTimeForBonus >= 1)
+            if (FrameTimeForBonus >= 5)
             {
                 virtualBonusesList.Add(new VirtualBonus());
                 FrameTimeForBonus = 0;

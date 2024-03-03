@@ -25,8 +25,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\mapsImages\map1.png">
+    <None Update="Data\bonusesInfo\damageBonus.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\bonusesInfo\reloadBonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\bonusesInfo\reloadBonusLow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\bonusesInfo\speedBonus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\bonusesInfo\speedBonusLow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\mapsImages\map1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Data\mapsImages\map2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

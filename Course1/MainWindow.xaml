@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Course1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowState="Maximized">
+        Title="Танковая дуэль" Height="450" Width="800" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,18 +22,24 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Click="PlayButton_Click" Content="Play" FontSize="50" FontFamily="Arial" Foreground="Black" Margin="10" Grid.Row="2" Grid.Column="2" Background="AliceBlue"/>
-        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="1" Grid.Row="3" Click="Map1_Click">
+        <Button Click="PlayButton_Click" Content="Играть" FontSize="36" FontFamily="Arial" Foreground="Black" Margin="10" Grid.Row="0" Grid.Column="2" Background="AliceBlue"/>
+        <Button Click="ButtonInformation_Click" Content="Управление и бонусы" FontSize="24" FontFamily="Arial" Foreground="Black" Margin="10" Grid.Row="1" Grid.Column="2" Background="AliceBlue"/>
+        <Button Click="ButtonResetScore_Click" Content="Обнулить счет" FontSize="24" FontFamily="Arial" Foreground="Black" Margin="10" Grid.Row="2" Grid.Column="2" Background="AliceBlue"/>
+        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="1" Grid.Row="3" Click="Map1_Click" MouseEnter="ButtonMap_MouseEnter" MouseLeave="ButtonMap_MouseLeave">
             <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map1.png"></Image>
         </Button>
-        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="2" Grid.Row="3" Click="Map2_Click">
+        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="2" Grid.Row="3" Click="Map2_Click" MouseEnter="ButtonMap_MouseEnter" MouseLeave="ButtonMap_MouseLeave">
             <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map2.png"></Image>
         </Button>
-        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="3" Grid.Row="3" Click="Map3_Click">
+        <Button BorderBrush="Black" BorderThickness="3" Margin="65,7,65,7" Grid.Column="3" Grid.Row="3" Click="Map3_Click" MouseEnter="ButtonMap_MouseEnter" MouseLeave="ButtonMap_MouseLeave">
             <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\mapsImages\map3.png"></Image>
         </Button>
         <TextBlock x:Name="firstMapText" Text="Map1" Grid.Column="1" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="Black"/>
         <TextBlock x:Name="secondMapText" Text="Map2" Grid.Column="2" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="Black"/>
         <TextBlock x:Name="thirdMapText" Text="Map3" Grid.Column="3" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="Black"/>
+        <TextBlock Text="Игрок 1" FontSize="36" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,40,0,0"/>
+        <TextBlock x:Name="ScorePlayer1" Text="0" FontSize="144" Grid.ColumnSpan="2" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="Игрок 2" FontSize="36" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,40,0,0"/>
+        <TextBlock x:Name="ScorePlayer2" Text="0" FontSize="144" Grid.ColumnSpan="2" Grid.Column="3" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

@@ -27,7 +27,9 @@ namespace Tanchiki
         private readonly string mapString;
         private readonly MainWindow MainWindowWPF;
         private readonly Timer timer;
-        public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString)
+        private TextBlock ScorePlayer1;
+        private TextBlock ScorePlayer2;
+        public GameScene(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings, MainWindow mainWindowWPF, string mapString, TextBlock ScorePlayer1, TextBlock ScorePlayer2)
       : base(gameWindowSettings, nativeWindowSettings)
         {
             VSync = VSyncMode.On;
@@ -37,6 +39,8 @@ namespace Tanchiki
             Location = new Vector2i(700, 140);
             this.mapString = mapString;
             timer = new Timer();
+            this.ScorePlayer1 = ScorePlayer1;
+            this.ScorePlayer2 = ScorePlayer2;
         }
 
 
@@ -48,7 +52,7 @@ namespace Tanchiki
             timer.Start();
             GL.ClearColor(Color4.AliceBlue);
             GL.Enable(EnableCap.CullFace);
-            renderer = new Renderer(mapString);
+            renderer = new Renderer(mapString, ScorePlayer1, ScorePlayer2);
         }
 
         protected override void OnUnload()
