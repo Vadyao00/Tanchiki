@@ -62,14 +62,14 @@ namespace Tanchiki
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
             timer.Update();
-            renderer?.Draw(e,timer);
+            renderer?.Draw(e);
             SwapBuffers();
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
-            renderer?.OnKeyDown(KeyboardState,timer);
+            renderer?.OnKeyDown(KeyboardState, timer);
             Title = renderer?.DrawFPS(frameEventArgs, Title);
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {

@@ -1,4 +1,6 @@
 ﻿using Libr.GameObjects.Bonuses;
+using Libr.GameObjects.Projectilies;
+using Libr.Utilities;
 
 namespace Libr
 {
@@ -38,63 +40,6 @@ namespace Libr
             Projectiles = new List<Projectile>();
         }
 
-        public float[] GetVertColorArray()
-        {
-            switch(Direction)
-            {
-                case Movement.Bottom:
-                      return
-                      [
-                            X, Y + Size, 0.0f, 1.0f, 0.0f,
-                            X, Y, 0.0f, 1.0f, 1.0f,
-                            X + Size, Y, 0.0f, 0.0f, 1.0f,
-                            X + Size, Y, 0.0f, 0.0f, 1.0f,
-                            X + Size, Y + Size, 0.0f, 0.0f, 0.0f,
-                            X, Y + Size, 0.0f, 1.0f, 0.0f
-                      ];
-                case Movement.Left:
-                      return
-                      [   
-                            X,Y + Size, 0.0f,1.0f,1.0f,
-                             X,Y, 0.0f,0.0f, 1.0f,
-                            X + Size,Y,0.0f,0.0f,0.0f,
-                            X + Size,Y,0.0f,0.0f,0.0f,
-                            X + Size,Y + Size,0.0f,1.0f,0.0f,
-                            X,Y + Size,0.0f,1.0f,1.0f
-                      ];
-                case Movement.Right:
-                     return
-                     [
-                         X, Y + Size, 0.0f, 1.0f, 0.0f,
-                         X, Y, 0.0f, 0.0f, 0.0f,
-                         X + Size, Y, 0.0f, 0.0f, 1.0f,
-                         X + Size, Y, 0.0f, 0.0f, 1.0f,
-                         X + Size, Y + Size, 0.0f, 1.0f, 1.0f,
-                         X, Y + Size, 0.0f, 1.0f, 0.0f
-                     ];
-                case Movement.Top:
-                    return
-                    [
-                        X, Y + Size, 0.0f, 0.0f, 1.0f,
-                        X, Y, 0.0f, 0.0f, 0.0f,
-                        X + Size, Y, 0.0f, 1.0f, 0.0f,
-                        X + Size, Y, 0.0f, 1.0f, 0.0f,
-                        X + Size, Y + Size, 0.0f, 1.0f, 1.0f,
-                        X, Y + Size, 0.0f, 0.0f, 1.0f
-                    ];
-                default:
-                    return
-                    [
-                        X, Y + Size, 0.0f, 1.0f, 1.0f,
-                        X, Y, 0.0f, 0.0f, 1.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f,
-                        X + Size, Y, 0.0f, 0.0f, 0.0f,
-                        X + Size, Y + Size, 0.0f, 1.0f, 0.0f,
-                        X, Y + Size, 0.0f, 1.0f, 1.0f
-                    ];
-            }
-
-        }
         public void PlayerMove(Movement move, List<Cell> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer)
         {
             if(Fuel <= 0) return;
@@ -166,31 +111,6 @@ namespace Libr
             return false;
         }
 
-        public float[] PointerAndReloadLine()
-        {
-            float x=0, y=0, xStart=X, xEnd=X + Size, yLine = Y + Size + 0.02f;
-            switch(Direction)
-            {
-                case Movement.Left:
-                    x = X;
-                    y = Y + Size/2;
-                    break;
-                case Movement.Top:
-                    x = X + Size/2;
-                    y = Y + Size;
-                    break;
-                case Movement.Right:
-                    x = X + Size;
-                    y = Y + Size/2;
-                    break;
-                case Movement.Bottom:
-                    x = X + Size/2;
-                    y = Y;
-                    break;
-            }
-            return [x, y, xStart, xEnd, yLine];
-        }
-
         public bool CheckIsDead()
         {
             if (Health <= 0) return true;
@@ -201,7 +121,7 @@ namespace Libr
         {
             if (NumShells != 0 && !IsReloading)
             {
-                Projectiles.Add(new Projectile(Direction, PointerAndReloadLine()[0], PointerAndReloadLine()[1]));
+                Projectiles.Add(new Projectile(Direction, VertexGenerator.GetShellVertexArray(this)));
                 NumShells--;
                 IsReloading = true;
                 Reload();

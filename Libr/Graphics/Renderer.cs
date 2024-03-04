@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
+using Libr.GameObjects.Projectilies;
+using Libr.Utilities;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -22,7 +24,6 @@ namespace Libr
         private double FrameTime { get; set; }
         private double FrameTimeForBonus { get; set; }
         private double FPS { get; set; }
-        private float[] bonusVertexArray;
         private double VarFPS { get; set; }
         public Map Map { get; private set; }
         public Texture Texture { get; private set; }
@@ -55,11 +56,10 @@ namespace Libr
             SecondPlayer = new Player(2);
             randomBonusFactory = new RandomBonusFactory();
             virtualBonusesList = [];
-            bonusVertexArray = [0];
             this.ScorePlayer1 = ScorePlayer1;
             this.ScorePlayer2 = ScorePlayer2;
         }
-        public void Draw(FrameEventArgs frameEventArgs, Timer timer)
+        public void Draw(FrameEventArgs frameEventArgs)
         {
             ShaderProgram?.ActiveProgram();
             Vao?.Activate();
@@ -67,23 +67,23 @@ namespace Libr
             Vao?.Draw(0,6);
             Vao?.Dispose();
             Vao?.Activate();
-            CreateVAO(GetVertWallsArray());
+            CreateVAO(VertexGenerator.GetWallsVertexArray(Map.ListWalls));
             Vao?.Draw(0, 1000);
             Vao?.Dispose();
-            if (GetBonusVertexArray().Length != 0)
+            if (VertexGenerator.GetBonusVertexArray(virtualBonusesList).Length != 0)
             {
                 Vao?.Activate();
-                CreateVAOBonus(GetBonusVertexArray());
+                CreateVAOBonus(VertexGenerator.GetBonusVertexArray(virtualBonusesList));
                 Vao?.Draw(0, 400);
                 Vao?.Dispose();
             }
             Vao?.Activate();
-            CreateVAOPlayer(FirstPlayer.GetVertColorArray().ToArray().Concat(SecondPlayer.GetVertColorArray()).ToArray());
+            CreateVAOPlayer(VertexGenerator.GetPlayerVertexArray(FirstPlayer).Concat(VertexGenerator.GetPlayerVertexArray(SecondPlayer)).ToArray());
             Vao?.Draw(0, 200);
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
             CreateVirtualBonus(frameEventArgs);
-            DrawBonusInfo(timer);
+            DrawBonusInfo();
             DrawHealthState();
             DrawFuelState();
             DrawReloadLine();
@@ -92,26 +92,6 @@ namespace Libr
             MoveShoots();
         }
 
-        private float[] GetVertWallsArray()
-        {
-            List<float> result = [];
-
-            foreach (Cell cell in Map.ListWalls)
-            {
-                float[] cellVertColorArr = [
-                    cell.X, cell.Y + cell.Size, 0.0f, 1.0f,1.0f,
-                    cell.X, cell.Y, 0.0f, 0.0f,1.0f,
-                    cell.X + cell.Size, cell.Y, 0.0f, 0.0f,0.0f,
-                    cell.X + cell.Size, cell.Y, 0.0f, 0.0f,0.0f,
-                    cell.X + cell.Size, cell.Y + cell.Size, 0.0f, 1.0f,0.0f,
-                    cell.X, cell.Y + cell.Size, 0.0f, 1.0f,1.0f
-                    ];
-                foreach (float vertColor in cellVertColorArr)
-                    result.Add(vertColor);
-            }
-
-            return result.ToArray();
-        }
         public void MoveShoots()
         {
             projectilesToRemove = new List<Projectile>();
@@ -129,16 +109,6 @@ namespace Libr
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
-        }
-
-        private float[] GetBonusVertexArray()
-        {
-            bonusVertexArray = [];
-            foreach (VirtualBonus bonus in virtualBonusesList)
-            {
-                bonusVertexArray = bonusVertexArray.Concat(bonus.GetVertexArray()).ToArray();
-            }
-            return bonusVertexArray;
         }
 
         private void CreateVAO(float[] vert_textureMap)
@@ -291,7 +261,7 @@ namespace Libr
             Vao.DisableAttribAll();
         }
 
-        private void DrawBonusInfo(Timer timer)
+        private void DrawBonusInfo()
         {
             if(FirstPlayer.Speed > 0.0045f)
             {
@@ -413,9 +383,10 @@ namespace Libr
 
         private void DrawReloadLine()
         {
-            float xStart = FirstPlayer.PointerAndReloadLine()[2];
-            float xEnd = FirstPlayer.PointerAndReloadLine()[3];
-            float y = FirstPlayer.PointerAndReloadLine()[4];
+            float[] reloadLineVertexArrayFirstPlayer = VertexGenerator.GetReloadLineVertexArray(FirstPlayer);
+            float xStart = reloadLineVertexArrayFirstPlayer[0];
+            float xEnd = reloadLineVertexArrayFirstPlayer[1];
+            float y = reloadLineVertexArrayFirstPlayer[2];
             double timeReload = FirstPlayer.TimeReload;
             float step = (xEnd - xStart) / (float)(timeReload * VarFPS);
             if (FirstPlayer.IsReloading && FirstCounter < (float)(timeReload * VarFPS))
@@ -438,9 +409,10 @@ namespace Libr
                 GL.Vertex2(xEnd, y);
                 GL.End();
             }
-            xStart = SecondPlayer.PointerAndReloadLine()[2];
-            xEnd = SecondPlayer.PointerAndReloadLine()[3];
-            y = SecondPlayer.PointerAndReloadLine()[4];
+            float[] reloadLineVertexArraySecondPlayer = VertexGenerator.GetReloadLineVertexArray(SecondPlayer);
+            xStart = reloadLineVertexArraySecondPlayer[0];
+            xEnd = reloadLineVertexArraySecondPlayer[1];
+            y = reloadLineVertexArraySecondPlayer[2];
             timeReload = SecondPlayer.TimeReload;
             step = (xEnd - xStart) / (float)(timeReload * VarFPS);
             if (SecondPlayer.IsReloading && SecondCounter < (float)(timeReload * VarFPS))

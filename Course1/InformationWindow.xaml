@@ -26,10 +26,10 @@
             <Image Source="D:\Labs\4sem\Курсовая работа\Course1\Course1\Data\tips\key2.png" VerticalAlignment="Top" HorizontalAlignment="Left" Height="57" Width="58" Margin="276,73,0,0" RenderTransformOrigin="0.88,0.699" Grid.Column="1"/>
             <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="79,161,0,0" TextWrapping="Wrap" Text="Движение" VerticalAlignment="Top" Width="119" Height="36" Grid.Column="1"/>
             <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="257,126,0,0" TextWrapping="Wrap" Text="Выстрел" VerticalAlignment="Top" Width="93" Height="36" RenderTransformOrigin="0.748,-0.196" Grid.Column="1"/>
-            <Border CornerRadius="40" Margin="10" BorderBrush="Gray" BorderThickness="4" Grid.Column="0"/>
-            <Border CornerRadius="40" Margin="10" BorderBrush="Gray" BorderThickness="4" Grid.Column="1"/>
+            <Border CornerRadius="40" Margin="10" BorderBrush="Gray" BorderThickness="5" Grid.Column="0"/>
+            <Border CornerRadius="40" Margin="10" BorderBrush="Gray" BorderThickness="5" Grid.Column="1"/>
         </Grid>
-        <Border BorderBrush="Gray" BorderThickness="3" Grid.Row="1" CornerRadius="30" Margin="10"/>
+        <Border BorderBrush="Gray" BorderThickness="5" Grid.Row="1" CornerRadius="30" Margin="10"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

@@ -40,12 +40,5 @@ namespace Libr
         {
             Handle = glHandle;
         }
-
-        public void Use(TextureUnit unit)
-        {
-            GL.ActiveTexture(unit);
-            GL.BindTexture(TextureTarget.Texture2D, Handle);
-        }
-
     }
 }
