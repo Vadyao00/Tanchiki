@@ -40,7 +40,7 @@ namespace Libr
             Projectiles = new List<Projectile>();
         }
 
-        public void PlayerMove(Movement move, List<Cell> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer)
+        public void PlayerMove(Movement move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer)
         {
             if(Fuel <= 0) return;
             float futureX = X;
@@ -90,7 +90,7 @@ namespace Libr
         }
 
 
-        private bool CheckCollisoinCells(float futureX, float futureY, List<Cell> listWalls)
+        private bool CheckCollisoinCells(float futureX, float futureY, List<Wall> listWalls)
         {
             foreach (var cell in listWalls)
             {

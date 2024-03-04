@@ -14,7 +14,7 @@ namespace Libr.GameObjects.Bonuses
         public float Size { get; private set; } = 0.08f;
         public bool IsUsed { get; set; } = false;
         public double LifeTime { get; set; } = 0;
-        public VirtualBonus(List<Cell> listWalls)
+        public VirtualBonus(List<Wall> listWalls)
         {
             Random random = new();
             bool checkCollision = true;

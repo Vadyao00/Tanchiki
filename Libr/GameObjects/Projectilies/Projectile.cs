@@ -15,7 +15,7 @@
             speedProjectile = 0.008f;
         }
 
-        public float[] Move(List<Cell> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
+        public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
         {
             float x = X, y = Y;
             switch (direction)
@@ -33,15 +33,14 @@
                     y -= speedProjectile;
                     break;
             }
-            foreach (Cell cell in listWalls)
+            foreach (Wall cell in listWalls)
             {
                 if (x < cell.X + cell.Size &&
                 x > cell.X &&
                 y < cell.Y + cell.Size &&
-                y > cell.Y && cell.IsWall)
+                y > cell.Y)
                 {
                     projectilesToRemove.Add(this);
-                    return [X, Y];
                 }
             }
             if (idPlayer == 2)
@@ -53,7 +52,6 @@
                 {
                     projectilesToRemove.Add(this);
                     firstPlayer.Health -= secondPlayer.Damage;
-                    return [X, Y];
                 }
                 else
                 {
@@ -70,7 +68,6 @@
                 {
                     projectilesToRemove.Add(this);
                     secondPlayer.Health -= firstPlayer.Damage;
-                    return [X, Y];
                 }
                 else
                 {
@@ -78,8 +75,6 @@
                     Y = y;
                 }
             }
-
-            return [X, Y];
         }
     }
 }

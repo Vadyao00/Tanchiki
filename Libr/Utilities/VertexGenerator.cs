@@ -61,11 +61,11 @@ namespace Libr.Utilities
                     ];
             }
         }
-        public static float[] GetWallsVertexArray(List<Cell> listWalls)
+        public static float[] GetWallsVertexArray(List<Wall> listWalls)
         {
             List<float> result = [];
 
-            foreach (Cell cell in listWalls)
+            foreach (Wall cell in listWalls)
             {
                 float[] cellVertColorArr = [
                     cell.X, cell.Y + cell.Size, 0.0f, 1.0f,1.0f,
