@@ -16,6 +16,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Data\bonusesInfo\damageBonus.png" />
+    <None Remove="Data\bonusesInfo\reloadBonus.png" />
+    <None Remove="Data\bonusesInfo\reloadBonusLow.png" />
+    <None Remove="Data\bonusesInfo\speedBonus.png" />
+    <None Remove="Data\bonusesInfo\speedBonusLow.png" />
+    <None Remove="Data\mapsImages\map1.png" />
+    <None Remove="Data\mapsImages\map2.png" />
+    <None Remove="Data\mapsImages\map3.png" />
+    <None Remove="Data\tips\key1.png" />
+    <None Remove="Data\tips\key2.png" />
+    <None Remove="Data\tips\keyboard1.png" />
+    <None Remove="Data\tips\keyboard2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.2" />
   </ItemGroup>
@@ -25,42 +40,42 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\bonusesInfo\damageBonus.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\bonusesInfo\reloadBonus.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\bonusesInfo\reloadBonusLow.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\bonusesInfo\speedBonus.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\bonusesInfo\speedBonusLow.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\mapsImages\map1.png">
+    <Resource Include="Data\bonusesInfo\damageBonus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\mapsImages\map2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\mapsImages\map3.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\tips\key1.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\tips\key2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\tips\keyboard1.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\tips\keyboard2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Resource>
+    <Resource Include="Data\bonusesInfo\reloadBonus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\bonusesInfo\reloadBonusLow.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\bonusesInfo\speedBonus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\bonusesInfo\speedBonusLow.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\mapsImages\map1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\mapsImages\map2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\mapsImages\map3.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\tips\key1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\tips\key2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\tips\keyboard1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Data\tips\keyboard2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

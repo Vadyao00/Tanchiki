@@ -1,24 +1,17 @@
 ﻿namespace Libr.GameObjects.Projectilies
 {
-    public class Projectile
+    public class Projectile(Movement direction, float[] vertexArray)
     {
-        public float X { get; private set; }
-        public float Y { get; private set; }
+        public float X { get; private set; } = vertexArray[0];
+        public float Y { get; private set; } = vertexArray[1];
 
-        private float speedProjectile;
-        public Movement direction { get; private set; }
-        public Projectile(Movement dir, float[] vertexArray)
-        {
-            X = vertexArray[0];
-            Y = vertexArray[1];
-            direction = dir;
-            speedProjectile = 0.008f;
-        }
+        private readonly float speedProjectile = 0.008f;
+        public Movement Direction { get; private set; } = direction;
 
         public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
         {
             float x = X, y = Y;
-            switch (direction)
+            switch (Direction)
             {
                 case Movement.Left:
                     x -= speedProjectile;

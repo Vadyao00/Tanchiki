@@ -26,7 +26,7 @@ namespace Libr
         {
             List<BonusDecorator> bonusesToRemoving = [];
             foreach (var activeBonus in ActiveBonuses)
-                if((activeBonus.GetType() == bonus.GetType())&& activeBonus._player.Equals(player))
+                if ((activeBonus.GetType() == bonus.GetType()) && activeBonus._player.Equals(player))
                 {
                     activeBonus.DeactivateBonus();
                     bonusesToRemoving.Add(activeBonus);
