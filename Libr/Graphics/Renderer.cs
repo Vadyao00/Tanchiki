@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Timer = Libr.GameObjects.Bonus_Management.Timer;
+using Timer = Libr.Timer;
 namespace Libr
 {
     public class Renderer
@@ -18,7 +19,6 @@ namespace Libr
         public BufferObject? VboVC { get; private set; }
         public BufferObject? VboTextureCoords { get; private set; }
         public float Cell { get; private set; } = 0.1f;
-        public float[] MapArr { get; private set; }
         public int FirstCounter { get; private set; }
         public int SecondCounter { get; private set; }
         private double FrameTime { get; set; }
@@ -36,15 +36,14 @@ namespace Libr
         public Texture TextureBonusInfoReload { get; private set; }
         public Texture TextureBonusInfoReloadLow { get; private set; }
         public Texture TextureBonusInfoSpeedLow { get; private set; }
-        private readonly BonusFactory bonusFactory;
+        private readonly RandomBonusFactory randomBonusFactory;
         private List<Projectile>? projectilesToRemove;
-        private TextBlock ScorePlayer1;
-        private TextBlock ScorePlayer2;
+        private readonly TextBlock ScorePlayer1;
+        private readonly TextBlock ScorePlayer2;
         public Renderer(string mapString, TextBlock ScorePlayer1, TextBlock ScorePlayer2)
         {
             ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
             Map = new Map(20, 20, Cell, LoadMapFromFile(mapString));
-            MapArr = Map.GetVertColorArray();
             Texture = Texture.LoadFromFile(@"data\textures\wall.png");
             TextureTank = Texture.LoadFromFile(@"data\textures\tank.png");
             TextureBonus = Texture.LoadFromFile(@"data\textures\bonus.png");
@@ -56,14 +55,12 @@ namespace Libr
             TextureBonusInfoSpeedLow = Texture.LoadFromFile(@"data\textures\speedBonusLow.png");
             FirstPlayer = new Player(1);
             SecondPlayer = new Player(2);
-            bonusFactory = new BonusFactory();
-            CreateVAO(MapArr);
+            randomBonusFactory = new RandomBonusFactory();
             virtualBonusesList = [];
             bonusVertexArray = [0];
             this.ScorePlayer1 = ScorePlayer1;
             this.ScorePlayer2 = ScorePlayer2;
         }
-
         public void Draw(FrameEventArgs frameEventArgs, Timer timer)
         {
             ShaderProgram?.ActiveProgram();
@@ -72,7 +69,7 @@ namespace Libr
             Vao?.Draw(0,6);
             Vao?.Dispose();
             Vao?.Activate();
-            CreateVAO(MapArr);
+            CreateVAO(GetVertWallsArray());
             Vao?.Draw(0, 1000);
             Vao?.Dispose();
             if (GetBonusVertexArray().Length != 0)
@@ -97,20 +94,40 @@ namespace Libr
             MoveShoots();
         }
 
+        private float[] GetVertWallsArray()
+        {
+            List<float> result = [];
+
+            foreach (Cell cell in Map.ListWalls)
+            {
+                float[] cellVertColorArr = [
+                    cell.X, cell.Y + cell.Size, 0.0f, 1.0f,1.0f,
+                    cell.X, cell.Y, 0.0f, 0.0f,1.0f,
+                    cell.X + cell.Size, cell.Y, 0.0f, 0.0f,0.0f,
+                    cell.X + cell.Size, cell.Y, 0.0f, 0.0f,0.0f,
+                    cell.X + cell.Size, cell.Y + cell.Size, 0.0f, 1.0f,0.0f,
+                    cell.X, cell.Y + cell.Size, 0.0f, 1.0f,1.0f
+                    ];
+                foreach (float vertColor in cellVertColorArr)
+                    result.Add(vertColor);
+            }
+
+            return result.ToArray();
+        }
         public void MoveShoots()
         {
             projectilesToRemove = new List<Projectile>();
             if (FirstPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in FirstPlayer.Projectiles)
                 {
-                    projectile.Move(Map.cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
+                    projectile.Move(Map.Cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 FirstPlayer.Projectiles.Remove(myProjectile);
             if (SecondPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in SecondPlayer.Projectiles)
                 {
-                    projectile.Move(Map.cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
+                    projectile.Move(Map.Cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
@@ -616,35 +633,35 @@ namespace Libr
         {
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                FirstPlayer.PlayerMove(Movement.Top, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.A))
             {
-                FirstPlayer.PlayerMove(Movement.Left, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.S))
             {
-                FirstPlayer.PlayerMove(Movement.Bottom, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.D))
             {
-                FirstPlayer.PlayerMove(Movement.Right, Map.GetListCells(), virtualBonusesList, SecondPlayer, bonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.U))
             {
-                SecondPlayer.PlayerMove(Movement.Top, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.J))
             {
-                SecondPlayer.PlayerMove(Movement.Bottom, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.H))
             {
-                SecondPlayer.PlayerMove(Movement.Left, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.K))
             {
-                SecondPlayer.PlayerMove(Movement.Right, Map.GetListCells(), virtualBonusesList, FirstPlayer, bonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
             }
             if (KeyboardState.IsKeyDown(Keys.V))
             {

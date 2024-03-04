@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL;
-
-namespace Libr
+﻿namespace Libr
 {
     public class Map
     {
-        public Cell[,] cells {  get;private set; }
+        public Cell[,] Cells {  get;private set; }
+        public List<Cell> ListWalls { get; private set; }
         public Map(int width, int height, float cellSize, int[,] data)
         {
-            cells = new Cell[width, height];
+            ListWalls = [];
+            Cells = new Cell[width, height];
             float halfWidth = width * cellSize / 2;
             float halfHeight = height * cellSize / 2;
 
@@ -23,38 +17,18 @@ namespace Libr
                 {
                     float xPos = (x * cellSize) - halfWidth;
                     float yPos = (y * cellSize) - halfHeight;
-                    cells[x, y] = new Cell(xPos, yPos, cellSize, data[x, y] == 1);
+                    Cells[x, y] = new Cell(xPos, yPos, cellSize, data[x, y] == 1);
                 }
             }
-        }
 
-        public float[] GetVertColorArray()
-        {
-            List<float> result = new List<float>();
-
-            foreach (Cell cell in cells)
+            for (int i = 0; i < Cells.GetLength(0); i++)
             {
-                float[] cellVertColorArr = cell.GetVertColorArray();
-                foreach (float vertColor in cellVertColorArr)
-                    if(cell.IsWall)
-                        result.Add(vertColor);
-            }
-
-            return result.ToArray();
-        }
-
-        public List<Cell> GetListCells()
-        {
-            List<Cell> list = new List<Cell>();
-
-            for (int i = 0; i < cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < cells.GetLength(1); j++)
+                for (int j = 0; j < Cells.GetLength(1); j++)
                 {
-                    list.Add(cells[i, j]);
+                    if (Cells[i,j].IsWall)
+                        ListWalls.Add(Cells[i, j]);
                 }
             }
-            return list;
         }
     }
 }

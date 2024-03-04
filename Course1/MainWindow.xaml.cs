@@ -15,6 +15,8 @@ namespace Course1
         public MainWindow()
         {
             InitializeComponent();
+            ResizeMode = ResizeMode.NoResize;
+
         }
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
@@ -40,23 +42,14 @@ namespace Course1
         private void Map1_Click(object sender, RoutedEventArgs e)
         {
             mapString = @"data\maps\map1.txt";
-            firstMapText.Foreground = Brushes.Green;
-            secondMapText.Foreground = Brushes.Black;
-            thirdMapText.Foreground = Brushes.Black;
         }
         private void Map2_Click(object sender, RoutedEventArgs e)
         {
             mapString = @"data\maps\map2.txt";
-            firstMapText.Foreground = Brushes.Black;
-            secondMapText.Foreground = Brushes.Green;
-            thirdMapText.Foreground = Brushes.Black;
         }
         private void Map3_Click(object sender, RoutedEventArgs e)
         {
             mapString = @"data\maps\map3.txt";
-            firstMapText.Foreground = Brushes.Black;
-            secondMapText.Foreground = Brushes.Black;
-            thirdMapText.Foreground = Brushes.Green;
         }
 
         private void ButtonMap_MouseEnter(object sender, MouseEventArgs e)

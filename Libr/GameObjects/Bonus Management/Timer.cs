@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
-
-namespace Libr.GameObjects.Bonus_Management
+namespace Libr
 {
     public class Timer
     {

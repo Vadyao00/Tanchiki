@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Libr.GameObjects.Bonuses;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Windowing.Common;
-using Timer = Libr.GameObjects.Bonus_Management.Timer;
+﻿using Libr.GameObjects.Bonuses;
 
 namespace Libr
 {
@@ -105,7 +95,7 @@ namespace Libr
             }
 
         }
-        public void PlayerMove(Movement move, List<Cell> mapCells, List<VirtualBonus> virtualBonusesList, Player? player, BonusFactory bonusFactory, Timer timer)
+        public void PlayerMove(Movement move, List<Cell> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer)
         {
             if(Fuel <= 0) return;
             float futureX = X;
@@ -131,7 +121,7 @@ namespace Libr
                     break;
             }
 
-            if (CheckCollisoinCells(futureX, futureY, mapCells))
+            if (CheckCollisoinCells(futureX, futureY, listWalls))
                 return;
 
             foreach (VirtualBonus bonus in virtualBonusesList)
@@ -142,7 +132,7 @@ namespace Libr
                     futureY + Size > bonus.Y)
                 { 
                     bonus.IsUsed = true;
-                    timer.AddBonus(bonusFactory.CreateBonus(this),this);
+                    timer.AddBonus(randomBonusFactory.CreateBonus(this),this);
                 }
             }
 
@@ -155,15 +145,14 @@ namespace Libr
         }
 
 
-        private bool CheckCollisoinCells(float futureX, float futureY, List<Cell> mapCells)
+        private bool CheckCollisoinCells(float futureX, float futureY, List<Cell> listWalls)
         {
-            foreach (var cell in mapCells)
+            foreach (var cell in listWalls)
             {
                 if (futureX < cell.X + cell.Size &&
                     futureX + Size > cell.X &&
                     futureY < cell.Y + cell.Size &&
-                    futureY + Size > cell.Y &&
-                    cell.IsWall) return true;
+                    futureY + Size > cell.Y) return true;
             }
             return false;
         }

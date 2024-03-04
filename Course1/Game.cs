@@ -1,25 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
+﻿using System.Windows.Controls;
 using Course1;
 using Libr;
-using OpenTK.Input;
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Timer = Libr.GameObjects.Bonus_Management.Timer;
+using Timer = Libr.Timer;
 namespace Tanchiki
 {
     public class GameScene : GameWindow
