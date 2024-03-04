@@ -3,9 +3,9 @@
     public class ShellBonusFactory : BonusFactory
     {
         public ShellBonusFactory(Player player) : base(player) { }
-        public override Bonus CreateBonus()
+        public override BonusDecorator CreateBonus()
         {
-            return new ShellBonus(player);
+            return new ShellBonusDecorator(player);
         }
     }
 }

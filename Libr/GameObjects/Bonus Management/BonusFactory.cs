@@ -9,6 +9,6 @@ namespace Libr
     public abstract class BonusFactory(Player player)
     {
         protected Player player = player;
-        public abstract Bonus CreateBonus();
+        public abstract BonusDecorator CreateBonus();
     }
 }

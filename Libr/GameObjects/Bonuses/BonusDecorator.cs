@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public abstract class Bonus(Player player) : IBonus
+    public abstract class BonusDecorator(Player player) : IBonus
     {
         public Player _player = player;
         protected TimeSpan startTime;

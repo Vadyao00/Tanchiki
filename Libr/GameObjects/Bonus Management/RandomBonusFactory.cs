@@ -3,7 +3,7 @@
     public class RandomBonusFactory
     {
         private int randomBonus;
-        public Bonus CreateBonus(Player player)
+        public BonusDecorator CreateBonus(Player player)
         {
             Random random = new();
             randomBonus = random.Next(1, 9);

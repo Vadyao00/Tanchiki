@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class FuelBonus(Player player) : Bonus(player)
+    public class HarmfulShellBonusDecorator(Player player) : BonusDecorator(player)
     {
-        private readonly float fuel = 10.0f;
+        private readonly int Shells = 15;
 
         public override void ActivateBonus()
         {
-            if (_player.Fuel <= 90.0f)
-                _player.Fuel += fuel;
-            else _player.Fuel = 100.0f;
+            if (_player.NumShells <= Shells)
+                _player.NumShells = 0;
+            else _player.NumShells -= Shells;
         }
 
         public override void DeactivateBonus() { }
     }
 }
+

@@ -22,7 +22,7 @@ namespace Libr
             speedProjectile = 0.008f;
         }
 
-        public float[] Move(Cell[,] cells, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
+        public float[] Move(List<Cell> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
         {
             float x=X, y=Y;
             switch (direction)
@@ -40,7 +40,7 @@ namespace Libr
                     y -= speedProjectile;
                     break;
             }
-            foreach(Cell cell in cells)
+            foreach(Cell cell in listWalls)
             {
                 if (x < cell.X + cell.Size &&
                 x  > cell.X &&

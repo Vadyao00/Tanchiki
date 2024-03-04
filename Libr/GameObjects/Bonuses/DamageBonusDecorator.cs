@@ -1,6 +1,6 @@
 ﻿namespace Libr
 {
-    public class DamageBonus(Player player) : Bonus(player)
+    public class DamageBonusDecorator(Player player) : BonusDecorator(player)
     {
         private readonly float normalDamage = 20.0f;
         private readonly float effectDamage = 40.0f;

@@ -3,9 +3,9 @@
     public class DamageBonusFactory : BonusFactory
     {
         public DamageBonusFactory(Player player) : base(player) { }
-        public override Bonus CreateBonus()
+        public override BonusDecorator CreateBonus()
         {
-            return new DamageBonus(player);
+            return new DamageBonusDecorator(player);
         }
     }
 }

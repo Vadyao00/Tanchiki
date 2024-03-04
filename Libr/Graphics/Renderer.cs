@@ -1,12 +1,10 @@
 ﻿using System.Drawing;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Timer = Libr.Timer;
 namespace Libr
 {
     public class Renderer
@@ -120,14 +118,14 @@ namespace Libr
             if (FirstPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in FirstPlayer.Projectiles)
                 {
-                    projectile.Move(Map.Cells, projectilesToRemove, FirstPlayer,SecondPlayer,1);
+                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer,SecondPlayer,1);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 FirstPlayer.Projectiles.Remove(myProjectile);
             if (SecondPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in SecondPlayer.Projectiles)
                 {
-                    projectile.Move(Map.Cells, projectilesToRemove, FirstPlayer, SecondPlayer,2);
+                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer, SecondPlayer,2);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
@@ -610,9 +608,9 @@ namespace Libr
         public void CreateVirtualBonus(FrameEventArgs frameEventArgs)
         {
             FrameTimeForBonus += frameEventArgs.Time;
-            if (FrameTimeForBonus >= 5)
+            if (FrameTimeForBonus >= 4)
             {
-                virtualBonusesList.Add(new VirtualBonus());
+                virtualBonusesList.Add(new VirtualBonus(Map.ListWalls));
                 FrameTimeForBonus = 0;
             }
 

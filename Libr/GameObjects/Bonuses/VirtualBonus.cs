@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Libr.GameObjects.Bonuses
 {
@@ -10,14 +11,24 @@ namespace Libr.GameObjects.Bonuses
     {
         public float X { get; private set; }
         public float Y { get; private set; }
-        public float Size { get; private set; } = 0.11f;
+        public float Size { get; private set; } = 0.08f;
         public bool IsUsed { get; set; } = false;
         public double LifeTime { get; set; } = 0;
-        public VirtualBonus()
+        public VirtualBonus(List<Cell> listWalls)
         {
             Random random = new();
-            X = (float)random.NextDouble() * 1.8f - 0.9f;
-            Y = (float)random.NextDouble() * 1.8f - 0.9f;
+            bool checkCollision = true;
+            while(checkCollision)
+            {
+                X = (float)random.NextDouble() * 1.8f - 0.9f;
+                Y = (float)random.NextDouble() * 1.8f - 0.9f;
+                checkCollision = listWalls.Any(cell =>
+                    X < cell.X + cell.Size &&
+                    X + Size > cell.X &&
+                    Y < cell.Y + cell.Size &&
+                    Y + Size > cell.Y
+                );
+            }
         }
 
         public float[] GetVertexArray()

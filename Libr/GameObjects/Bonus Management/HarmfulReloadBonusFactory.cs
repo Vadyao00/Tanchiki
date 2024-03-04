@@ -3,9 +3,9 @@
     public class HarmfulReloadBonusFactory : BonusFactory
     {
         public HarmfulReloadBonusFactory(Player player) : base(player) { }
-        public override Bonus CreateBonus()
+        public override BonusDecorator CreateBonus()
         {
-            return new HarmfulReloadBonus(player);
+            return new HarmfulReloadBonusDecorator(player);
         }
     }
 }

@@ -3,9 +3,9 @@
     public class FuelBonusFactory : BonusFactory
     {
         public FuelBonusFactory(Player player) : base(player) { }
-        public override Bonus CreateBonus()
+        public override BonusDecorator CreateBonus()
         {
-            return new FuelBonus(player);
+            return new FuelBonusDecorator(player);
         }
     }
 }

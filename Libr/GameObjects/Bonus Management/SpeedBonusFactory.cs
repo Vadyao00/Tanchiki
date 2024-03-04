@@ -3,9 +3,9 @@
     public class SpeedBonusFactory : BonusFactory
     {
         public SpeedBonusFactory(Player player) : base(player) { }
-        public override Bonus CreateBonus()
+        public override BonusDecorator CreateBonus()
         {
-            return new SpeedBonus(player);
+            return new SpeedBonusDecorator(player);
         }
     }
 }

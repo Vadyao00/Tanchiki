@@ -3,7 +3,7 @@ namespace Libr
 {
     public class Timer
     {
-        public List<Bonus> ActiveBonuses;
+        public List<BonusDecorator> ActiveBonuses;
         public Stopwatch Stopwatch;
 
         public Timer()
@@ -22,9 +22,9 @@ namespace Libr
             Stopwatch.Stop();
         }
 
-        public void AddBonus(Bonus bonus,Player player)
+        public void AddBonus(BonusDecorator bonus,Player player)
         {
-            List<Bonus> bonusesToRemoving = [];
+            List<BonusDecorator> bonusesToRemoving = [];
             foreach (var activeBonus in ActiveBonuses)
                 if((activeBonus.GetType() == bonus.GetType())&& activeBonus._player.Equals(player))
                 {
@@ -42,7 +42,7 @@ namespace Libr
 
         public void Update()
         {
-            List<Bonus> bonusesToRemoving = [];
+            List<BonusDecorator> bonusesToRemoving = [];
             foreach (var bonus in ActiveBonuses)
             {
                 if(bonus.IsExpired())

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class ShellBonus(Player player) : Bonus(player)
+    public class ShellBonusDecorator(Player player) : BonusDecorator(player)
     {
         private readonly int Shells = 30;
 
