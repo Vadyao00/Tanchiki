@@ -5,7 +5,7 @@
         public float X { get; private set; } = vertexArray[0];
         public float Y { get; private set; } = vertexArray[1];
 
-        private readonly float speedProjectile = 0.008f;
+        private readonly float speedProjectile = 0.01f;
         public Movement Direction { get; private set; } = direction;
 
         public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)

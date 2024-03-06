@@ -17,8 +17,8 @@ namespace Libr
         public ArrayObject? Vao {  get;private set; }
         public ShaderProgram ShaderProgram { get; private set; }
         public BufferObject? VboVC { get; private set; }
-        public BufferObject? VboTextureCoords { get; private set; }
-        public float Cell { get; private set; } = 0.1f;
+        private float[] backgroundVertArray;
+        public float Wall { get; private set; } = 0.1f;
         public int FirstCounter { get; private set; }
         public int SecondCounter { get; private set; }
         private double FrameTime { get; set; }
@@ -26,7 +26,7 @@ namespace Libr
         private double FPS { get; set; }
         private double VarFPS { get; set; }
         public Map Map { get; private set; }
-        public Texture Texture { get; private set; }
+        public Texture TextureWall { get; private set; }
         public Texture TextureTank { get; private set; }
         public Texture TextureBonus { get; private set; }
         public Texture TextureBackground { get; private set; }
@@ -42,8 +42,8 @@ namespace Libr
         public Renderer(string mapString, TextBlock ScorePlayer1, TextBlock ScorePlayer2)
         {
             ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            Map = new Map(20, 20, Cell, LoadMapFromFile(mapString));
-            Texture = Texture.LoadFromFile(@"data\textures\wall.png");
+            Map = new Map(20, 20, Wall, LoadMapFromFile(mapString));
+            TextureWall = Texture.LoadFromFile(@"data\textures\wall.png");
             TextureTank = Texture.LoadFromFile(@"data\textures\tank.png");
             TextureBonus = Texture.LoadFromFile(@"data\textures\bonus.png");
             TextureBackground = Texture.LoadFromFile(@"data\textures\background.png");
@@ -58,34 +58,39 @@ namespace Libr
             virtualBonusesList = [];
             this.ScorePlayer1 = ScorePlayer1;
             this.ScorePlayer2 = ScorePlayer2;
+            backgroundVertArray = [
+             -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
+             -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
+             1.0f, 1.0f, 0.0f, 1.0f,1.0f,
+             -1.0f, 1.0f, 0.0f, 0.0f,1.0f
+            ];
         }
         public void Draw(FrameEventArgs frameEventArgs)
         {
             ShaderProgram?.ActiveProgram();
             Vao?.Activate();
-            CreateVAOBackground();
+            CreateVAO(backgroundVertArray, TextureBackground);
             Vao?.Draw(0,6);
-            Vao?.Dispose();
-            Vao?.Activate();
-            CreateVAO(VertexGenerator.GetWallsVertexArray(Map.ListWalls));
+            CreateVAO(VertexGenerator.GetWallsVertexArray(Map.ListWalls), TextureWall);
             Vao?.Draw(0, 1000);
-            Vao?.Dispose();
             if (VertexGenerator.GetBonusVertexArray(virtualBonusesList).Length != 0)
             {
-                Vao?.Activate();
-                CreateVAOBonus(VertexGenerator.GetBonusVertexArray(virtualBonusesList));
+                CreateVAO(VertexGenerator.GetBonusVertexArray(virtualBonusesList), TextureBonus);
                 Vao?.Draw(0, 400);
-                Vao?.Dispose();
             }
-            Vao?.Activate();
-            CreateVAOPlayer(VertexGenerator.GetPlayerVertexArray(FirstPlayer).Concat(VertexGenerator.GetPlayerVertexArray(SecondPlayer)).ToArray());
-            Vao?.Draw(0, 200);
+            CreateVAO(VertexGenerator.GetPlayerVertexArray(FirstPlayer), TextureTank);
+            Vao?.DrawPoligon(0, 50);
+            CreateVAO(VertexGenerator.GetPlayerVertexArray(SecondPlayer), TextureTank);
+            Vao?.DrawPoligon(0, 50);
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
             CreateVirtualBonus(frameEventArgs);
             DrawBonusInfo();
             DrawHealthState();
             DrawFuelState();
+            DrawShellState();
             DrawReloadLine();
             DrawShoots();
             RestartGame();
@@ -110,12 +115,11 @@ namespace Libr
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
         }
-
-        private void CreateVAO(float[] vert_textureMap)
+        private void CreateVAO(float[] vert_texture, Texture Texture)
         {
 
             VboVC = new BufferObject(BufferType.ArrayBuffer);
-            VboVC.SetData(vert_textureMap, BufferHint.StaticDraw);
+            VboVC.SetData(vert_texture, BufferHint.StaticDraw);
 
             int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
             int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
@@ -123,89 +127,6 @@ namespace Libr
             GL.Uniform1(TextureCoordArray, 0);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
-
-            Vao = new ArrayObject();
-            Vao.Activate();
-
-            Vao.AttachBufer(VboVC);
-
-            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
-
-            Vao.Deactivate();
-            Vao.DisableAttribAll();
-        }
-
-        private void CreateVAOBackground()
-        {
-
-            VboVC = new BufferObject(BufferType.ArrayBuffer);
-            VboVC.SetData([
-             -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
-             -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
-             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
-             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
-             1.0f, 1.0f, 0.0f, 1.0f,1.0f,
-             -1.0f, 1.0f, 0.0f, 0.0f,1.0f
-            ], BufferHint.StaticDraw);
-
-            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
-
-            GL.Uniform1(TextureCoordArray, 0);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, TextureBackground.Handle);
-
-            Vao = new ArrayObject();
-            Vao.Activate();
-
-            Vao.AttachBufer(VboVC);
-
-            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
-
-            Vao.Deactivate();
-            Vao.DisableAttribAll();
-        }
-
-        private void CreateVAOPlayer(float[] vert_texturePl)
-        {
-            VboVC = new BufferObject(BufferType.ArrayBuffer);
-            VboVC.SetData(vert_texturePl, BufferHint.StaticDraw);
-
-            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
-
-            GL.Uniform1(TextureCoordArray, 0);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, TextureTank.Handle);
-
-            Vao = new ArrayObject();
-            Vao.Activate();
-
-            Vao.AttachBufer(VboVC);
-
-            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
-
-            Vao.Deactivate();
-            Vao.DisableAttribAll();
-
-            ShaderProgram?.SetTexture("aTextureCoord", TextureTank.Handle);
-        }
-
-        private void CreateVAOBonus(float[] vert_textureBonus)
-        {
-
-            VboVC = new BufferObject(BufferType.ArrayBuffer);
-            VboVC.SetData(vert_textureBonus, BufferHint.StaticDraw);
-
-            int VertexArray = ShaderProgram.GetAttribProgram("aPosition");
-            int TextureCoordArray = ShaderProgram.GetAttribProgram("aTextureCoord");
-
-            GL.Uniform1(TextureCoordArray, 0);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, TextureBonus.Handle);
 
             Vao = new ArrayObject();
             Vao.Activate();
@@ -263,96 +184,61 @@ namespace Libr
 
         private void DrawBonusInfo()
         {
-            if(FirstPlayer.Speed > 0.0045f)
+            ShaderProgram?.ActiveProgram();
+            Vao?.Activate();
+            if (FirstPlayer.Speed > 0.0065f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("speedHigh", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
-            if (FirstPlayer.Speed < 0.0035f)
+            if (FirstPlayer.Speed < 0.0055f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("speedLow", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
-            if (SecondPlayer.Speed > 0.0045f)
+            if (SecondPlayer.Speed > 0.0065f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("speedHigh", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
-            if (SecondPlayer.Speed < 0.0035f)
+            if (SecondPlayer.Speed < 0.0055f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("speedLow", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
             if (FirstPlayer.Damage > 20f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.Damage > 20f)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
             if (FirstPlayer.TimeReload < 0.45)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("reloadHigh", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
+
             }
             if (FirstPlayer.TimeReload > 0.55)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("reloadLow", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.TimeReload < 0.45)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("reloadHigh", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
             if (SecondPlayer.TimeReload > 0.55)
             {
-                ShaderProgram?.ActiveProgram();
-                Vao?.Activate();
                 CreateVAOBonusInfo("reloadLow", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
-                Vao?.Dispose();
-                ShaderProgram?.DeactiveProgram();
             }
+            Vao?.Dispose();
+            ShaderProgram?.DeactiveProgram();
         }
 
         private void DrawShoots()
@@ -556,6 +442,42 @@ namespace Libr
             GL.Vertex2(0.8f, 0.79f);
             GL.Vertex2(1.0f, 0.79f);
             GL.Vertex2(1.0f, 0.89f);
+            GL.End();
+        }
+
+        private void DrawShellState()
+        {
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Orange);
+            GL.Vertex2(-0.78f, 0.79f);
+            GL.Vertex2(-0.68f, 0.79f);
+            GL.Vertex2(-0.78f, 0.002f * FirstPlayer.NumShells + 0.79f);
+            GL.Vertex2(-0.68f, 0.002f * FirstPlayer.NumShells + 0.79f);
+            GL.End();
+            GL.Begin(PrimitiveType.TriangleStrip);
+            GL.Color3(Color.Orange);
+            GL.Vertex2(0.68f, 0.79f);
+            GL.Vertex2(0.78f, 0.79f);
+            GL.Vertex2(0.68f, 0.002f * SecondPlayer.NumShells + 0.79f);
+            GL.Vertex2(0.78f, 0.002f * SecondPlayer.NumShells + 0.79f);
+            GL.End();
+            GL.LineWidth(5);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(-0.78f, 0.99f);
+            GL.Vertex2(-0.68f, 0.99f);
+            GL.Vertex2(-0.68f, 0.79f);
+            GL.Vertex2(-0.78f, 0.79f);
+            GL.Vertex2(-0.78f, 0.99f);
+            GL.End();
+            GL.LineWidth(5);
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color3(Color.Black);
+            GL.Vertex2(0.78f, 0.99f);
+            GL.Vertex2(0.68f, 0.99f);
+            GL.Vertex2(0.68f, 0.79f);
+            GL.Vertex2(0.78f, 0.79f);
+            GL.Vertex2(0.78f, 0.99f);
             GL.End();
         }
 

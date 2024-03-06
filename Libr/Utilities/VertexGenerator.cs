@@ -12,52 +12,77 @@ namespace Libr.Utilities
                 case Movement.Bottom:
                     return
                     [
-                          player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
-                            player.X, player.Y, 0.0f, 1.0f, 1.0f,
-                            player.X + player.Size, player.Y, 0.0f, 0.0f, 1.0f,
-                            player.X + player.Size, player.Y, 0.0f, 0.0f, 1.0f,
-                            player.X + player.Size, player.Y + player.Size, 0.0f, 0.0f, 0.0f,
-                            player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f,
+                        player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
+                        player.X, player.Y + player.Size*0.25f, 0.0f, 1.0f, 0.75f,
+                        player.X + player.Size*0.42f, player.Y + player.Size*0.25f, 0.0f, 0.56f, 0.75f,
+                        player.X + player.Size*0.42f, player.Y, 0.0f, 0.56f, 1.0f,
+                        player.X + player.Size*0.58f, player.Y, 0.0f, 0.44f, 1.0f,
+                        player.X + player.Size*0.58f, player.Y + player.Size*0.25f, 0.0f, 0.44f, 0.75f,
+                        player.X + player.Size, player.Y + player.Size*0.25f, 0.0f, 0.0f, 0.75f,
+                        player.X + player.Size, player.Y + player.Size, 0.0f, 0.0f, 0.0f,
+                        player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f
                     ];
                 case Movement.Left:
                     return
                     [
-                          player.X,player.Y + player.Size, 0.0f,1.0f,1.0f,
-                             player.X,player.Y, 0.0f,0.0f, 1.0f,
-                            player.X + player.Size,player.Y,0.0f,0.0f,0.0f,
-                            player.X + player.Size,player.Y,0.0f,0.0f,0.0f,
-                            player.X + player.Size,player.Y + player.Size,0.0f,1.0f,0.0f,
-                            player.X,player.Y + player.Size,0.0f,1.0f,1.0f
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f,
+                        player.X + player.Size, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
+                        player.X + player.Size*0.25f, player.Y + player.Size, 0.0f, 1.0f, 0.75f,
+                        player.X + player.Size*0.25f, player.Y + player.Size*0.58f, 0.0f, 0.56f, 0.75f,
+                        player.X, player.Y + player.Size*0.58f, 0.0f, 0.56f, 1.0f,
+                        player.X, player.Y + player.Size*0.42f, 0.0f, 0.44f, 1.0f,
+                        player.X + player.Size*0.25f, player.Y + player.Size*0.42f, 0.0f, 0.44f, 0.75f,
+                        player.X + player.Size*0.25f, player.Y, 0.0f, 0.0f, 0.75f,
+                        player.X + player.Size, player.Y, 0.0f, 0.0f, 0.0f,
+                        player.X + player.Size, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f
                     ];
                 case Movement.Right:
                     return
                     [
-                        player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
-                         player.X, player.Y, 0.0f, 0.0f, 0.0f,
-                         player.X + player.Size, player.Y, 0.0f, 0.0f, 1.0f,
-                         player.X + player.Size, player.Y, 0.0f, 0.0f, 1.0f,
-                         player.X + player.Size, player.Y + player.Size, 0.0f, 1.0f, 1.0f,
-                         player.X, player.Y + player.Size, 0.0f, 1.0f, 0.0f
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f,
+                        player.X, player.Y + player.Size, 0.0f, 0.0f, 0.0f,
+                        player.X, player.Y, 0.0f, 1.0f, 0.0f,
+                        player.X + player.Size*0.75f, player.Y, 0.0f, 1.0f, 0.75f,
+                        player.X + player.Size*0.75f, player.Y + player.Size*0.42f, 0.0f, 0.56f, 0.75f,
+                        player.X + player.Size, player.Y + player.Size*0.42f, 0.0f, 0.56f, 1.0f,
+                        player.X + player.Size, player.Y + player.Size*0.58f, 0.0f, 0.44f, 1.0f,
+                        player.X + player.Size*0.75f, player.Y + player.Size*0.58f, 0.0f, 0.44f, 0.75f,
+                        player.X + player.Size*0.75f, player.Y + player.Size, 0.0f, 0.0f, 0.75f,
+                        player.X, player.Y + player.Size, 0.0f, 0.0f, 0.0f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f
                     ];
                 case Movement.Top:
                     return
                     [
-                        player.X, player.Y + player.Size, 0.0f, 0.0f, 1.0f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f,
+                        player.X, player.Y + player.Size*0.75f, 0.0f, 0.0f, 0.75f,
                         player.X, player.Y, 0.0f, 0.0f, 0.0f,
                         player.X + player.Size, player.Y, 0.0f, 1.0f, 0.0f,
-                        player.X + player.Size, player.Y, 0.0f, 1.0f, 0.0f,
-                        player.X + player.Size, player.Y + player.Size, 0.0f, 1.0f, 1.0f,
-                        player.X, player.Y + player.Size, 0.0f, 0.0f, 1.0f
+                        player.X + player.Size, player.Y + player.Size*0.75f, 0.0f, 1.0f, 0.75f,
+                        player.X + player.Size * 0.58f, player.Y + player.Size*0.75f, 0.0f, 0.56f, 0.75f,
+                        player.X + player.Size * 0.58f, player.Y + player.Size, 0.0f, 0.56f, 1.0f,
+                        player.X + player.Size * 0.42f, player.Y + player.Size, 0.0f, 0.44f, 1.0f,
+                        player.X + player.Size * 0.42f, player.Y + player.Size*0.75f, 0.0f, 0.44f, 0.75f,
+                        player.X, player.Y + player.Size*0.75f, 0.0f, 0.0f, 0.75f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f
                     ];
                 default:
                     return
                     [
-                        player.X, player.Y + player.Size, 0.0f, 1.0f, 1.0f,
-                        player.X, player.Y, 0.0f, 0.0f, 1.0f,
-                        player.X + player.Size, player.Y, 0.0f, 0.0f, 0.0f,
-                        player.X + player.Size, player.Y, 0.0f, 0.0f, 0.0f,
-                        player.X + player.Size, player.Y + player.Size, 0.0f, 1.0f, 0.0f,
-                        player.X, player.Y + player.Size, 0.0f, 1.0f, 1.0f
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f,
+                        player.X, player.Y + player.Size*0.75f, 0.0f, 0.0f, 0.75f,
+                        player.X, player.Y, 0.0f, 0.0f, 0.0f,
+                        player.X + player.Size, player.Y, 0.0f, 1.0f, 0.0f,
+                        player.X + player.Size, player.Y + player.Size*0.75f, 0.0f, 1.0f, 0.75f,
+                        player.X + player.Size * 0.58f, player.Y + player.Size*0.75f, 0.0f, 0.56f, 0.75f,
+                        player.X + player.Size * 0.58f, player.Y + player.Size, 0.0f, 0.56f, 1.0f,
+                        player.X + player.Size * 0.42f, player.Y + player.Size, 0.0f, 0.44f, 1.0f,
+                        player.X + player.Size * 0.42f, player.Y + player.Size*0.75f, 0.0f, 0.44f, 0.75f,
+                        player.X, player.Y + player.Size*0.75f, 0.0f, 0.0f, 0.75f,
+                        player.X + player.Size/2, player.Y + player.Size/2,0.0f, 0.5f,0.5f
                     ];
             }
         }

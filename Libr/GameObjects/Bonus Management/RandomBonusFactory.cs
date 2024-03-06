@@ -3,6 +3,7 @@
     public class RandomBonusFactory
     {
         private int randomBonus;
+
         public BonusDecorator CreateBonus(Player player)
         {
             Random random = new();

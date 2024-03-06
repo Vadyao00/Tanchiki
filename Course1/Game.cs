@@ -28,6 +28,7 @@ namespace Tanchiki
             timer = new Timer();
             this.ScorePlayer1 = ScorePlayer1;
             this.ScorePlayer2 = ScorePlayer2;
+            UpdateFrequency = 60;
         }
 
 

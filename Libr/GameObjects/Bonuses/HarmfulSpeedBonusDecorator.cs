@@ -9,7 +9,7 @@ namespace Libr
     public class HarmfulSpeedBonusDecorator(Player player) : BonusDecorator(player)
     {
         private readonly float speedEffect = 0.002f;
-        private readonly float speedNormal = 0.004f;
+        private readonly float speedNormal = 0.006f;
 
         public override void ActivateBonus()
         {

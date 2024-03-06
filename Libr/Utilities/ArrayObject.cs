@@ -66,12 +66,14 @@ namespace Libr
         {
             Activate();
             GL.DrawArrays(PrimitiveType.Triangles, start, count);
+            Dispose();
         }
 
         public void DrawPoligon(int start, int count)
         {
             Activate();
             GL.DrawArrays(PrimitiveType.Polygon, start, count);
+            Dispose();
         }
 
         public void DisableAttribAll()
