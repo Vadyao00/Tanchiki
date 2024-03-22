@@ -8,8 +8,8 @@ namespace Libr
 {
     public class SpeedBonusDecorator(Player player) : BonusDecorator(player)
     {
-        private readonly float speedEffect = 0.002f;
-        private readonly float speedNormal = 0.006f;
+        private readonly float speedEffect = 0.15f;
+        private readonly float speedNormal = 0.35f;
 
         public override void ActivateBonus()
         {

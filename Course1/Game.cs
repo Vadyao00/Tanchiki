@@ -28,7 +28,6 @@ namespace Tanchiki
             timer = new Timer();
             this.ScorePlayer1 = ScorePlayer1;
             this.ScorePlayer2 = ScorePlayer2;
-            UpdateFrequency = 60;
         }
 
 
@@ -37,7 +36,7 @@ namespace Tanchiki
         protected override void OnLoad()
         {
             base.OnLoad();
-            timer.Start();
+            //timer.Start();
             GL.ClearColor(Color4.AliceBlue);
             GL.Enable(EnableCap.CullFace);
             renderer = new Renderer(mapString, ScorePlayer1, ScorePlayer2);
@@ -47,7 +46,7 @@ namespace Tanchiki
         {
             renderer?.Vao?.Dispose();
             renderer?.ShaderProgram.DeleteProgram();
-            timer.Stop();
+            //timer.Stop();
             base.OnUnload();
             
         }
@@ -70,7 +69,7 @@ namespace Tanchiki
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
-            renderer?.OnKeyDown(KeyboardState, timer);
+            renderer?.OnKeyDown(KeyboardState, timer, (float)frameEventArgs.Time);
             Title = renderer?.DrawFPS(frameEventArgs, Title);
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {

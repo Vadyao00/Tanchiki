@@ -186,22 +186,22 @@ namespace Libr
         {
             ShaderProgram?.ActiveProgram();
             Vao?.Activate();
-            if (FirstPlayer.Speed > 0.0065f)
+            if (FirstPlayer.Speed > 0.4f)
             {
                 CreateVAOBonusInfo("speedHigh", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
             }
-            if (FirstPlayer.Speed < 0.0055f)
+            if (FirstPlayer.Speed < 0.3f)
             {
                 CreateVAOBonusInfo("speedLow", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
             }
-            if (SecondPlayer.Speed > 0.0065f)
+            if (SecondPlayer.Speed > 0.4f)
             {
                 CreateVAOBonusInfo("speedHigh", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
             }
-            if (SecondPlayer.Speed < 0.0055f)
+            if (SecondPlayer.Speed < 0.3f)
             {
                 CreateVAOBonusInfo("speedLow", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
                 Vao?.DrawPoligon(0, 30);
@@ -521,39 +521,39 @@ namespace Libr
             }
         }
 
-        public void OnKeyDown(KeyboardState KeyboardState, Timer timer)
+        public void OnKeyDown(KeyboardState KeyboardState, Timer timer, float speedKoef)
         {
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.A))
             {
-                FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.S))
             {
-                FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.D))
             {
-                FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer);
+                FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.U))
             {
-                SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.J))
             {
-                SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.H))
             {
-                SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.K))
             {
-                SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer);
+                SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
             }
             if (KeyboardState.IsKeyDown(Keys.V))
             {
