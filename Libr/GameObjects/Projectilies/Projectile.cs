@@ -5,25 +5,25 @@
         public float X { get; private set; } = vertexArray[0];
         public float Y { get; private set; } = vertexArray[1];
 
-        private readonly float speedProjectile = 0.01f;
+        private readonly float speedProjectile = 0.7f;
         public Movement Direction { get; private set; } = direction;
 
-        public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer)
+        public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer,float koef)
         {
             float x = X, y = Y;
             switch (Direction)
             {
                 case Movement.Left:
-                    x -= speedProjectile;
+                    x -= speedProjectile*koef;
                     break;
                 case Movement.Top:
-                    y += speedProjectile;
+                    y += speedProjectile*koef;
                     break;
                 case Movement.Right:
-                    x += speedProjectile;
+                    x += speedProjectile*koef;
                     break;
                 case Movement.Bottom:
-                    y -= speedProjectile;
+                    y -= speedProjectile*koef;
                     break;
             }
             foreach (Wall cell in listWalls)

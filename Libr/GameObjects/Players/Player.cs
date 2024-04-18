@@ -15,7 +15,7 @@ namespace Libr
         public float Size { get; private set; } = 0.08f;
         public float Health { get; set; } = 100f;
         public float Damage { get;  set; } = 20f;
-        public float Speed { get;  set; } = 0.35f;//0.006f
+        public float Speed { get;  set; } = 0.35f;
         public double TimeReload { get; set; } = 0.5;
         public float Fuel { get; set; } = 100.0f;
         public int NumShells { get; set; } = 100;
@@ -42,10 +42,10 @@ namespace Libr
 
         public void PlayerMove(Movement move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer, float speedKoef)
         {
+            Direction = move;
             if(Fuel <= 0) return;
             float futureX = X;
             float futureY = Y;
-            Direction = move;
             switch (move)
             {
                 case Movement.Left:

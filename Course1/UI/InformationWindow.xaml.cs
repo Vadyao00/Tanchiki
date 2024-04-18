@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Tanchiki
+namespace Tanchiki.UI
 {
     public partial class InformationWindow : Window
     {
@@ -8,6 +8,7 @@ namespace Tanchiki
         {
             InitializeComponent();
             ResizeMode = ResizeMode.NoResize;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

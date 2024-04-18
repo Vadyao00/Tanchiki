@@ -37,9 +37,10 @@ namespace Libr
         public Texture TextureBonusInfoSpeedLow { get; private set; }
         private readonly RandomBonusFactory randomBonusFactory;
         private List<Projectile>? projectilesToRemove;
-        private readonly TextBlock ScorePlayer1;
-        private readonly TextBlock ScorePlayer2;
-        public Renderer(string mapString, TextBlock ScorePlayer1, TextBlock ScorePlayer2)
+        private TextBlock Score;
+        private TextBlock ScorePlayer1;
+        private TextBlock ScorePlayer2;
+        public Renderer(string mapString, TextBlock score, TextBlock scorePlayer1, TextBlock scorePlayer2)
         {
             ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
             Map = new Map(20, 20, Wall, LoadMapFromFile(mapString));
@@ -56,8 +57,7 @@ namespace Libr
             SecondPlayer = new Player(2);
             randomBonusFactory = new RandomBonusFactory();
             virtualBonusesList = [];
-            this.ScorePlayer1 = ScorePlayer1;
-            this.ScorePlayer2 = ScorePlayer2;
+            Score = score;
             backgroundVertArray = [
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
              -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
@@ -66,6 +66,8 @@ namespace Libr
              1.0f, 1.0f, 0.0f, 1.0f,1.0f,
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f
             ];
+            ScorePlayer1 = scorePlayer1;
+            ScorePlayer2 = scorePlayer2;
         }
         public void Draw(FrameEventArgs frameEventArgs)
         {
@@ -94,23 +96,23 @@ namespace Libr
             DrawReloadLine();
             DrawShoots();
             RestartGame();
-            MoveShoots();
+            MoveShoots((float)frameEventArgs.Time);
         }
 
-        public void MoveShoots()
+        public void MoveShoots(float koef)
         {
             projectilesToRemove = new List<Projectile>();
             if (FirstPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in FirstPlayer.Projectiles)
                 {
-                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer,SecondPlayer,1);
+                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer,SecondPlayer,1,koef);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 FirstPlayer.Projectiles.Remove(myProjectile);
             if (SecondPlayer.Projectiles.Count != 0)
                 foreach (Projectile projectile in SecondPlayer.Projectiles)
                 {
-                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer, SecondPlayer,2);
+                    projectile.Move(Map.ListWalls, projectilesToRemove, FirstPlayer, SecondPlayer,2,koef);
                 }
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
@@ -489,6 +491,8 @@ namespace Libr
                 SecondPlayer = new Player(2);
                 virtualBonusesList = [];
                 ScorePlayer2.Text = (int.Parse(ScorePlayer2.Text)+1).ToString();
+                string scoreString = $"Игрок 1 | {ScorePlayer1.Text} : {ScorePlayer2.Text} | Игрок 2";
+                Score.Text = scoreString;
             }
             if(SecondPlayer.CheckIsDead())
             {
@@ -496,6 +500,8 @@ namespace Libr
                 SecondPlayer = new Player(2);
                 virtualBonusesList = [];
                 ScorePlayer1.Text = (int.Parse(ScorePlayer1.Text) + 1).ToString();
+                string scoreString = $"Игрок 1 | {ScorePlayer1.Text} : {ScorePlayer2.Text} | Игрок 2";
+                Score.Text = scoreString;
             }
         }
 
@@ -520,41 +526,66 @@ namespace Libr
                 virtualBonusesList.Remove(bonus);
             }
         }
-
+        private Keys lastKeyPressed;
         public void OnKeyDown(KeyboardState KeyboardState, Timer timer, float speedKoef)
         {
+            Movement? playerMovement = null;
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                playerMovement = Movement.Top;
+                lastKeyPressed = Keys.W;
             }
-            if (KeyboardState.IsKeyDown(Keys.A))
+            else if (KeyboardState.IsKeyDown(Keys.A))
             {
-                FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                playerMovement = Movement.Left;
+                lastKeyPressed = Keys.A;
             }
-            if (KeyboardState.IsKeyDown(Keys.S))
+            else if (KeyboardState.IsKeyDown(Keys.S))
             {
-                FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                playerMovement = Movement.Bottom;
+                lastKeyPressed = Keys.S;
             }
-            if (KeyboardState.IsKeyDown(Keys.D))
+            else if (KeyboardState.IsKeyDown(Keys.D))
             {
-                FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                playerMovement = Movement.Right;
+                lastKeyPressed = Keys.D;
             }
-            if (KeyboardState.IsKeyDown(Keys.U))
+            if (playerMovement.HasValue)
             {
-                SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                FirstPlayer.PlayerMove(playerMovement.Value, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
             }
-            if (KeyboardState.IsKeyDown(Keys.J))
-            {
-                SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            }
-            if (KeyboardState.IsKeyDown(Keys.H))
-            {
-                SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            }
-            if (KeyboardState.IsKeyDown(Keys.K))
-            {
-                SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            }
+            //if (KeyboardState.IsKeyDown(Keys.W))
+            //{
+            //    FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.A))
+            //{
+            //    FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.S))
+            //{
+            //    FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.D))
+            //{
+            //    FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.I))
+            //{
+            //    SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.K))
+            //{
+            //    SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.J))
+            //{
+            //    SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+            //}
+            //if (KeyboardState.IsKeyDown(Keys.L))
+            //{
+            //    SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+            //}
             if (KeyboardState.IsKeyDown(Keys.V))
             {
                 FirstPlayer.Shoot();

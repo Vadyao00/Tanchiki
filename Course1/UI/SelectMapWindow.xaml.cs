@@ -1,45 +1,31 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Tanchiki;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
 using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-namespace Course1
+namespace Tanchiki.UI
 {
-    public partial class MainWindow : Window
+    public partial class SelectMapWindow : Window
     {
-        private string mapString = @"data\maps\map1.txt";
         private bool IsMap1Clicked = false;
         private bool IsMap2Clicked = false;
         private bool IsMap3Clicked = false;
-        public MainWindow()
+
+        public SelectMapWindow()
         {
             InitializeComponent();
             ResizeMode = ResizeMode.NoResize;
-
-        }
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            var nativeWindowSettings = new NativeWindowSettings
-            {
-                WindowState = OpenTK.Windowing.Common.WindowState.Normal,
-                WindowBorder = WindowBorder.Resizable,
-                StartFocused = true,
-                StartVisible = true,
-                Flags = ContextFlags.Default,
-                APIVersion = new Version(3, 3),
-                Profile = ContextProfile.Compatability,
-                API = ContextAPI.OpenGL,
-            };
-
-            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this,mapString, ScorePlayer1, ScorePlayer2))
-            {
-                Hide();
-                gameScene.Run();
-            }
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void Map1_Click(object sender, RoutedEventArgs e)
@@ -47,7 +33,7 @@ namespace Course1
             IsMap1Clicked = true;
             IsMap3Clicked = false;
             IsMap2Clicked = false;
-            mapString = @"data\maps\map1.txt";
+            ContainerClass.mapString = @"data\maps\map1.txt";
             Button button = (Button)sender;
 
             DropShadowEffect dropShadowEffect = new DropShadowEffect();
@@ -60,13 +46,14 @@ namespace Course1
             map2Button.Effect = null;
             map3Button.BorderThickness = new Thickness(1);
             map3Button.Effect = null;
+            this.Close();
         }
         private void Map2_Click(object sender, RoutedEventArgs e)
         {
             IsMap2Clicked = true;
             IsMap1Clicked = false;
             IsMap3Clicked = false;
-            mapString = @"data\maps\map2.txt";
+            ContainerClass.mapString = @"data\maps\map2.txt";
             Button button = (Button)sender;
 
             DropShadowEffect dropShadowEffect = new DropShadowEffect();
@@ -79,13 +66,14 @@ namespace Course1
             map1Button.Effect = null;
             map3Button.BorderThickness = new Thickness(1);
             map3Button.Effect = null;
+            this.Close();
         }
         private void Map3_Click(object sender, RoutedEventArgs e)
         {
             IsMap3Clicked = true;
             IsMap1Clicked = false;
             IsMap2Clicked = false;
-            mapString = @"data\maps\map3.txt";
+            ContainerClass.mapString = @"data\maps\map3.txt";
             Button button = (Button)sender;
 
             DropShadowEffect dropShadowEffect = new DropShadowEffect();
@@ -98,6 +86,7 @@ namespace Course1
             map2Button.Effect = null;
             map1Button.BorderThickness = new Thickness(1);
             map1Button.Effect = null;
+            this.Close();
         }
 
         private void ButtonMap_MouseEnter(object sender, MouseEventArgs e)
@@ -130,17 +119,6 @@ namespace Course1
             Button button = (Button)sender;
             button.BorderThickness = new Thickness(1);
             button.Effect = null;
-        }
-
-        private void ButtonInformation_Click(object sender, RoutedEventArgs e)
-        {
-            InformationWindow infoWindow = new InformationWindow();
-            infoWindow.Show();
-        }
-        private void ButtonResetScore_Click(object sender, RoutedEventArgs e)
-        {
-            ScorePlayer1.Text = "0";
-            ScorePlayer2.Text = "0";
         }
     }
 }

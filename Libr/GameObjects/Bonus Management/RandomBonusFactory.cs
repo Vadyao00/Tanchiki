@@ -14,9 +14,9 @@
                 2 => new FuelBonusFactory(player).CreateBonus(),
                 3 => new DamageBonusFactory(player).CreateBonus(),
                 4 => new ReloadBonusFactory(player).CreateBonus(),
-                5 => new ShellBonusFactory(player).CreateBonus(),
+                5 => new ProjectileBonusFactory(player).CreateBonus(),
                 6 => new HarmfulSpeedBonusFactory(player).CreateBonus(),
-                7 => new HarmfulShellBonusFactory(player).CreateBonus(),
+                7 => new HarmfulProjectileBonusFactory(player).CreateBonus(),
                 8 => new HarmfulReloadBonusFactory(player).CreateBonus(),
                 _ => new SpeedBonusFactory(player).CreateBonus(),
             };

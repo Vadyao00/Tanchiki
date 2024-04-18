@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <Configurations>Debug;Release;bvj</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,18 +17,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Data\bonusesInfo\damageBonus.png" />
-    <None Remove="Data\bonusesInfo\reloadBonus.png" />
-    <None Remove="Data\bonusesInfo\reloadBonusLow.png" />
-    <None Remove="Data\bonusesInfo\speedBonus.png" />
-    <None Remove="Data\bonusesInfo\speedBonusLow.png" />
-    <None Remove="Data\mapsImages\map1.png" />
-    <None Remove="Data\mapsImages\map2.png" />
-    <None Remove="Data\mapsImages\map3.png" />
-    <None Remove="Data\tips\key1.png" />
-    <None Remove="Data\tips\key2.png" />
-    <None Remove="Data\tips\keyboard1.png" />
-    <None Remove="Data\tips\keyboard2.png" />
+    <None Remove="UI\Data\bonusesInfo\damageBonus.png" />
+    <None Remove="UI\Data\bonusesInfo\reloadBonus.png" />
+    <None Remove="UI\Data\bonusesInfo\reloadBonusLow.png" />
+    <None Remove="UI\Data\bonusesInfo\speedBonus.png" />
+    <None Remove="UI\Data\bonusesInfo\speedBonusLow.png" />
+    <None Remove="UI\Data\mapsImages\map1.png" />
+    <None Remove="UI\Data\mapsImages\map2.png" />
+    <None Remove="UI\Data\mapsImages\map3.png" />
+    <None Remove="UI\Data\tips\key1.png" />
+    <None Remove="UI\Data\tips\key2.png" />
+    <None Remove="UI\Data\tips\keyboard1.png" />
+    <None Remove="UI\Data\tips\keyboard2.png" />
+    <None Remove="UI\Data\UIPictures\backgroundMenu.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,42 +42,57 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Data\bonusesInfo\damageBonus.png">
+    <Resource Include="UI\Data\bonusesInfo\damageBonus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\bonusesInfo\reloadBonus.png">
+    <Resource Include="UI\Data\bonusesInfo\reloadBonus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\bonusesInfo\reloadBonusLow.png">
+    <Resource Include="UI\Data\bonusesInfo\reloadBonusLow.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\bonusesInfo\speedBonus.png">
+    <Resource Include="UI\Data\bonusesInfo\speedBonus.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\bonusesInfo\speedBonusLow.png">
+    <Resource Include="UI\Data\bonusesInfo\speedBonusLow.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\mapsImages\map1.png">
+    <Resource Include="UI\Data\mapsImages\map1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\mapsImages\map2.png">
+    <Resource Include="UI\Data\mapsImages\map2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\mapsImages\map3.png">
+    <Resource Include="UI\Data\mapsImages\map3.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\tips\key1.png">
+    <Resource Include="UI\Data\tips\key1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\tips\key2.png">
+    <Resource Include="UI\Data\tips\key2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\tips\keyboard1.png">
+    <Resource Include="UI\Data\tips\keyboard1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\tips\keyboard2.png">
+    <Resource Include="UI\Data\tips\keyboard2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="UI\Data\UIPictures\backgroundMenu.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UI\InformationWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\MoreInformationWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\SelectMapWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
