@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
 using Libr.GameObjects.Projectilies;
 using Libr.Utilities;
+using Microsoft.Windows.Themes;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -526,66 +527,72 @@ namespace Libr
                 virtualBonusesList.Remove(bonus);
             }
         }
-        private Keys lastKeyPressed;
         public void OnKeyDown(KeyboardState KeyboardState, Timer timer, float speedKoef)
         {
-            Movement? playerMovement = null;
+            Movement? firstPlayerMovement = null;
+            Movement? secondPlayerMovement = null;
             if (KeyboardState.IsKeyDown(Keys.W))
             {
-                playerMovement = Movement.Top;
-                lastKeyPressed = Keys.W;
+                firstPlayerMovement = Movement.Top;
             }
-            else if (KeyboardState.IsKeyDown(Keys.A))
+            if (KeyboardState.IsKeyDown(Keys.A))
             {
-                playerMovement = Movement.Left;
-                lastKeyPressed = Keys.A;
+                firstPlayerMovement = Movement.Left;
             }
-            else if (KeyboardState.IsKeyDown(Keys.S))
+            if (KeyboardState.IsKeyDown(Keys.S))
             {
-                playerMovement = Movement.Bottom;
-                lastKeyPressed = Keys.S;
+                firstPlayerMovement = Movement.Bottom;
             }
-            else if (KeyboardState.IsKeyDown(Keys.D))
+            if (KeyboardState.IsKeyDown(Keys.D))
             {
-                playerMovement = Movement.Right;
-                lastKeyPressed = Keys.D;
+                firstPlayerMovement = Movement.Right;
             }
-            if (playerMovement.HasValue)
+            if (KeyboardState.IsKeyDown(Keys.I))
             {
-                FirstPlayer.PlayerMove(playerMovement.Value, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                secondPlayerMovement = Movement.Top;
             }
-            //if (KeyboardState.IsKeyDown(Keys.W))
-            //{
-            //    FirstPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.A))
-            //{
-            //    FirstPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.S))
-            //{
-            //    FirstPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.D))
-            //{
-            //    FirstPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.I))
-            //{
-            //    SecondPlayer.PlayerMove(Movement.Top, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.K))
-            //{
-            //    SecondPlayer.PlayerMove(Movement.Bottom, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.J))
-            //{
-            //    SecondPlayer.PlayerMove(Movement.Left, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            //}
-            //if (KeyboardState.IsKeyDown(Keys.L))
-            //{
-            //    SecondPlayer.PlayerMove(Movement.Right, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
-            //}
+            if (KeyboardState.IsKeyDown(Keys.K))
+            {
+                secondPlayerMovement = Movement.Bottom;
+            }
+            if (KeyboardState.IsKeyDown(Keys.J))
+            {
+                secondPlayerMovement = Movement.Left;
+            }
+            if (KeyboardState.IsKeyDown(Keys.L))
+            {
+                secondPlayerMovement = Movement.Right;
+            }
+            switch(firstPlayerMovement)
+            {
+                case Movement.Left:
+                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Right:
+                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Bottom:
+                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Top:
+                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+            }
+            switch (secondPlayerMovement)
+            {
+                case Movement.Left:
+                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Right:
+                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Bottom:
+                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+                case Movement.Top:
+                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    break;
+            }
             if (KeyboardState.IsKeyDown(Keys.V))
             {
                 FirstPlayer.Shoot();

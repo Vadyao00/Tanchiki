@@ -20,7 +20,7 @@ namespace Libr
         public float Fuel { get; set; } = 100.0f;
         public int NumShells { get; set; } = 100;
         public bool IsReloading { get; private set; } = false;
-        public Movement Direction { get;private set; }
+        public Movement? Direction { get;private set; }
         public List<Projectile> Projectiles {  get; private set; }
 
         public Player(int num)
@@ -40,7 +40,7 @@ namespace Libr
             Projectiles = [];
         }
 
-        public void PlayerMove(Movement move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer, float speedKoef)
+        public void PlayerMove(Movement? move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer, float speedKoef)
         {
             Direction = move;
             if(Fuel <= 0) return;
