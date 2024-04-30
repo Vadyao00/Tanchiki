@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Libr.BonusDecorator" Collapsed="true">
+    <Position X="13.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIIAAAAAAAAQAAgCAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\BonusDecorator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Libr.DamageBonusDecorator" Collapsed="true">
+    <Position X="11.25" Y="3.5" Width="2" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.75" Y="4.062" />
+        <Point X="13.596" Y="4.062" />
+        <Point X="13.596" Y="4.345" />
+        <Point X="12.25" Y="4.345" />
+        <Point X="12.25" Y="4.191" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAEAAAAAAAAAAABAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\DamageBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.FuelBonusDecorator" Collapsed="true">
+    <Position X="14.75" Y="2.5" Width="1.75" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="14.688" Y="4" />
+        <Point X="14.688" Y="3.345" />
+        <Point X="15.625" Y="3.345" />
+        <Point X="15.625" Y="3.191" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAgAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\FuelBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulProjectileBonusDecorator" Collapsed="true">
+    <Position X="15.5" Y="3.5" Width="2.5" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="15.25" Y="4.125" />
+        <Point X="15.5" Y="4.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulProjectileBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulReloadBonusDecorator" Collapsed="true">
+    <Position X="12" Y="5.5" Width="2.5" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="14.062" Y="4.562" />
+        <Point X="14.062" Y="5.346" />
+        <Point X="13.25" Y="5.346" />
+        <Point X="13.25" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulReloadBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulSpeedBonusDecorator" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="2.25" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="14.25" Y="4" />
+        <Point X="14.25" Y="3.345" />
+        <Point X="13.375" Y="3.345" />
+        <Point X="13.375" Y="3.191" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulSpeedBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ProjectileBonusDecorator" Collapsed="true">
+    <Position X="15.5" Y="4.5" Width="2" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="15.25" Y="4.375" />
+        <Point X="15.404" Y="4.375" />
+        <Point X="15.404" Y="4.346" />
+        <Point X="16.5" Y="4.346" />
+        <Point X="16.5" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\ProjectileBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ReloadBonusDecorator" Collapsed="true">
+    <Position X="14.75" Y="5.5" Width="2" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="14.938" Y="4.562" />
+        <Point X="14.938" Y="5.346" />
+        <Point X="15.75" Y="5.346" />
+        <Point X="15.75" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\ReloadBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.SpeedBonusDecorator" Collapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.75" />
+    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
+      <Path>
+        <Point X="13.75" Y="4.5" />
+        <Point X="13.69" Y="4.5" />
+        <Point X="13.69" Y="4.846" />
+        <Point X="13.5" Y="4.846" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\SpeedBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

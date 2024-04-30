@@ -4,23 +4,11 @@ namespace Libr
     public class Timer
     {
         public List<BonusDecorator> ActiveBonuses;
-        //public Stopwatch Stopwatch;
 
         public Timer()
         {
-            //Stopwatch = new Stopwatch();
             ActiveBonuses = [];
         }
-
-        //public void Start()
-        //{
-        //    Stopwatch.Start();
-        //}
-
-        //public void Stop()
-        //{
-        //    Stopwatch.Stop();
-        //}
 
         public void AddBonus(BonusDecorator bonus,Player player)
         {

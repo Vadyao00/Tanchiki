@@ -369,8 +369,7 @@ namespace Libr
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка чтения файла: {ex.Message}");
-                throw new Exception();
+                throw new Exception($"Ошибка чтения файла: {ex.Message}");
             }
         }
 

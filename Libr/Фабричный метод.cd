@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Libr.BonusFactory" Collapsed="true">
+    <Position X="19.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACABAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\BonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.DamageBonusFactory" Collapsed="true">
+    <Position X="18.25" Y="3.25" Width="1.75" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="20.25" Y="5" />
+        <Point X="20.25" Y="4.316" />
+        <Point X="19.125" Y="4.316" />
+        <Point X="19.125" Y="3.941" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\DamageBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.FuelBonusFactory" Collapsed="true">
+    <Position X="17.75" Y="5.75" Width="1.5" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="19.75" Y="5.25" />
+        <Point X="18.5" Y="5.25" />
+        <Point X="18.5" Y="5.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\FuelBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulProjectileBonusFactory" Collapsed="true">
+    <Position X="20.75" Y="6.75" Width="2.5" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="20.75" Y="5.562" />
+        <Point X="20.75" Y="6.596" />
+        <Point X="22" Y="6.596" />
+        <Point X="22" Y="6.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulProjectileBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulReloadBonusFactory" Collapsed="true">
+    <Position X="16.5" Y="4.25" Width="2.25" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="19.75" Y="5.125" />
+        <Point X="19.375" Y="5.125" />
+        <Point X="19.375" Y="4.629" />
+        <Point X="18.75" Y="4.629" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulReloadBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulSpeedBonusFactory" Collapsed="true">
+    <Position X="20.75" Y="3.25" Width="2.25" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="20.75" Y="5" />
+        <Point X="20.75" Y="4.316" />
+        <Point X="21.875" Y="4.316" />
+        <Point X="21.875" Y="3.941" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulSpeedBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ProjectileBonusFactory" Collapsed="true">
+    <Position X="18.25" Y="6.75" Width="2" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="20.25" Y="5.562" />
+        <Point X="20.25" Y="6.596" />
+        <Point X="19.25" Y="6.596" />
+        <Point X="19.25" Y="6.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\ProjectileBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ReloadBonusFactory" Collapsed="true">
+    <Position X="22.25" Y="4.5" Width="1.75" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="21.25" Y="5.062" />
+        <Point X="22.25" Y="5.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\ReloadBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.SpeedBonusFactory" Collapsed="true">
+    <Position X="21.75" Y="5.75" Width="1.75" />
+    <InheritanceLine Type="Libr.BonusFactory" FixedFromPoint="true">
+      <Path>
+        <Point X="21.25" Y="5.438" />
+        <Point X="22.625" Y="5.438" />
+        <Point X="22.625" Y="5.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\SpeedBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
