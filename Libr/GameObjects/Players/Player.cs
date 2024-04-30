@@ -23,6 +23,8 @@ namespace Libr
         public Movement? Direction { get;private set; }
         public List<Projectile> Projectiles {  get; private set; }
 
+        public Player() { }
+
         public Player(int num)
         {
             if (num == 1)
