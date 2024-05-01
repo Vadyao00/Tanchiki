@@ -2,7 +2,7 @@
 {
     public class HarmfulReloadBonusFactory : BonusFactory
     {
-        public HarmfulReloadBonusFactory(Player player) : base(player) { }
+        public HarmfulReloadBonusFactory(Tank player) : base(player) { }
         public override BonusDecorator CreateBonus()
         {
             return new HarmfulReloadBonusDecorator(player);

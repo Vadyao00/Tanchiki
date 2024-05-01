@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class FuelBonusDecorator(Player player) : BonusDecorator(player)
+    public class FuelBonusDecorator(Tank player) : BonusDecorator(player)
     {
         private readonly float fuel = 10.0f;
 

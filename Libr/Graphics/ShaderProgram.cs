@@ -44,12 +44,6 @@ namespace Libr
 
         public int GetAttribProgram(string name) => GL.GetAttribLocation(_program, name);
 
-        public void SetUniform4(string name, Vector4 vec)
-        {
-            int location = GL.GetUniformLocation(_program, name);
-            GL.Uniform4(location, vec);
-        }
-
         private int CreateShader(ShaderType shaderType, string shaderFile)
         {
             string shaderStr = File.ReadAllText(shaderFile);
@@ -65,17 +59,6 @@ namespace Libr
             }
 
             return shaderID;
-        }
-
-        public void SetTexture(string name, int unit)
-        {
-            int location = GL.GetUniformLocation(_program, name);
-            GL.Uniform1(location, unit);
-        }
-
-        public void ActivateTextureUnit(TextureUnit unit)
-        {
-            GL.ActiveTexture(unit);
         }
 
         private void DeleteShader(int shader)

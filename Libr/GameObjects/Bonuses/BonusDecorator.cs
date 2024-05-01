@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public abstract class BonusDecorator(Player player) : Player, IBonus
+    public abstract class BonusDecorator(Tank player) : Tank, IBonus
     {
-        public Player _player = player;
+        public Tank _player = player;
         protected TimeSpan startTime;
         protected TimeSpan duration = TimeSpan.FromMilliseconds(10000);
 

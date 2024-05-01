@@ -4,8 +4,17 @@ namespace Libr.Utilities
 {
     public class VertexGenerator
     {
+        private static float[] backgroundVertArray = [
+             -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
+             -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
+             1.0f, 1.0f, 0.0f, 1.0f,1.0f,
+             -1.0f, 1.0f, 0.0f, 0.0f,1.0f
+            ];
+
         private static float[] bonusVertexArray = [];
-        public static float[] GetPlayerVertexArray(Player player)
+        public static float[] GetPlayerVertexArray(Tank player)
         {
             switch (player.Direction)
             {
@@ -115,7 +124,7 @@ namespace Libr.Utilities
             }
             return bonusVertexArray;
         }
-        public static float[] GetShellVertexArray(Player player)
+        public static float[] GetShellVertexArray(Tank player)
         {
             float x = 0, y = 0;
             switch (player.Direction)
@@ -139,10 +148,19 @@ namespace Libr.Utilities
             }
             return [x, y];
         }
-        public static float[] GetReloadLineVertexArray(Player player)
+
+        public static float[] GetReloadLineVertexArray(Tank player)
         {
             float xStart = player.X, xEnd = player.X + player.Size, yLine = player.Y + player.Size + 0.02f;
             return [xStart, xEnd, yLine];
         }
+
+        public static float[] GetBackgroundVertexArray() => backgroundVertArray;
+        public static float[] GetSpeedFirstVertexArray() => [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f];
+        public static float[] GetSpeedSecondVertexArray() => [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f];
+        public static float[] GetDamageFirstVertexArray() => [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f];
+        public static float[] GetDamageSecondVertexArray() => [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f];
+        public static float[] GetReloadFirstVertexArray() => [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f];
+        public static float[] GetReloadSecondVertexArray() => [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f];
     }
 }

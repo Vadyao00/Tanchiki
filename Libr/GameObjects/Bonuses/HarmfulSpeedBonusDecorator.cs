@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class HarmfulSpeedBonusDecorator(Player player) : BonusDecorator(player)
+    public class HarmfulSpeedBonusDecorator(Tank player) : BonusDecorator(player)
     {
         private readonly float speedEffect = 0.15f;
         private readonly float speedNormal = 0.35f;

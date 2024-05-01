@@ -4,7 +4,7 @@
     {
         private int randomBonus;
 
-        public BonusDecorator CreateBonus(Player player)
+        public BonusDecorator CreateBonus(Tank player)
         {
             Random random = new();
             randomBonus = random.Next(1, 9);

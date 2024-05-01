@@ -10,13 +10,12 @@
   </Class>
   <Class Name="Libr.DamageBonusDecorator" Collapsed="true">
     <Position X="11.25" Y="3.5" Width="2" />
-    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true" FixedToPoint="true">
+    <InheritanceLine Type="Libr.BonusDecorator" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="13.75" Y="4.062" />
-        <Point X="13.596" Y="4.062" />
-        <Point X="13.596" Y="4.345" />
-        <Point X="12.25" Y="4.345" />
-        <Point X="12.25" Y="4.191" />
+        <Point X="13.51" Y="4.062" />
+        <Point X="13.51" Y="3.812" />
+        <Point X="13.25" Y="3.812" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -54,14 +53,6 @@
   </Class>
   <Class Name="Libr.HarmfulReloadBonusDecorator" Collapsed="true">
     <Position X="12" Y="5.5" Width="2.5" />
-    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
-      <Path>
-        <Point X="14.062" Y="4.562" />
-        <Point X="14.062" Y="5.346" />
-        <Point X="13.25" Y="5.346" />
-        <Point X="13.25" Y="5.5" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>GameObjects\Bonuses\HarmfulReloadBonusDecorator.cs</FileName>
@@ -100,14 +91,6 @@
   </Class>
   <Class Name="Libr.ReloadBonusDecorator" Collapsed="true">
     <Position X="14.75" Y="5.5" Width="2" />
-    <InheritanceLine Type="Libr.BonusDecorator" FixedFromPoint="true">
-      <Path>
-        <Point X="14.938" Y="4.562" />
-        <Point X="14.938" Y="5.346" />
-        <Point X="15.75" Y="5.346" />
-        <Point X="15.75" Y="5.5" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>GameObjects\Bonuses\ReloadBonusDecorator.cs</FileName>

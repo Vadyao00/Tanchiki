@@ -10,7 +10,7 @@ namespace Libr
             ActiveBonuses = [];
         }
 
-        public void AddBonus(BonusDecorator bonus,Player player)
+        public void AddBonus(BonusDecorator bonus,Tank player)
         {
             List<BonusDecorator> bonusesToRemoving = [];
             foreach (var activeBonus in ActiveBonuses)

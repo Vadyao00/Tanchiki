@@ -32,7 +32,6 @@ namespace Tanchiki
             ScorePlayer2 = scorePlayer2;
         }
 
-
         private Renderer? renderer;
 
         protected override void OnLoad()
@@ -48,7 +47,6 @@ namespace Tanchiki
             renderer?.Vao?.Dispose();
             renderer?.ShaderProgram.DeleteProgram();
             base.OnUnload();
-            
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -61,16 +59,16 @@ namespace Tanchiki
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            timer.Update();
             renderer?.Draw(e);
+            Title = renderer?.DrawFPS(e, Title);
             SwapBuffers();
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs frameEventArgs)
         {
+            timer.Update();
             renderer?.OnKeyDown(KeyboardState, timer, (float)frameEventArgs.Time);
-            Title = renderer?.DrawFPS(frameEventArgs, Title);
             if (KeyboardState.IsKeyDown(Keys.Escape))
             {
                 MainWindowWPF.Show();
@@ -81,4 +79,4 @@ namespace Tanchiki
 
         
     }
-}
+}   

@@ -13,12 +13,11 @@ namespace Libr
     public class Renderer
     {
         public List<VirtualBonus> virtualBonusesList;
-        public Player FirstPlayer { get; private set; }
-        public Player SecondPlayer { get; private set; }
+        public Tank FirstPlayer { get; private set; }
+        public Tank SecondPlayer { get; private set; }
         public ArrayObject? Vao {  get;private set; }
         public ShaderProgram ShaderProgram { get; private set; }
         public BufferObject? VboVC { get; private set; }
-        private float[] backgroundVertArray;
         public float Wall { get; private set; } = 0.1f;
         public int FirstCounter { get; private set; }
         public int SecondCounter { get; private set; }
@@ -36,7 +35,9 @@ namespace Libr
         public Texture TextureBonusInfoReload { get; private set; }
         public Texture TextureBonusInfoReloadLow { get; private set; }
         public Texture TextureBonusInfoSpeedLow { get; private set; }
+
         private readonly RandomBonusFactory randomBonusFactory;
+
         private List<Projectile>? projectilesToRemove;
         private TextBlock Score;
         private TextBlock ScorePlayer1;
@@ -54,27 +55,20 @@ namespace Libr
             TextureBonusInfoReload = Texture.LoadFromFile(@"data\textures\reloadBonus.png");
             TextureBonusInfoReloadLow = Texture.LoadFromFile(@"data\textures\reloadBonusLow.png");
             TextureBonusInfoSpeedLow = Texture.LoadFromFile(@"data\textures\speedBonusLow.png");
-            FirstPlayer = new Player(1);
-            SecondPlayer = new Player(2);
+            FirstPlayer = new Tank(1);
+            SecondPlayer = new Tank(2);
             randomBonusFactory = new RandomBonusFactory();
             virtualBonusesList = [];
             Score = score;
-            backgroundVertArray = [
-             -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
-             -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
-             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
-             1.0f, -1.0f, 0.0f, 1.0f,0.0f,
-             1.0f, 1.0f, 0.0f, 1.0f,1.0f,
-             -1.0f, 1.0f, 0.0f, 0.0f,1.0f
-            ];
             ScorePlayer1 = scorePlayer1;
             ScorePlayer2 = scorePlayer2;
         }
+
         public void Draw(FrameEventArgs frameEventArgs)
         {
             ShaderProgram?.ActiveProgram();
             Vao?.Activate();
-            CreateVAO(backgroundVertArray, TextureBackground);
+            CreateVAO(VertexGenerator.GetBackgroundVertexArray(), TextureBackground);
             Vao?.Draw(0,6);
             CreateVAO(VertexGenerator.GetWallsVertexArray(Map.ListWalls), TextureWall);
             Vao?.Draw(0, 1000);
@@ -84,12 +78,12 @@ namespace Libr
                 Vao?.Draw(0, 400);
             }
             CreateVAO(VertexGenerator.GetPlayerVertexArray(FirstPlayer), TextureTank);
-            Vao?.DrawPoligon(0, 50);
+            Vao?.DrawPolygon(0, 50);
             CreateVAO(VertexGenerator.GetPlayerVertexArray(SecondPlayer), TextureTank);
-            Vao?.DrawPoligon(0, 50);
+            Vao?.DrawPolygon(0, 50);
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
-            CreateVirtualBonus(frameEventArgs);
+            CreateAndDeleteVirtualBonus(frameEventArgs);
             DrawBonusInfo();
             DrawHealthState();
             DrawFuelState();
@@ -100,7 +94,7 @@ namespace Libr
             MoveShoots((float)frameEventArgs.Time);
         }
 
-        public void MoveShoots(float koef)
+        private void MoveShoots(float koef)
         {
             projectilesToRemove = new List<Projectile>();
             if (FirstPlayer.Projectiles.Count != 0)
@@ -118,6 +112,7 @@ namespace Libr
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
         }
+
         private void CreateVAO(float[] vert_texture, Texture Texture)
         {
 
@@ -191,54 +186,54 @@ namespace Libr
             Vao?.Activate();
             if (FirstPlayer.Speed > 0.4f)
             {
-                CreateVAOBonusInfo("speedHigh", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("speedHigh", VertexGenerator.GetSpeedFirstVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (FirstPlayer.Speed < 0.3f)
             {
-                CreateVAOBonusInfo("speedLow", [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("speedLow", VertexGenerator.GetSpeedFirstVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (SecondPlayer.Speed > 0.4f)
             {
-                CreateVAOBonusInfo("speedHigh", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("speedHigh", VertexGenerator.GetSpeedSecondVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (SecondPlayer.Speed < 0.3f)
             {
-                CreateVAOBonusInfo("speedLow", [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("speedLow", VertexGenerator.GetSpeedSecondVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (FirstPlayer.Damage > 20f)
             {
-                CreateVAOBonusInfo("damage", [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("damage", VertexGenerator.GetDamageFirstVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (SecondPlayer.Damage > 20f)
             {
-                CreateVAOBonusInfo("damage", [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("damage", VertexGenerator.GetDamageSecondVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (FirstPlayer.TimeReload < 0.45)
             {
-                CreateVAOBonusInfo("reloadHigh", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("reloadHigh", VertexGenerator.GetReloadFirstVertexArray());
+                Vao?.DrawPolygon(0, 30);
 
             }
             if (FirstPlayer.TimeReload > 0.55)
             {
-                CreateVAOBonusInfo("reloadLow", [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("reloadLow", VertexGenerator.GetReloadFirstVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (SecondPlayer.TimeReload < 0.45)
             {
-                CreateVAOBonusInfo("reloadHigh", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("reloadHigh", VertexGenerator.GetReloadSecondVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             if (SecondPlayer.TimeReload > 0.55)
             {
-                CreateVAOBonusInfo("reloadLow", [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f]);
-                Vao?.DrawPoligon(0, 30);
+                CreateVAOBonusInfo("reloadLow", VertexGenerator.GetReloadSecondVertexArray());
+                Vao?.DrawPolygon(0, 30);
             }
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
@@ -453,15 +448,15 @@ namespace Libr
             GL.Color3(Color.Orange);
             GL.Vertex2(-0.78f, 0.79f);
             GL.Vertex2(-0.68f, 0.79f);
-            GL.Vertex2(-0.78f, 0.002f * FirstPlayer.NumShells + 0.79f);
-            GL.Vertex2(-0.68f, 0.002f * FirstPlayer.NumShells + 0.79f);
+            GL.Vertex2(-0.78f, 0.002f * FirstPlayer.NumProjectiles + 0.79f);
+            GL.Vertex2(-0.68f, 0.002f * FirstPlayer.NumProjectiles + 0.79f);
             GL.End();
             GL.Begin(PrimitiveType.TriangleStrip);
             GL.Color3(Color.Orange);
             GL.Vertex2(0.68f, 0.79f);
             GL.Vertex2(0.78f, 0.79f);
-            GL.Vertex2(0.68f, 0.002f * SecondPlayer.NumShells + 0.79f);
-            GL.Vertex2(0.78f, 0.002f * SecondPlayer.NumShells + 0.79f);
+            GL.Vertex2(0.68f, 0.002f * SecondPlayer.NumProjectiles + 0.79f);
+            GL.Vertex2(0.78f, 0.002f * SecondPlayer.NumProjectiles + 0.79f);
             GL.End();
             GL.LineWidth(5);
             GL.Begin(PrimitiveType.LineLoop);
@@ -487,8 +482,8 @@ namespace Libr
         {
             if(FirstPlayer.CheckIsDead())
             {
-                FirstPlayer = new Player(1);
-                SecondPlayer = new Player(2);
+                FirstPlayer = new Tank(1);
+                SecondPlayer = new Tank(2);
                 virtualBonusesList = [];
                 ScorePlayer2.Text = (int.Parse(ScorePlayer2.Text)+1).ToString();
                 string scoreString = $"Игрок 1 | {ScorePlayer1.Text} : {ScorePlayer2.Text} | Игрок 2";
@@ -496,8 +491,8 @@ namespace Libr
             }
             if(SecondPlayer.CheckIsDead())
             {
-                FirstPlayer = new Player(1);
-                SecondPlayer = new Player(2);
+                FirstPlayer = new Tank(1);
+                SecondPlayer = new Tank(2);
                 virtualBonusesList = [];
                 ScorePlayer1.Text = (int.Parse(ScorePlayer1.Text) + 1).ToString();
                 string scoreString = $"Игрок 1 | {ScorePlayer1.Text} : {ScorePlayer2.Text} | Игрок 2";
@@ -505,7 +500,7 @@ namespace Libr
             }
         }
 
-        public void CreateVirtualBonus(FrameEventArgs frameEventArgs)
+        private void CreateAndDeleteVirtualBonus(FrameEventArgs frameEventArgs)
         {
             FrameTimeForBonus += frameEventArgs.Time;
             if (FrameTimeForBonus >= 4)
@@ -526,6 +521,7 @@ namespace Libr
                 virtualBonusesList.Remove(bonus);
             }
         }
+
         public void OnKeyDown(KeyboardState KeyboardState, Timer timer, float speedKoef)
         {
             Movement? firstPlayerMovement = null;
@@ -565,31 +561,31 @@ namespace Libr
             switch(firstPlayerMovement)
             {
                 case Movement.Left:
-                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    FirstPlayer.Move(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Right:
-                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    FirstPlayer.Move(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Bottom:
-                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    FirstPlayer.Move(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Top:
-                    FirstPlayer.PlayerMove(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
+                    FirstPlayer.Move(firstPlayerMovement, Map.ListWalls, virtualBonusesList, SecondPlayer, randomBonusFactory, timer, speedKoef);
                     break;
             }
             switch (secondPlayerMovement)
             {
                 case Movement.Left:
-                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    SecondPlayer.Move(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Right:
-                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    SecondPlayer.Move(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Bottom:
-                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    SecondPlayer.Move(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
                     break;
                 case Movement.Top:
-                    SecondPlayer.PlayerMove(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
+                    SecondPlayer.Move(secondPlayerMovement, Map.ListWalls, virtualBonusesList, FirstPlayer, randomBonusFactory, timer, speedKoef);
                     break;
             }
             if (KeyboardState.IsKeyDown(Keys.V))

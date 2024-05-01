@@ -69,7 +69,7 @@ namespace Libr
             Dispose();
         }
 
-        public void DrawPoligon(int start, int count)
+        public void DrawPolygon(int start, int count)
         {
             Activate();
             GL.DrawArrays(PrimitiveType.Polygon, start, count);

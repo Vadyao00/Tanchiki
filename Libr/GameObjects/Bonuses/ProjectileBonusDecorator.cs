@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class ProjectileBonusDecorator(Player player) : BonusDecorator(player)
+    public class ProjectileBonusDecorator(Tank player) : BonusDecorator(player)
     {
         private readonly int Shells = 30;
 
         public override void ActivateBonus()
         {
-            if (_player.NumShells <= 70)
-                _player.NumShells += Shells;
-            else _player.NumShells = 100;
+            if (_player.NumProjectiles <= 70)
+                _player.NumProjectiles += Shells;
+            else _player.NumProjectiles = 100;
         }
 
         public override void DeactivateBonus() { }

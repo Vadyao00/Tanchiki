@@ -1,8 +1,8 @@
 ﻿namespace Libr
 {
-    public abstract class BonusFactory(Player player)
+    public abstract class BonusFactory(Tank player)
     {
-        protected Player player = player;
+        protected Tank player = player;
         public abstract BonusDecorator CreateBonus();
     }
 }

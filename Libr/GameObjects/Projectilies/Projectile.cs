@@ -8,7 +8,7 @@
         private readonly float speedProjectile = 0.7f;
         public Movement? Direction { get; private set; } = direction;
 
-        public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Player firstPlayer, Player secondPlayer, int idPlayer,float koef)
+        public void Move(List<Wall> listWalls, List<Projectile> projectilesToRemove, Tank firstPlayer, Tank secondPlayer, int idPlayer,float koef)
         {
             float x = X, y = Y;
             switch (Direction)

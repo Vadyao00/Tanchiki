@@ -1,4 +1,5 @@
-﻿using Libr.GameObjects.Bonuses;
+﻿using System.Windows.Media;
+using Libr.GameObjects.Bonuses;
 using Libr.GameObjects.Projectilies;
 using Libr.Utilities;
 
@@ -8,7 +9,7 @@ namespace Libr
     {
         Left,Top,Right, Bottom
     }
-    public class Player
+    public class Tank
     {
         public float X {  get; private set; }
         public float Y { get; private set; }
@@ -18,14 +19,14 @@ namespace Libr
         public float Speed { get;  set; } = 0.35f;
         public double TimeReload { get; set; } = 0.5;
         public float Fuel { get; set; } = 100.0f;
-        public int NumShells { get; set; } = 100;
+        public int NumProjectiles { get; set; } = 100;
         public bool IsReloading { get; private set; } = false;
         public Movement? Direction { get;private set; }
         public List<Projectile> Projectiles {  get; private set; }
 
-        public Player() { }
+        public Tank() { }
 
-        public Player(int num)
+        public Tank(int num)
         {
             if (num == 1)
             {
@@ -42,7 +43,7 @@ namespace Libr
             Projectiles = [];
         }
 
-        public void PlayerMove(Movement? move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Player? player, RandomBonusFactory randomBonusFactory, Timer timer, float speedKoef)
+        public void Move(Movement? move, List<Wall> listWalls, List<VirtualBonus> virtualBonusesList, Tank? player, RandomBonusFactory randomBonusFactory, Timer timer, float speedKoef)
         {
             Direction = move;
             if(Fuel <= 0) return;
@@ -71,16 +72,9 @@ namespace Libr
             if (CheckCollisoinCells(futureX, futureY, listWalls))
                 return;
 
-            foreach (VirtualBonus bonus in virtualBonusesList)
+            if(CheckCollisionBonus(futureX,futureY, virtualBonusesList))
             {
-                if (futureX < bonus.X + bonus.Size &&
-                    futureX + Size > bonus.X &&
-                    futureY < bonus.Y + bonus.Size &&
-                    futureY + Size > bonus.Y)
-                { 
-                    bonus.IsUsed = true;
-                    timer.AddBonus(randomBonusFactory.CreateBonus(this),this);
-                }
+                timer.AddBonus(randomBonusFactory.CreateBonus(this), this);
             }
 
             if (CheckCollisionWithAnotherPlayer(futureX, futureY, player))
@@ -91,6 +85,21 @@ namespace Libr
             Fuel -= 0.01f;
         }
 
+        private bool CheckCollisionBonus(float futureX, float futureY, List<VirtualBonus> virtualBonusesList)
+        {
+            foreach (VirtualBonus bonus in virtualBonusesList)
+            {
+                if (futureX < bonus.X + bonus.Size &&
+                    futureX + Size > bonus.X &&
+                    futureY < bonus.Y + bonus.Size &&
+                    futureY + Size > bonus.Y)
+                {
+                    bonus.IsUsed = true;
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private bool CheckCollisoinCells(float futureX, float futureY, List<Wall> listWalls)
         {
@@ -104,7 +113,7 @@ namespace Libr
             return false;
         }
 
-        private bool CheckCollisionWithAnotherPlayer(float futureX, float futureY, Player? player)
+        private bool CheckCollisionWithAnotherPlayer(float futureX, float futureY, Tank? player)
         {
             if (futureX < player?.X + player?.Size &&
                     futureX + Size > player?.X &&
@@ -121,10 +130,10 @@ namespace Libr
 
         public void Shoot()
         {
-            if (NumShells != 0 && !IsReloading)
+            if (NumProjectiles != 0 && !IsReloading)
             {
                 Projectiles.Add(new Projectile(Direction, VertexGenerator.GetShellVertexArray(this)));
-                NumShells--;
+                NumProjectiles--;
                 IsReloading = true;
                 Reload();
             }

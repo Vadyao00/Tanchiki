@@ -15,6 +15,7 @@ namespace Course1
         private static TextBlock ScorePlayer1 = new TextBlock();
         private static TextBlock ScorePlayer2 = new TextBlock();
         TextBlock Score;
+
         public Menu()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace Course1
             Score.Text = $"Игрок 1 | {ScorePlayer1.Text} : {ScorePlayer2.Text} | Игрок 2";
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             var nativeWindowSettings = new NativeWindowSettings
@@ -39,8 +41,7 @@ namespace Course1
                 Profile = ContextProfile.Compatability,
                 API = ContextAPI.OpenGL,
             };
-
-            using(GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings,this,ContainerClass.mapString,Score,ScorePlayer1,ScorePlayer2))
+            using (GameScene gameScene = new(GameWindowSettings.Default, nativeWindowSettings, this, ContainerClass.mapString, Score, ScorePlayer1, ScorePlayer2))
             {
                 Hide();
                 gameScene.Run();

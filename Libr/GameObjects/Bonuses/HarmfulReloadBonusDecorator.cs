@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Libr
 {
-    public class HarmfulReloadBonusDecorator(Player player) : BonusDecorator(player)
+    public class HarmfulReloadBonusDecorator(Tank player) : BonusDecorator(player)
     {
         private readonly double reloadEffect = 0.3;
         private readonly double reloadNormal = 0.5;
