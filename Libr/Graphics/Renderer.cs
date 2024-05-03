@@ -131,8 +131,8 @@ namespace Libr
 
             Vao.AttachBufer(VboVC);
 
-            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, VertexAttribPointerType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, VertexAttribPointerType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
             Vao.Deactivate();
             Vao.DisableAttribAll();
@@ -173,8 +173,8 @@ namespace Libr
 
             Vao.AttachBufer(VboVC);
 
-            Vao.AttribPointer(VertexArray, 3, AttribType.Float, 5 * sizeof(float), 0);
-            Vao.AttribPointer(TextureCoordArray, 2, AttribType.Float, 5 * sizeof(float), 3 * sizeof(float));
+            Vao.AttribPointer(VertexArray, 3, VertexAttribPointerType.Float, 5 * sizeof(float), 0);
+            Vao.AttribPointer(TextureCoordArray, 2, VertexAttribPointerType.Float, 5 * sizeof(float), 3 * sizeof(float));
 
             Vao.Deactivate();
             Vao.DisableAttribAll();

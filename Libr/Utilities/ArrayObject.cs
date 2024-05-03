@@ -9,11 +9,6 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Libr
 {
-    public enum AttribType
-    {
-        Float = VertexAttribPointerType.Float
-    }
-
     public class ArrayObject : IDisposable
     {
         public int ArrayID { private set; get; }
@@ -55,11 +50,11 @@ namespace Libr
             _buffersList.Add(buffer);
         }
 
-        public void AttribPointer(int index, int elementsPerVertex, AttribType type, int stride, int offset)
+        public void AttribPointer(int index, int elementsPerVertex, VertexAttribPointerType type, int stride, int offset)
         {
             _attribsList.Add(index);
             GL.EnableVertexAttribArray(index);
-            GL.VertexAttribPointer(index, elementsPerVertex, (VertexAttribPointerType)type, false, stride, offset);
+            GL.VertexAttribPointer(index, elementsPerVertex, type, false, stride, offset);
         }
 
         public void Draw(int start, int count)

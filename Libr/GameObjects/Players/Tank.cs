@@ -10,12 +10,13 @@ namespace Libr
         Left,Top,Right, Bottom
     }
     public class Tank
+
     {
         public float X {  get; private set; }
         public float Y { get; private set; }
         public float Size { get; private set; } = 0.08f;
         public float Health { get; set; } = 100f;
-        public float Damage { get;  set; } = 20f;
+        public float Damage { get; set; } = 20f;
         public float Speed { get;  set; } = 0.35f;
         public double TimeReload { get; set; } = 0.5;
         public float Fuel { get; set; } = 100.0f;
@@ -24,7 +25,7 @@ namespace Libr
         public Movement? Direction { get;private set; }
         public List<Projectile> Projectiles {  get; private set; }
 
-        public Tank() { }
+        public Tank() : this(1) { }
 
         public Tank(int num)
         {

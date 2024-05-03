@@ -31,6 +31,12 @@ namespace Libr.GameObjects.Bonuses
             }
         }
 
+        public VirtualBonus(float X, float Y)
+        {
+            this.X = X;
+            this.Y = Y;
+        }
+
         public float[] GetVertexArray()
         {
             return

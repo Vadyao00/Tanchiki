@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Libr.BonusFactory">
+    <Position X="7" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACABAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\BonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.DamageBonusFactory">
+    <Position X="0.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\DamageBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.FuelBonusFactory">
+    <Position X="5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\FuelBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulProjectileBonusFactory">
+    <Position X="7.25" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulProjectileBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulReloadBonusFactory">
+    <Position X="11.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulReloadBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulSpeedBonusFactory">
+    <Position X="16.25" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\HarmfulSpeedBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ProjectileBonusFactory">
+    <Position X="2.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\ProjectileBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.RandomBonusFactory">
+    <Position X="18.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAgAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\RandomBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ReloadBonusFactory">
+    <Position X="9.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\ReloadBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.SpeedBonusFactory">
+    <Position X="14" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\SpeedBonusFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Timer">
+    <Position X="23" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAQAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\Timer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.BonusDecorator">
+    <Position X="7" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIIAAAAAAAAQAAgCAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\BonusDecorator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_player" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Libr.DamageBonusDecorator">
+    <Position X="2.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAEAAAAAAAAAAABAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\DamageBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.FuelBonusDecorator">
+    <Position X="7.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAgAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\FuelBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulProjectileBonusDecorator">
+    <Position X="11.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulProjectileBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulReloadBonusDecorator">
+    <Position X="14" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulReloadBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.HarmfulSpeedBonusDecorator">
+    <Position X="16.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\HarmfulSpeedBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ProjectileBonusDecorator">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\ProjectileBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ReloadBonusDecorator">
+    <Position X="5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAEAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\ReloadBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.SpeedBonusDecorator">
+    <Position X="9.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonuses\SpeedBonusDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Map">
+    <Position X="22.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Map Elements\Map.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ListWalls" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Libr.Wall">
+    <Position X="25.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>GameObjects\Map Elements\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Tank">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAICACAIIAAhAgAACAAAAABAAAAAEAACgACAAiAYAA=</HashCode>
+      <FileName>GameObjects\Players\Tank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Renderer">
+    <Position X="16.5" Y="1.5" Width="1.75" />
+    <Members>
+      <Method Name="DrawBonusInfo" Hidden="true" />
+      <Method Name="DrawFPS" Hidden="true" />
+      <Method Name="DrawFuelState" Hidden="true" />
+      <Method Name="DrawHealthState" Hidden="true" />
+      <Method Name="DrawReloadLine" Hidden="true" />
+      <Method Name="DrawShellState" Hidden="true" />
+      <Method Name="DrawShoots" Hidden="true" />
+      <Property Name="FPS" Hidden="true" />
+      <Property Name="FrameTime" Hidden="true" />
+      <Method Name="Renderer" Hidden="true" />
+      <Method Name="RestartGame" Hidden="true" />
+      <Property Name="VarFPS" Hidden="true" />
+    </Members>
+    <AssociationLine Name="randomBonusFactory" Type="Libr.RandomBonusFactory" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.521" Y="6.968" />
+        <Point X="17.521" Y="7.343" />
+        <Point X="19.25" Y="7.343" />
+        <Point X="19.25" Y="14.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="virtualBonusesList" Type="Libr.GameObjects.Bonuses.VirtualBonus" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.25" Y="6.812" />
+        <Point X="21.688" Y="6.812" />
+        <Point X="21.688" Y="7.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gKEOQCAABBCBAgwBSgAgBAGUBJoEQAYAAgABAAAAgQE=</HashCode>
+      <FileName>Graphics\Renderer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="randomBonusFactory" />
+      <Property Name="FirstPlayer" />
+      <Property Name="SecondPlayer" />
+      <Property Name="Vao" />
+      <Property Name="ShaderProgram" />
+      <Property Name="VboVC" />
+      <Property Name="Map" />
+      <Property Name="TextureWall" />
+      <Property Name="TextureBonus" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="projectilesToRemove" />
+      <Field Name="virtualBonusesList" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Libr.ShaderProgram">
+    <Position X="23.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAEAAAIAAAAAAAAAUAAAAgAAIAAAQAAA=</HashCode>
+      <FileName>Graphics\ShaderProgram.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Texture">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAEAA=</HashCode>
+      <FileName>Graphics\Texture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.ArrayObject" BaseTypeListCollapsed="true">
+    <Position X="25.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAACBACoBAEAAIAAAQIAEAAAAIAAAQAAAAAAA=</HashCode>
+      <FileName>Utilities\ArrayObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_buffersList" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Libr.BufferObject" BaseTypeListCollapsed="true">
+    <Position X="27.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACBAAARAEAAAAAAAAAEAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Utilities\BufferObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.571" Collapsed="true" />
+  </Class>
+  <Class Name="Libr.GameObjects.Bonuses.VirtualBonus">
+    <Position X="21" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAABAAAAAgAAAAAAAAAAAAAAAAAAAAAIAAAAAYAA=</HashCode>
+      <FileName>GameObjects\Bonuses\VirtualBonus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.GameObjects.Projectilies.Projectile">
+    <Position X="21" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAABCAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>GameObjects\Projectilies\Projectile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Libr.Utilities.VertexGenerator">
+    <Position X="21.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAIAAAEAQAggAACAAAAAAIAAACAARAAAAAGAAAEA=</HashCode>
+      <FileName>Utilities\VertexGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Libr.IBonus">
+    <Position X="9" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Bonus Management\IBonus.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Libr.Movement">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAACACAAAAAAAA=</HashCode>
+      <FileName>GameObjects\Players\Tank.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Libr.BufferType">
+    <Position X="27.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\BufferObject.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Libr.BufferHint">
+    <Position X="27.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\BufferObject.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
