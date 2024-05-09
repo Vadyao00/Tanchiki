@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Libr
+﻿namespace Libr
 {
     public class HarmfulProjectileBonusDecorator(Tank player) : BonusDecorator(player)
     {
@@ -20,4 +14,3 @@ namespace Libr
         public override void DeactivateBonus() { }
     }
 }
-

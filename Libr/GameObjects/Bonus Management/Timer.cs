@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-namespace Libr
+﻿namespace Libr
 {
     public class Timer
     {

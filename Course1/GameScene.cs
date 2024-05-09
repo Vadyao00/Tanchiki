@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using Course1;
 using Libr;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -76,7 +75,5 @@ namespace Tanchiki
             }
             base.OnUpdateFrame(frameEventArgs);
         }
-
-        
     }
 }   

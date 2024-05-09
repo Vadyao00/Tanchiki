@@ -182,21 +182,28 @@
       <Property Name="FrameTime" Hidden="true" />
       <Method Name="Renderer" Hidden="true" />
       <Method Name="RestartGame" Hidden="true" />
+      <Property Name="TextureBackground" Hidden="true" />
+      <Property Name="TextureBonusInfoDamage" Hidden="true" />
+      <Property Name="TextureBonusInfoReload" Hidden="true" />
+      <Property Name="TextureBonusInfoReloadLow" Hidden="true" />
+      <Property Name="TextureBonusInfoSpeed" Hidden="true" />
+      <Property Name="TextureBonusInfoSpeedLow" Hidden="true" />
+      <Property Name="TextureTank" Hidden="true" />
       <Property Name="VarFPS" Hidden="true" />
     </Members>
-    <AssociationLine Name="randomBonusFactory" Type="Libr.RandomBonusFactory" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="17.521" Y="6.968" />
-        <Point X="17.521" Y="7.343" />
-        <Point X="19.25" Y="7.343" />
-        <Point X="19.25" Y="14.25" />
-      </Path>
-    </AssociationLine>
     <AssociationLine Name="virtualBonusesList" Type="Libr.GameObjects.Bonuses.VirtualBonus" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="18.25" Y="6.812" />
-        <Point X="21.688" Y="6.812" />
+        <Point X="18.25" Y="5.504" />
+        <Point X="21.688" Y="5.504" />
         <Point X="21.688" Y="7.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="randomBonusFactory" Type="Libr.RandomBonusFactory" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.521" Y="5.622" />
+        <Point X="17.521" Y="5.997" />
+        <Point X="19.25" Y="5.997" />
+        <Point X="19.25" Y="14.25" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -215,8 +222,8 @@
       <Property Name="TextureBonus" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Field Name="projectilesToRemove" />
       <Field Name="virtualBonusesList" />
+      <Field Name="projectilesToRemove" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Libr.ShaderProgram">
