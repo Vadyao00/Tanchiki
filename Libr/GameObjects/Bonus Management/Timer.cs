@@ -1,14 +1,28 @@
 ﻿namespace Libr
 {
+    /// <summary>
+    /// Класс таймера.
+    /// </summary>
     public class Timer
     {
+        /// <summary>
+        /// Коллекция активных бонусов.
+        /// </summary>
         public List<BonusDecorator> ActiveBonuses;
 
+        /// <summary>
+        /// Конструктор класса, инициализирующий коллекцию бонусов.
+        /// </summary>
         public Timer()
         {
             ActiveBonuses = [];
         }
 
+        /// <summary>
+        /// Метод, добавляющий в коллекцию активынх бонусов новый бонус.
+        /// </summary>
+        /// <param name="bonus">Бонус, который добавляется.</param>
+        /// <param name="player">Игрок, к которому применяется бонус.</param>
         public void AddBonus(BonusDecorator bonus,Tank player)
         {
             List<BonusDecorator> bonusesToRemoving = [];
@@ -27,6 +41,9 @@
             bonus.StartDurationTracking();
         }
 
+        /// <summary>
+        /// Метод, деактиварующий и удаляющий неактивные бонусы.
+        /// </summary>
         public void Update()
         {
             List<BonusDecorator> bonusesToRemoving = [];

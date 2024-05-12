@@ -2,9 +2,15 @@ using Libr;
 using Libr.GameObjects.Bonuses;
 namespace TestGame
 {
+    /// <summary>
+    ///  ласс, тестрирующий столкновение игрока с игровыми объектами
+    /// </summary>
     [TestClass]
     public class TestTankCollision
     {
+        /// <summary>
+        /// ћетод, провер€ющий успешное движение игрока вниз
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulMoveBottom()
         {
@@ -28,7 +34,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedMove, isMove);
         }
-
+        /// <summary>
+        /// ћетод, провер€ющий успешное движение игрока влево
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulMoveLeft()
         {
@@ -52,7 +60,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedMove, isMove);
         }
-
+        /// <summary>
+        /// ћетод, провер€ющий неуспешное движение игрока вниз
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulMoveBottom()
         {
@@ -76,7 +86,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedMove, isMove);
         }
-
+        /// <summary>
+        /// ћетод, провер€ющий неуспешное движение игрока влево
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulMoveLeft()
         {

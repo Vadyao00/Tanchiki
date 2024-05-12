@@ -4,48 +4,135 @@ using System.Windows.Controls;
 using Libr.GameObjects.Bonuses;
 using Libr.GameObjects.Projectilies;
 using Libr.Utilities;
-using Microsoft.Windows.Themes;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 namespace Libr
 {
+    /// <summary>
+    /// Класс, представляющий рендеринг игровых объектов.
+    /// </summary>
     public class Renderer
     {
+        /// <summary>
+        /// Коллекция виртуальных бонусов.
+        /// </summary>
         public List<VirtualBonus> virtualBonusesList;
+        /// <summary>
+        /// Объект перовго игрока.
+        /// </summary>
         public Tank FirstPlayer { get; private set; }
+        /// <summary>
+        /// Объект второго игрока.
+        /// </summary>
         public Tank SecondPlayer { get; private set; }
+        /// <summary>
+        /// Объект вершинного буфера.
+        /// </summary>
         public ArrayObject? Vao {  get;private set; }
+        /// <summary>
+        /// Объект шейдерной программы.
+        /// </summary>
         public ShaderProgram ShaderProgram { get; private set; }
+        /// <summary>
+        /// Буферный объект вершины.
+        /// </summary>
         public BufferObject? VboVC { get; private set; }
-        public float Wall { get; private set; } = 0.1f;
+        /// <summary>
+        /// Счетчик для отображения уровня линии перезарядки первого игрока.
+        /// </summary>
         public int FirstCounter { get; private set; }
+        /// <summary>
+        /// Счетчик для отображения уровня линии перезарядки второго игрока.
+        /// </summary>
         public int SecondCounter { get; private set; }
+        /// <summary>
+        /// Счетчик, отслеживающий время прохождения одной секунды.
+        /// </summary>
         private double FrameTime { get; set; }
+        /// <summary>
+        /// Счетчик, отслеживающий время жизни бонуса.
+        /// </summary>
         private double FrameTimeForBonus { get; set; }
+        /// <summary>
+        /// Счетчик частоты обновления экрана.
+        /// </summary>
         private double FPS { get; set; }
+        /// <summary>
+        /// Текущая частота обновления экрана.
+        /// </summary>
         private double VarFPS { get; set; }
+        /// <summary>
+        /// Объект карты.
+        /// </summary>
         public Map Map { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру стены.
+        /// </summary>
         public Texture TextureWall { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру танка.
+        /// </summary>
         public Texture TextureTank { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру бонуса.
+        /// </summary>
         public Texture TextureBonus { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру заднего фона.
+        /// </summary>
         public Texture TextureBackground { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру информационной иконки увеличенной скорости движения.
+        /// </summary>
         public Texture TextureBonusInfoSpeed { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру информационной иконки урона.
+        /// </summary>
         public Texture TextureBonusInfoDamage { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру информационной иконки уменьшенной скорости перезарядки.
+        /// </summary>
         public Texture TextureBonusInfoReload { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру информационной иконки увеличенной скорости перезарядуки.
+        /// </summary>
         public Texture TextureBonusInfoReloadLow { get; private set; }
+        /// <summary>
+        /// Объект класса <see cref="Texture"/>, представляющий текстуру информационной иконки уменьшенной скорости движения.
+        /// </summary>
         public Texture TextureBonusInfoSpeedLow { get; private set; }
-
+        /// <summary>
+        /// Объект класса <see cref="RandomBinusFactory"/>.
+        /// </summary>
         private readonly RandomBonusFactory randomBonusFactory;
-
+        /// <summary>
+        /// Коллекция снарядов для удаления.
+        /// </summary>
         private List<Projectile>? projectilesToRemove;
+        /// <summary>
+        /// Объект класса <see cref="TextBlock"/>, содержащий счет игроков.
+        /// </summary>
         private TextBlock Score;
+        /// <summary>
+        /// Объект класса <see cref="TextBlock"/>, содержащий счет первого игрока.
+        /// </summary>
         private TextBlock ScorePlayer1;
+        /// <summary>
+        /// Объект класса <see cref="TextBlock"/>, содержащий счет второго игрока.
+        /// </summary>
         private TextBlock ScorePlayer2;
+        /// <summary>
+        /// Конструктор, инициализирующий текстуры игровых объектов и создающий карту и шейдерную программу.
+        /// </summary>
+        /// <param name="mapString">Путь к файлу с картой.</param>
+        /// <param name="score">Объект класса <see cref="TextBlock"/>, содержащий счет игроков.</param>
+        /// <param name="scorePlayer1">Объект класса <see cref="TextBlock"/>, содержащий счет первого игрока.</param>
+        /// <param name="scorePlayer2">Объект класса <see cref="TextBlock"/>, содержащий счет второго игрока.</param>
         public Renderer(string mapString, TextBlock score, TextBlock scorePlayer1, TextBlock scorePlayer2)
         {
             ShaderProgram = new ShaderProgram(@"data\shaders\shader_base.vert", @"data\shaders\shader_base.frag");
-            Map = new Map(20, 20, Wall, LoadMapFromFile(mapString));
+            Map = new Map(20, 20, 0.1f, LoadMapFromFile(mapString));
             TextureWall = Texture.LoadFromFile(@"data\textures\wall.png");
             TextureTank = Texture.LoadFromFile(@"data\textures\tank.png");
             TextureBonus = Texture.LoadFromFile(@"data\textures\bonus.png");
@@ -63,7 +150,10 @@ namespace Libr
             ScorePlayer1 = scorePlayer1;
             ScorePlayer2 = scorePlayer2;
         }
-
+        /// <summary>
+        /// Метод, отвечающий за отрисовку и движение игровых объектов.
+        /// </summary>
+        /// <param name="frameEventArgs">Объект структуры <see cref="FrameEventArgs"/>.</param>
         public void Draw(FrameEventArgs frameEventArgs)
         {
             ShaderProgram?.ActiveProgram();
@@ -93,7 +183,10 @@ namespace Libr
             RestartGame();
             MoveShoots((float)frameEventArgs.Time);
         }
-
+        /// <summary>
+        /// Метод, передвигающий снаряды по карте.
+        /// </summary>
+        /// <param name="koef">Коэффициент движения снаряда, зависящий от частоты обновления экрана.</param>
         private void MoveShoots(float koef)
         {
             projectilesToRemove = new List<Projectile>();
@@ -112,7 +205,11 @@ namespace Libr
             foreach (Projectile myProjectile in projectilesToRemove)
                 SecondPlayer.Projectiles.Remove(myProjectile);
         }
-
+        /// <summary>
+        /// Метод, создающий объект вершинного буфера.
+        /// </summary>
+        /// <param name="vert_texture">Массив вершин для отрисовки объекта.</param>
+        /// <param name="Texture">Текстура объекта.</param>
         private void CreateVAO(float[] vert_texture, Texture Texture)
         {
 
@@ -137,7 +234,11 @@ namespace Libr
             Vao.Deactivate();
             Vao.DisableAttribAll();
         }
-
+        /// <summary>
+        /// Метод, создающий объект вершинного буфера для информационной иконки.
+        /// </summary>
+        /// <param name="bonusType">Тип бонуса.</param>
+        /// <param name="vert_textureBonus">Массив вершин бонуса для отрисовки.</param>
         private void CreateVAOBonusInfo(string bonusType,float[] vert_textureBonus)
         {
 
@@ -179,7 +280,9 @@ namespace Libr
             Vao.Deactivate();
             Vao.DisableAttribAll();
         }
-
+        /// <summary>
+        /// Метод, отображающий информационные иконки игроков.
+        /// </summary>
         private void DrawBonusInfo()
         {
             ShaderProgram?.ActiveProgram();
@@ -238,7 +341,9 @@ namespace Libr
             Vao?.Dispose();
             ShaderProgram?.DeactiveProgram();
         }
-
+        /// <summary>
+        /// Метод, отображающий снаряды на игровом поле.
+        /// </summary>
         private void DrawShoots()
         {
             if (FirstPlayer.Projectiles.Count != 0)
@@ -264,7 +369,9 @@ namespace Libr
                 }
             }
         }
-
+        /// <summary>
+        /// Метод, отображающий линию перезарядки.
+        /// </summary>
         private void DrawReloadLine()
         {
             float[] reloadLineVertexArrayFirstPlayer = VertexGenerator.GetReloadLineVertexArray(FirstPlayer);
@@ -320,7 +427,12 @@ namespace Libr
                 GL.End();
             }
         }
-
+        /// <summary>
+        /// Метод, отображающий частоту обновления экрана.
+        /// </summary>
+        /// <param name="frameEventArgs">Объект структуры <see cref="FrameEventArgs"/>.</param>
+        /// <param name="Title">Строка, содержащая частоту обновления экрана.</param>
+        /// <returns></returns>
         public string DrawFPS(FrameEventArgs frameEventArgs, string Title)
         {
             FrameTime += frameEventArgs.Time;
@@ -334,7 +446,11 @@ namespace Libr
             }
             return Title;
         }
-
+        /// <summary>
+        /// Метод, загружающий карту из файла в массив.
+        /// </summary>
+        /// <param name="filename">Путь к файлу со строкой.</param>
+        /// <returns>Массив цифр, представляющий карту.</returns>
         private static int[,] LoadMapFromFile(string filename)
         {
             try
@@ -367,7 +483,9 @@ namespace Libr
                 throw new Exception($"Ошибка чтения файла: {ex.Message}");
             }
         }
-
+        /// <summary>
+        /// Метод, отображающий шкалу здороья игроков.
+        /// </summary>
         private void DrawHealthState()
         {
             GL.Begin(PrimitiveType.TriangleStrip);
@@ -403,7 +521,9 @@ namespace Libr
             GL.Vertex2(-1.0f, 0.998f);
             GL.End();
         }
-
+        /// <summary>
+        /// Метод, отображающий шкалу топлива игроков.
+        /// </summary>
         private void DrawFuelState()
         {
 
@@ -441,7 +561,9 @@ namespace Libr
             GL.Vertex2(1.0f, 0.89f);
             GL.End();
         }
-
+        /// <summary>
+        /// Метод, отображающий шкалу снарядов игроков.
+        /// </summary>
         private void DrawShellState()
         {
             GL.Begin(PrimitiveType.TriangleStrip);
@@ -477,7 +599,9 @@ namespace Libr
             GL.Vertex2(0.78f, 0.99f);
             GL.End();
         }
-
+        /// <summary>
+        /// Метод, перезапускающий игру.
+        /// </summary>
         private void RestartGame()
         {
             if(FirstPlayer.CheckIsDead())
@@ -499,7 +623,10 @@ namespace Libr
                 Score.Text = scoreString;
             }
         }
-
+        /// <summary>
+        /// Метод, создающий и удаляющий виртуальные бонусы на карте.
+        /// </summary>
+        /// <param name="frameEventArgs">Объект структуры <see cref="FrameEventArgs"/>.</param>
         private void CreateAndDeleteVirtualBonus(FrameEventArgs frameEventArgs)
         {
             FrameTimeForBonus += frameEventArgs.Time;
@@ -521,7 +648,12 @@ namespace Libr
                 virtualBonusesList.Remove(bonus);
             }
         }
-
+        /// <summary>
+        /// Метод, обрабатывающий нажатия на клавиши.
+        /// </summary>
+        /// <param name="KeyboardState">Объект класса <see cref="KeyboardState"/>.</param>
+        /// <param name="timer">Объект класса <see cref="Timer"/>.</param>
+        /// <param name="speedKoef">Коэффициент движения танка, зависящий от частоты обновления экрана.</param>
         public void OnKeyDown(KeyboardState KeyboardState, Timer timer, float speedKoef)
         {
             Movement? firstPlayerMovement = null;

@@ -1,9 +1,20 @@
 ﻿namespace Libr
 {
+    /// <summary>
+    /// Фабрика случайных бонусов.
+    /// </summary>
     public class RandomBonusFactory
     {
+        /// <summary>
+        /// Номер бонуса.
+        /// </summary>
         private int randomBonus;
 
+        /// <summary>
+        /// Метод, создающий случайный бонус.
+        /// </summary>
+        /// <param name="player">Объект класса <see cref="Tank"/>, представляющий игрока, который будет изменяться.</param>
+        /// <returns>Возвращает случайный созданный бонус.</returns>
         public BonusDecorator CreateBonus(Tank player)
         {
             Random random = new();

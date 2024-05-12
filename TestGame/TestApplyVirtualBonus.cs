@@ -3,9 +3,15 @@ using Libr;
 
 namespace TestGame
 {
+    /// <summary>
+    /// Класс, тестирующий работу виртуальных бонусов
+    /// </summary>
     [TestClass]
     public class TestApplyVirtualBonus
     {
+        /// <summary>
+        /// Метод, тестирующий успешное применение бонуса при движении влево
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulApplyBonusWhileMoveLeft()
         {
@@ -27,7 +33,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsUsed, isUsed);
         }
-
+        /// <summary>
+        /// Метод, тестирующий успешное применение бонуса при движении вниз
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulApplyBonusWhileMoveBottom()
         {
@@ -49,7 +57,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsUsed, isUsed);
         }
-
+        /// <summary>
+        /// Метод, тестирующий применение бонуса при движении влево
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulApplyBonusWhileMoveLeft()
         {
@@ -71,7 +81,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsUsed, isUsed);
         }
-
+        /// <summary>
+        /// Метод, тестирующий применение бонуса при движении вниз
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulApplyBonusWhileMoveBottom()
         {

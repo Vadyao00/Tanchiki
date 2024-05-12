@@ -2,8 +2,16 @@
 
 namespace Libr.Utilities
 {
+
+    /// <summary>
+    /// Класс, генерирующий массивы координат игровых объектов.
+    /// </summary>
     public class VertexGenerator
     {
+
+        /// <summary>
+        /// Массив вершин для заднего фона.
+        /// </summary>
         private static float[] backgroundVertArray = [
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f,
              -1.0f, -1.0f, 0.0f, 0.0f,0.0f,
@@ -13,7 +21,16 @@ namespace Libr.Utilities
              -1.0f, 1.0f, 0.0f, 0.0f,1.0f
             ];
 
+        /// <summary>
+        /// Массив вершин для бонусов.
+        /// </summary>
         private static float[] bonusVertexArray = [];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин игрока.
+        /// </summary>
+        /// <param name="player">Игрок, вершины которого будут возвращены.</param>
+        /// <returns>Возвращает массив вершин игрока.</returns>
         public static float[] GetPlayerVertexArray(Tank player)
         {
             switch (player.Direction)
@@ -95,6 +112,12 @@ namespace Libr.Utilities
                     ];
             }
         }
+
+        /// <summary>
+        /// Метод, вовзращающий массив вершин стен.
+        /// </summary>
+        /// <param name="listWalls">Коллекция стен.</param>
+        /// <returns>Возвращает массив вершин стен.</returns>
         public static float[] GetWallsVertexArray(List<Wall> listWalls)
         {
             List<float> result = [];
@@ -115,15 +138,27 @@ namespace Libr.Utilities
 
             return result.ToArray();
         }
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин виртуальных бонусов.
+        /// </summary>
+        /// <param name="virtualBonusesList">Коллекция виртуальных бонусов.</param>
+        /// <returns>Вовзращает массив вершин виртуальных бонусов.</returns>
         public static float[] GetBonusVertexArray(List<VirtualBonus> virtualBonusesList)
         {
             bonusVertexArray = [];
             foreach (VirtualBonus bonus in virtualBonusesList)
             {
-                bonusVertexArray = bonusVertexArray.Concat(bonus.GetVertexArray()).ToArray();
+                bonusVertexArray = bonusVertexArray.Concat(GetVertexArrayOfVirtualBonus(bonus)).ToArray();
             }
             return bonusVertexArray;
         }
+
+        /// <summary>
+        /// Метод, возвращающий координаты снарядов игрока.
+        /// </summary>
+        /// <param name="player">Игрок, координаты снарядов которого будут возвращены.</param>
+        /// <returns>Возвращает массив координат снарядов игрока.</returns>
         public static float[] GetShellVertexArray(Tank player)
         {
             float x = 0, y = 0;
@@ -149,18 +184,75 @@ namespace Libr.Utilities
             return [x, y];
         }
 
+        /// <summary>
+        /// Метод, возвращающий массив вершин виртуального бонуса.
+        /// </summary>
+        /// <param name="virtualBonus">Виртуальный бонус, вершины которого будут возвращены.</param>
+        /// <returns>Возвращает массив вершин заданного виртуального бонуса.</returns>
+        public static float[] GetVertexArrayOfVirtualBonus(VirtualBonus virtualBonus)
+        {
+            return
+            [
+             virtualBonus.X, virtualBonus.Y + virtualBonus.Size, 0.0f, 0.0f,1.0f,
+             virtualBonus.X, virtualBonus.Y, 0.0f, 0.0f,0.0f,
+             virtualBonus.X + virtualBonus.Size, virtualBonus.Y, 0.0f, 1.0f,0.0f,
+             virtualBonus.X + virtualBonus.Size, virtualBonus.Y, 0.0f, 1.0f,0.0f,
+             virtualBonus.X + virtualBonus.Size, virtualBonus.Y + virtualBonus.Size, 0.0f, 1.0f,1.0f,
+             virtualBonus.X, virtualBonus.Y + virtualBonus.Size, 0.0f, 0.0f,1.0f
+            ];
+        }
+
+        /// <summary>
+        /// Метод, вовзращающий вершины линии перезарядки игрока.
+        /// </summary>
+        /// <param name="player">Игрок,вершины линии перезарядки которого будут возвращены.</param>
+        /// <returns>Массив вершин линии перезарядки.</returns>
         public static float[] GetReloadLineVertexArray(Tank player)
         {
             float xStart = player.X, xEnd = player.X + player.Size, yLine = player.Y + player.Size + 0.02f;
             return [xStart, xEnd, yLine];
         }
 
+        /// <summary>
+        /// Метод, возвращающий массив вершин заднего фона.
+        /// </summary>
+        /// <returns>Возвращает массив вершин заднего фона.</returns>
         public static float[] GetBackgroundVertexArray() => backgroundVertArray;
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для скорости первого игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetSpeedFirstVertexArray() => [-1.0f, 0.75f, 0.0f, 0.0f, 0.5f, -0.975f, 0.725f, 0.0f, 0.5f, 0.0f, -0.95f, 0.75f, 0.0f, 1.0f, 0.5f, -0.975f, 0.775f, 0.0f, 0.5f, 1.0f, -1.0f, 0.75f, 0.0f, 0.0f, 0.5f];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для скорости второго игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetSpeedSecondVertexArray() => [0.8f, 0.75f, 0.0f, 0.0f, 0.5f, 0.825f, 0.725f, 0.0f, 0.5f, 0.0f, 0.85f, 0.75f, 0.0f, 1.0f, 0.5f, 0.825f, 0.775f, 0.0f, 0.5f, 1.0f, 0.8f, 0.75f, 0.0f, 0.0f, 0.5f];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для урона первого игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetDamageFirstVertexArray() => [-0.94f, 0.75f, 0.0f, 0.0f, 0.5f, -0.915f, 0.725f, 0.0f, 0.5f, 0.0f, -0.89f, 0.75f, 0.0f, 1.0f, 0.5f, -0.915f, 0.775f, 0.0f, 0.5f, 1.0f, -0.94f, 0.75f, 0.0f, 0.0f, 0.5f];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для урона второго игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetDamageSecondVertexArray() => [0.86f, 0.75f, 0.0f, 0.0f, 0.5f, 0.885f, 0.725f, 0.0f, 0.5f, 0.0f, 0.91f, 0.75f, 0.0f, 1.0f, 0.5f, 0.885f, 0.775f, 0.0f, 0.5f, 1.0f, 0.86f, 0.75f, 0.0f, 0.0f, 0.5f];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для скорости перезарядки первого игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetReloadFirstVertexArray() => [-0.88f, 0.75f, 0.0f, 0.0f, 0.5f, -0.855f, 0.725f, 0.0f, 0.5f, 0.0f, -0.83f, 0.75f, 0.0f, 1.0f, 0.5f, -0.855f, 0.775f, 0.0f, 0.5f, 1.0f, -0.88f, 0.75f, 0.0f, 0.0f, 0.5f];
+
+        /// <summary>
+        /// Метод, возвращающий массив вершин информационной иконки для скорости перезарядки второго игрока.
+        /// </summary>
+        /// <returns>Масиив вершин информационной иконки.</returns>
         public static float[] GetReloadSecondVertexArray() => [0.92f, 0.75f, 0.0f, 0.0f, 0.5f, 0.945f, 0.725f, 0.0f, 0.5f, 0.0f, 0.97f, 0.75f, 0.0f, 1.0f, 0.5f, 0.945f, 0.775f, 0.0f, 0.5f, 1.0f, 0.92f, 0.75f, 0.0f, 0.0f, 0.5f];
     }
 }

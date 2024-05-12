@@ -3,9 +3,15 @@ using Libr.GameObjects.Projectilies;
 
 namespace TestGame
 {
+    /// <summary>
+    /// Класс, тестирующий движение снарядов
+    /// </summary>
     [TestClass]
     public class TestProjectileMove
     {
+        /// <summary>
+        /// Метод, проверяющий неуспешное движение снаряда вниз
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulProjectileMoveBottom()
         {
@@ -22,7 +28,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsMove, isMove);
         }
-
+        /// <summary>
+        /// Метод, проверяющий успешное движение снаряда вниз
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulProjectileMoveBottom()
         {
@@ -39,7 +47,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsMove, isMove);
         }
-
+        /// <summary>
+        /// Метод, проверяющий неуспешное движение снаряда влево
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulProjectileMoveLeft()
         {
@@ -56,6 +66,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsMove, isMove);
         }
+        /// <summary>
+        /// Метод, проверяющий успешное движение снаряда влево
+        /// </summary>
 
         [TestMethod]
         public void TestSuccessfulProjectileMoveLeft()
@@ -73,7 +86,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedIsMove, isMove);
         }
-
+        /// <summary>
+        /// Метод, проверяющий успешное столкновение снаряда с игроком
+        /// </summary>
         [TestMethod]
         public void TestSuccessfulProjectileCollisionWithPlayer()
         {
@@ -90,7 +105,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedCollision, isCollision);
         }
-
+        /// <summary>
+        /// Метод, проверяющий неуспешное столкновение снаряда с игроком
+        /// </summary>
         [TestMethod]
         public void TestNotSuccessfulProjectileCollisionWithPlayer()
         {

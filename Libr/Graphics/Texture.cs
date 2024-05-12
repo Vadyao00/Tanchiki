@@ -5,10 +5,20 @@ using System.IO;
 
 namespace Libr
 {
+    /// <summary>
+    /// Представляет текстуру, загруженную из файла.
+    /// </summary>
     public class Texture
     {
+        /// <summary>
+        /// Идентификатор текстуры OpenGL.
+        /// </summary>
         public readonly int Handle;
-
+        /// <summary>
+        /// Загружает текстуру из файла.
+        /// </summary>
+        /// <param name="path">Путь к файлу текстуры.</param>
+        /// <returns>Объект текстуры.</returns>
         public static Texture LoadFromFile(string path)
         {
             int handle = GL.GenTexture();
@@ -35,7 +45,10 @@ namespace Libr
 
             return new Texture(handle);
         }
-
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="Texture"/>.
+        /// </summary>
+        /// <param name="glHandle">Идентификатор текстуры OpenGL.</param>
         public Texture(int glHandle)
         {
             Handle = glHandle;

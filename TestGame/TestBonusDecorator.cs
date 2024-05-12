@@ -2,9 +2,15 @@
 
 namespace TestGame
 {
+    /// <summary>
+    /// Класс, тестирующий работу декоратора
+    /// </summary>
     [TestClass]
     public class TestBonusDecorator
     {
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с увеличенным уроном
+        /// </summary>
         [TestMethod]
         public void TestApplyDamageDecorator()
         {
@@ -19,7 +25,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedValue, currentValue);
         }
-
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с уменьшенной скоростью перезарядки
+        /// </summary>
         [TestMethod]
         public void TestApplyReloadDecorator()
         {
@@ -34,7 +42,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedValue, currentValue);
         }
-
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с увеличенной скоростью перезарядки
+        /// </summary>
 
         [TestMethod]
         public void TestApplyHarmfulReloadDecorator()
@@ -50,7 +60,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedValue, currentValue);
         }
-
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с уменьшенной скоростью движения
+        /// </summary>
         [TestMethod]
         public void TestApplyHarmfulSpeedDecorator()
         {
@@ -65,7 +77,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedValue, currentValue,0.01);
         }
-
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с увеличенной скоростью движения
+        /// </summary>
         [TestMethod]
         public void TestApplySpeedDecorator()
         {
@@ -80,7 +94,9 @@ namespace TestGame
 
             Assert.AreEqual(expectedValue, currentValue);
         }
-
+        /// <summary>
+        /// Метод, проверяющий применение декоратора с уменьшение количества снарядов
+        /// </summary>
         [TestMethod]
         public void TestApplyHarmfulProjectileDecorator()
         {
